@@ -7,6 +7,6 @@ Created on Thu Apr 12 12:25:10 2018
 
 import objects as obj
 
-cars = [obj.Car(3,2,2,True)]
+cars = [obj.Car(3,2,3,True,True), obj.Car(0,0,2,False,False)]
 board = obj.Board(6,cars)
 board.show()
