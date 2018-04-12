@@ -7,6 +7,6 @@ Created on Thu Apr 12 12:25:10 2018
 
 import objects as obj
 
-def main():
-    #nog niks:)
-    a = 1
+cars = [obj.Car(3,2,2,True)]
+board = obj.Board(6,cars)
+board.show()
