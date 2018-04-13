@@ -12,6 +12,7 @@ class rushHour:
         self.size = size
         amount = 0
         names = []
+        self.initBoard = update();
 
         # read in board
         for i in range(len(board)):
@@ -33,7 +34,7 @@ class rushHour:
                     car.orientation = 'H'
 
 
-    def show(self):
+    def update(self):
 
         # initialise board
         board = []
@@ -52,3 +53,8 @@ class rushHour:
                     board[vehicle.yBegin][vehicle.xBegin + i] = vehicle.name
 
         return board
+
+    # return true if game is won
+    def won(self):
+
+        return GOAL_VEHICLE in self.vehicles
