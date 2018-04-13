@@ -1,4 +1,3 @@
-
 import vehicle as v
 
 # Hardcode doelauto (TODO)
