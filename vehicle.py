@@ -8,6 +8,7 @@ class vehicle:
         self.yBegin = yBegin
         self.length = length
         self.orientation = orientation
+        self.moveHistory = []
 
     # move orientation coord plus or minus 1
     def move(self, direction):
