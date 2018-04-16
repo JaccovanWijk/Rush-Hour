@@ -30,12 +30,15 @@ def solve(vehicle):
                 afterGoal = True
             elif letter == ".":
                 if afterGoal:
-                    # voeg hier nog iets toe aan movehistory
+                    begin = [vehicle.xBegin,vehicle.yBegin]
+                    vehicle.moveHistory.append(begin)
                     vehicle.move(1)
             else:
                 # if there's a car in front move it
                 for car in game.vehicles:
                     if car.name == letter and afterGoal:
                         solve(car)
-                #voeg hier nog iets toe aan movehistory
+
+                begin = [vehicle.xBegin,vehicle.yBegin]
+                vehicle.moveHistory.append(begin)
                 vehicle.move(1)
