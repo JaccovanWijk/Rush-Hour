@@ -16,19 +16,19 @@ class rushHour:
         self.size = int(math.sqrt(len(self.initBoard)))
 
         # read in board
-        for i in range(len(board)):
+        for i in range(len(self.initBoard)):
             # current coordinates
             x = i % self.size
             y = i // self.size
 
             # make new vehicles
-            if board[i] != '.' and board[i] not in names:
-                self.vehicles.append(v.vehicle(board[i], x, y, 1, 'N'))
-                names.append(board[i])
+            if self.initBoard[i] != '.' and self.initBoard[i] not in names:
+                self.vehicles.append(v.vehicle(self.initBoard[i], x, y, 1, 'N'))
+                names.append(self.initBoard[i])
 
             # change length if vehicle does exist
-            elif board[i] in names:
-                index = names.index(board[i])
+            elif self.initBoard[i] in names:
+                index = names.index(self.initBoard[i])
                 car = self.vehicles[index]
                 car.length += 1
                 if x == car.xBegin:
@@ -47,14 +47,12 @@ class rushHour:
             for j in range(self.size):
                 row.append('.')
             board.append(row)
-        print(board)
         # show all vehicles
         for vehicle in self.vehicles:
             for i in range(vehicle.length):
                 if vehicle.orientation == 'V':
                     board[vehicle.yBegin + i][vehicle.xBegin] = vehicle.name
                 elif vehicle.orientation == 'H':
-                    print(vehicle.name, vehicle.xBegin, i)
                     board[vehicle.yBegin][vehicle.xBegin + i] = vehicle.name
 
         boardStr = ""
@@ -62,6 +60,8 @@ class rushHour:
             for j in i:
                 boardStr += j
 
+        for i in board:
+            print(i)
         self.initBoard = board
 
 
