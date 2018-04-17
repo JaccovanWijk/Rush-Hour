@@ -2,6 +2,7 @@ import vehicle as v
 
 # Hardcode doelauto (TODO)
 GOAL_VEHICLE = v.vehicle('X', 4, 2, 2, 'H')
+initboard = []
 
 class rushHour:
 
@@ -12,17 +13,19 @@ class rushHour:
         self.size = size
         amount = 0
         names = []
-        self.initBoard = update();
+        self.testHistory = []
 
         # read in board
         for i in range(len(board)):
             # current coordinates
             x = i % self.size
             y = i // self.size
+
             # make new vehicles
             if board[i] != '.' and board[i] not in names:
                 self.vehicles.append(v.vehicle(board[i], x, y, 1, 'N'))
                 names.append(board[i])
+
             # change length if vehicle does exist
             elif board[i] in names:
                 index = names.index(board[i])
@@ -32,6 +35,8 @@ class rushHour:
                     car.orientation = 'V'
                 else:
                     car.orientation = 'H'
+
+        self.initBoard = self.update()
 
 
     def update(self):
@@ -53,6 +58,14 @@ class rushHour:
                     board[vehicle.yBegin][vehicle.xBegin + i] = vehicle.name
 
         return board
+
+    def makingMove(self, direction, carName):
+        for car in self.vehicles:
+            if car.name == carName:
+                car.move(direction)
+        print(car.name, car.xBegin , car.yBegin)
+        self.initBoard = self.update()
+
 
     # return true if game is won
     def won(self):

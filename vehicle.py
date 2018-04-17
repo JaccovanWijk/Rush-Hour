@@ -15,5 +15,7 @@ class vehicle:
 
         if self.orientation == 'H':
             self.xBegin + direction
+            self.moveHistory.append(self.xBegin)
         elif self.orientation == 'V':
             self.yBegin + direction
+            self.moveHistory.append(self.yBegin)
