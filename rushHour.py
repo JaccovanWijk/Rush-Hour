@@ -8,33 +8,10 @@ class rushHour:
 
     def __init__(self, board):
 
-        self.vehicles = []
-        amount = 0
-        names = []
         self.testHistory = []
         self.initBoard = board.replace("\n", "")
         self.size = int(math.sqrt(len(self.initBoard)))
-
-        # read in board
-        for i in range(len(self.initBoard)):
-            # current coordinates
-            x = i % self.size
-            y = i // self.size
-
-            # make new vehicles
-            if self.initBoard[i] != '.' and self.initBoard[i] not in names:
-                self.vehicles.append(v.vehicle(self.initBoard[i], x, y, 1, 'N'))
-                names.append(self.initBoard[i])
-
-            # change length if vehicle does exist
-            elif self.initBoard[i] in names:
-                index = names.index(self.initBoard[i])
-                car = self.vehicles[index]
-                car.length += 1
-                if x == car.xBegin:
-                    car.orientation = 'V'
-                else:
-                    car.orientation = 'H'
+        self.vehicles = self.getVehicles(self.initBoard)
 
 
     def update(self):
@@ -59,49 +36,69 @@ class rushHour:
             for j in i:
                 boardStr += j
 
-        # for i in board:
-        #     print(i)
-        self.initBoard = boardStr
+
+        return boardStr
+
+    def getVehicles(self, board):
+
+        names = []
+        vehicles = []
+        # read in board
+        for i in range(len(board)):
+            # current coordinates
+            x = i % self.size
+            y = i // self.size
+
+            # make new vehicles
+            if board[i] != '.' and board[i] not in names:
+                vehicles.append(v.vehicle(board[i], x, y, 1, 'N'))
+                names.append(board[i])
+
+            # change length if vehicle does exist
+            elif board[i] in names:
+                index = names.index(board[i])
+                car = vehicles[index]
+                car.length += 1
+                if x == car.xBegin:
+                    car.orientation = 'V'
+                else:
+                    car.orientation = 'H'
+        return vehicles
 
 
-    def searchMoves(self, board, vehicle):
+    def searchMoves(self, vehicle):
 
         moves = []
         # search all moves horizontally
         if vehicle.orientation == 'H':
-            i = 0
-            # search all moves to the left
-            while vehicle.xBegin - i >= 0 and board[vehicle.yBegin][vehicle.xBegin - i] == '.':
-                moves.append(i)
-                i += 1
 
-            j = 0
-            # search all moves to the right
-            while vehicle.xBegin + j < 6 and board[vehicle.yBegin][vehicle.xBegin + j] == '.':
-                moves.append(j)
-                j += 1
+            # search move left
+            if vehicle.xBegin - 1 >= 0:
+                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin - 1] == ".":
+                    moves.append(-1)
+
+            # search move right
+            elif vehicle.xBegin + vehicle.length < 6:
+                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin + vehicle.length] == ".":
+                    moves.append(1)
 
         elif vehicle.orientation == 'V':
-            i = 0
-            # search all moves to above
-            while vehicle.yBegin - i >= 0 and board[vehicle.yBegin - i][vehicle.xBegin] == '.':
-                moves.append(i)
-                i += 1
 
-            j = 0
-            # search all moves to below
-            while vehicle.xBegin + i < 6 and board[vehicle.yBegin - j][vehicle.xBegin] == '.':
-                moves.append(j)
-                j += 1
+            # search move up
+            if vehicle.yBegin - 1 >= 0:
+                if self.initBoard[(vehicle.yBegin - 1) * 6 + vehicle.xBegin] == ".":
+                    moves.append(-1)
+
+            # search move down
+            elif vehicle.yBegin + vehicle.length < 6:
+                if self.initBoard[(vehicle.yBegin + vehicle.length) * 6 + vehicle.xBegin] == ".":
+                    moves.append(1)
 
         return moves
 
-    def makingMove(self, carName, direction):
-        for vehicle in self.vehicles:
-            if vehicle.name == carName:
-                vehicle.move(direction)
+    def makingMove(self, car, direction):
+        car.move(direction)
         return self.update()
-
 
     # return true if game is won
     def won(self):
