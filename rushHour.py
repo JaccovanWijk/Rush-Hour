@@ -8,7 +8,6 @@ class rushHour:
 
     def __init__(self, board, size):
 
-
         self.vehicles = []
         self.size = size
         amount = 0
@@ -59,12 +58,41 @@ class rushHour:
 
         return board
 
-    def makingMove(self, direction, carName):
-        for car in self.vehicles:
-            if car.name == carName:
-                car.move(direction)
-        print(car.name, car.xBegin , car.yBegin)
-        self.initBoard = self.update()
+    def searchMoves(self, board, vehicle):
+
+        moves = []
+        # search all moves horizontally
+        if vehicle.orientation == 'H':
+            i = 0
+            # search all moves to the left
+            while vehicle.xBegin - i >= 0 and board[vehicle.yBegin][vehicle.xBegin - i] == '.':
+                moves.append(i)
+                i += 1
+
+            j = 0
+            # search all moves to the right
+            while vehicle.xBegin + j < 6 and board[vehicle.yBegin][vehicle.xBegin + j] == '.':
+                moves.append(j)
+                j += 1
+
+        elif vehicle.orientation == 'V':
+            i = 0
+            # search all moves to above
+            while vehicle.yBegin - i >= 0 and board[vehicle.yBegin - i][vehicle.xBegin] == '.':
+                moves.append(i)
+                i += 1
+
+            j = 0
+            # search all moves to below
+            while vehicle.xBegin + i < 6 and board[vehicle.yBegin - j][vehicle.xBegin] == '.':
+                moves.append(j)
+                j += 1
+
+        return moves
+
+    def makingMove(self, direction, car):
+        car.move(direction)
+        return self.update()
 
 
     # return true if game is won
