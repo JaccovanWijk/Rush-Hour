@@ -1,18 +1,19 @@
 import vehicle as v
+import math
 
 # Hardcode doelauto (TODO)
 GOAL_VEHICLE = v.vehicle('X', 4, 2, 2, 'H')
-initboard = []
 
 class rushHour:
 
-    def __init__(self, board, size):
+    def __init__(self, board):
 
         self.vehicles = []
-        self.size = size
         amount = 0
         names = []
         self.testHistory = []
+        self.initBoard = board.replace("\n", "")
+        self.size = int(math.sqrt(len(self.initBoard)))
 
         # read in board
         for i in range(len(board)):
@@ -35,28 +36,34 @@ class rushHour:
                 else:
                     car.orientation = 'H'
 
-        self.initBoard = self.update()
-
 
     def update(self):
 
         # initialise board
         board = []
+        print(self.size)
         for i in range(self.size):
             row = []
             for j in range(self.size):
                 row.append('.')
             board.append(row)
-
+        print(board)
         # show all vehicles
         for vehicle in self.vehicles:
             for i in range(vehicle.length):
                 if vehicle.orientation == 'V':
                     board[vehicle.yBegin + i][vehicle.xBegin] = vehicle.name
                 elif vehicle.orientation == 'H':
+                    print(vehicle.name, vehicle.xBegin, i)
                     board[vehicle.yBegin][vehicle.xBegin + i] = vehicle.name
 
-        return board
+        boardStr = ""
+        for i in board:
+            for j in i:
+                boardStr += j
+
+        self.initBoard = board
+
 
     def searchMoves(self, board, vehicle):
 
@@ -90,8 +97,10 @@ class rushHour:
 
         return moves
 
-    def makingMove(self, direction, car):
-        car.move(direction)
+    def makingMove(self, carName, direction):
+        for vehicle in self.vehicles:
+            if vehicle.name == carName:
+                vehicle.move(direction)
         return self.update()
 
 
