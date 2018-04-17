@@ -6,4 +6,6 @@ f.close()
 
 game = r.rushHour(board)
 
+print(game.initBoard)
 game.makingMove("P",1)
+print(game.initBoard)

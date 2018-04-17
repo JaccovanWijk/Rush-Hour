@@ -41,7 +41,6 @@ class rushHour:
 
         # initialise board
         board = []
-        print(self.size)
         for i in range(self.size):
             row = []
             for j in range(self.size):
@@ -60,9 +59,9 @@ class rushHour:
             for j in i:
                 boardStr += j
 
-        for i in board:
-            print(i)
-        self.initBoard = board
+        # for i in board:
+        #     print(i)
+        self.initBoard = boardStr
 
 
     def searchMoves(self, board, vehicle):

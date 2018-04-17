@@ -13,6 +13,6 @@ class vehicle:
     def move(self, direction):
 
         if self.orientation == 'H':
-            self.xBegin + direction
+            self.xBegin = self.xBegin + direction
         elif self.orientation == 'V':
-            self.yBegin + direction
+            self.yBegin = self.yBegin + direction
