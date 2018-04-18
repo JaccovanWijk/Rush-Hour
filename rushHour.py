@@ -72,15 +72,15 @@ class rushHour:
         # search all moves horizontally
         if vehicle.orientation == 'H':
 
+            # search move right
+            if vehicle.xBegin + vehicle.length < 6:
+                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin + vehicle.length] == '.':
+                    moves.append(1)
+
             # search move left
             if vehicle.xBegin - 1 >= 0:
-                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin - 1] == ".":
+                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin - 1] == '.':
                     moves.append(-1)
-
-            # search move right
-            elif vehicle.xBegin + vehicle.length < 6:
-                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin + vehicle.length] == ".":
-                    moves.append(1)
 
         elif vehicle.orientation == 'V':
 
@@ -90,7 +90,7 @@ class rushHour:
                     moves.append(-1)
 
             # search move down
-            elif vehicle.yBegin + vehicle.length < 6:
+            if vehicle.yBegin + vehicle.length < 6:
                 if self.initBoard[(vehicle.yBegin + vehicle.length) * 6 + vehicle.xBegin] == ".":
                     moves.append(1)
 
@@ -103,4 +103,9 @@ class rushHour:
     # return true if game is won
     def won(self):
 
-        return GOAL_VEHICLE in self.vehicles
+        for vehicle in self.vehicles:
+
+            if vehicle.name == 'X' and vehicle.xBegin == 4 and vehicle.yBegin == 2:
+                return True
+
+        return False

@@ -10,6 +10,7 @@ class breadthFirst(r.rushHour):
     def getSucessors(self):
 
         sucessors = []
+        cars = self.vehicles
 
         # get all moves of all vehicles
         for vehicle in self.vehicles:
@@ -18,7 +19,7 @@ class breadthFirst(r.rushHour):
 
                 newBoard = self.makingMove(vehicle, i)
                 move = vehicle.name + str(i)
-                print(move)
+                self.makingMove(vehicle, -i)
                 sucessors.append([newBoard, move])
 
         return sucessors
@@ -35,18 +36,15 @@ class breadthFirst(r.rushHour):
 
         # initialise search
         openBoards.append([self.initBoard, self.vehicles])
-        moves[self.initBoard] = (None, None)
+        moves[self.initBoard] = ()
 
         while openBoards:
 
             (self.initBoard, self.vehicles) = openBoards.popleft()
-            print(self.initBoard)
-
-            self.vehicles = self.getVehicles(self.initBoard)
 
             # stop if puzzle is solved
             if self.won():
-                return showMoves(currentBoard, moves)
+                return self.showMoves(self.initBoard, moves)
 
             for (newBoard, move) in self.getSucessors():
 
@@ -54,18 +52,18 @@ class breadthFirst(r.rushHour):
                 if newBoard in closedBoards:
                     continue
 
-                # if board isn't already
+                # if board isn't already in queue
                 if not newBoard in openBoards:
 
                     # add move to moves
                     moves[newBoard] = (self.initBoard, move)
-                    openBoards.append([newBoard, self.getVehicles(str(newBoard))])
+                    openBoards.append([newBoard, self.getVehicles(newBoard)])
 
             # finish processing current board
             closedBoards.add(self.initBoard)
 
 
-    def showMoves(board, moves):
+    def showMoves(self, board, moves):
 
         moveList = list()
 
