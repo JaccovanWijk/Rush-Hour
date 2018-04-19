@@ -2,13 +2,14 @@ import rushHour as r
 from collections import deque
 
 class breadthFirst(r.rushHour):
+    """A breadth first search algorithm for Rush Hour"""
 
     def __init__(self,board):
 
         r.rushHour.__init__(self,board)
 
     def getSucessors(self):
-
+        """Get next board states reachable by making one move"""
         sucessors = []
         cars = self.vehicles
 
@@ -18,13 +19,14 @@ class breadthFirst(r.rushHour):
             for i in self.searchMoves(vehicle):
 
                 newBoard = self.makingMove(vehicle, i)
-                move = vehicle.name + str(i)
+                move = vehicle.name + ' ' + str(i)
                 self.makingMove(vehicle, -i)
                 sucessors.append([newBoard, move])
 
         return sucessors
 
     def breadthFirstSearch(self):
+        """The breadth first search algorithm"""
 
         # open possibilities
         openBoards = deque()
@@ -57,6 +59,8 @@ class breadthFirst(r.rushHour):
 
                     # add move to moves
                     moves[newBoard] = (self.initBoard, move)
+
+                    # add new board state to open boards
                     openBoards.append([newBoard, self.getVehicles(newBoard)])
 
             # finish processing current board
@@ -64,15 +68,18 @@ class breadthFirst(r.rushHour):
 
 
     def showMoves(self, board, moves):
+        """Makes a list of moves made to solve the puzzle"""
 
         moveList = list()
 
         while True:
 
+            # go back one move
             row = moves[board]
             if len(row) == 2:
                 board = row[0]
                 move = row[1]
+
                 # add move to begin of list
                 moveList.append(move)
             else:

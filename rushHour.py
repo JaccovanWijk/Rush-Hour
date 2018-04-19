@@ -1,10 +1,8 @@
 import vehicle as v
 import math
 
-# Hardcode doelauto (TODO)
-GOAL_VEHICLE = v.vehicle('X', 4, 2, 2, 'H')
-
 class rushHour:
+    """A single Rush Hour board"""
 
     def __init__(self, board):
 
@@ -12,9 +10,11 @@ class rushHour:
         self.initBoard = board.replace("\n", "")
         self.size = int(math.sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
+        self.goal = v.vehicle('X', 4, 2, 2, 'H')
 
 
     def update(self):
+        """Update board with new set of cars"""
 
         # initialise board
         board = []
@@ -31,6 +31,7 @@ class rushHour:
                 elif vehicle.orientation == 'H':
                     board[vehicle.yBegin][vehicle.xBegin + i] = vehicle.name
 
+        # convert char array to string
         boardStr = ""
         for i in board:
             for j in i:
@@ -40,6 +41,7 @@ class rushHour:
         return boardStr
 
     def getVehicles(self, board):
+        """Read in vehicle of a given board"""
 
         names = []
         vehicles = []
@@ -67,6 +69,7 @@ class rushHour:
 
 
     def searchMoves(self, vehicle):
+        """Search for available moves for a given vehicle"""
 
         moves = []
         # search all moves horizontally
@@ -97,15 +100,16 @@ class rushHour:
         return moves
 
     def makingMove(self, car, direction):
+        """Move a car in a given direction"""
+
         car.move(direction)
         return self.update()
 
     # return true if game is won
     def won(self):
+        """Returns true if winning condition is satisfied"""
 
         for vehicle in self.vehicles:
-
             if vehicle.name == 'X' and vehicle.xBegin == 4 and vehicle.yBegin == 2:
                 return True
-
         return False
