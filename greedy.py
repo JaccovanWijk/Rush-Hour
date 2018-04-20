@@ -98,28 +98,30 @@ def solve(board):
 
     game = r.rushHour(board)
 
-    while not game.won():
-
-        # gebruik game.searchMoves() om voor elke auto de mogelijke moves te vinden en zoek er de eerste auto die een move heeft.
-        moves = []
-        for vehicle in game.vehicles:
-            moves.append(game.searchMoves(vehicle))
-
-        for car in game.vehicles:
+    goalVehicles = []
+    for car in game.vehicles:
             if car.name == "X":
                 goalVehicles.append(car)
 
-        if vehicle.orientation == "H":
-            # pick everything in it's row
-            possibleDrive = game.initBoard[vehicle.yBegin - 1]
-        elif vehicle.orientation == "V":
-            # pick everything in it's column
-            possibleDrive = game.initBoard[vehicle.xBegin::game.size]
+    while not game.won():
+            
+        # look possible moves
+        possibleMoves = game.searchMoves(goalVehicles[-1])
+        
+        if len(possibleMoves) == 0:
+            # left or right/ up or down
+            
+                
+def prefWay(vehicle):
+    possibleDrive = game.driveline(vehicle)
+    directions = []
+    if possibleDrive[0] == vehicle.name:
+        return {1}
+    elif possibleDrive[-1] == vehicle.name:
+        return {-1}
+    else:
+        return {1, -1}
 
-        # check voor auto's in de weg of ze kunnen bewegen
-        for letter in possibleDrive:
-            if letter != ".":
-                #do something
 
 
 __main__()
