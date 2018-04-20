@@ -107,7 +107,7 @@ def solve(board):
 
         for car in game.vehicles:
             if car.name == "X":
-                goalVehicles.apped(car)
+                goalVehicles.append(car)
 
         if vehicle.orientation == "H":
             # pick everything in it's row
@@ -116,8 +116,8 @@ def solve(board):
             # pick everything in it's column
             possibleDrive = game.initBoard[vehicle.xBegin::game.size]
 
-        # check voor auto's in de weg of ze kunnenbewegen
-        for
+        # check voor auto's in de weg of ze kunnen bewegen
+
 
 
 __main__()
