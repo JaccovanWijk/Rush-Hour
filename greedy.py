@@ -111,8 +111,6 @@ def solve(board):
         if len(possibleMoves) == 0:
             # left or right/ up or down
             
-        
-
                 
 def prefWay(vehicle):
     possibleDrive = game.driveline(vehicle)
@@ -123,7 +121,7 @@ def prefWay(vehicle):
         return {-1}
     else:
         return {1, -1}
-       
+
 
 
 __main__()
