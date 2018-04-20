@@ -113,3 +113,16 @@ class rushHour:
             if vehicle.name == 'X' and vehicle.xBegin == 4 and vehicle.yBegin == 2:
                 return True
         return False
+
+
+    # return possible driveline
+    def driveline(self, vehicle):
+
+        possibleDrive = ""
+        if vehicle.orientation == "H":
+            # pick everything in it's row
+            possibleDrive = self.initBoard[vehicle.yBegin - 1]
+        elif vehicle.orientation == "V":
+            # pick everything in it's column
+            possibleDrive = self.initBoard[vehicle.xBegin::self.size]
+        return possibleDrive

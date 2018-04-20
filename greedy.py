@@ -117,7 +117,9 @@ def solve(board):
             possibleDrive = game.initBoard[vehicle.xBegin::game.size]
 
         # check voor auto's in de weg of ze kunnen bewegen
-
+        for letter in possibleDrive:
+            if letter != ".":
+                #do something
 
 
 __main__()
