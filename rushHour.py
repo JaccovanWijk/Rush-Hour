@@ -11,6 +11,7 @@ class rushHour:
         self.size = int(math.sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
         self.goal = v.vehicle('X', 4, 2, 2, 'H')
+        self.moves = dict()
 
 
     def update(self):
@@ -23,6 +24,7 @@ class rushHour:
             for j in range(self.size):
                 row.append('.')
             board.append(row)
+
         # show all vehicles
         for vehicle in self.vehicles:
             for i in range(vehicle.length):
@@ -102,10 +104,16 @@ class rushHour:
     def makingMove(self, car, direction):
         """Move a car in a given direction"""
 
+        # move car
         car.move(direction)
-        return self.update()
 
-    # return true if game is won
+        # update board
+        newState = self.update()
+        move = car.name + " " + direction
+        car.moves[newState] = (self.initBoard, move)
+
+        return newState
+
     def won(self):
         """Returns true if winning condition is satisfied"""
 
@@ -114,10 +122,8 @@ class rushHour:
                 return True
         return False
 
-
-    # return possible driveline
     def driveline(self, vehicle):
-
+        """Return possible driveline"""
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
@@ -126,3 +132,23 @@ class rushHour:
             # pick everything in it's column
             possibleDrive = self.initBoard[vehicle.xBegin::self.size]
         return possibleDrive
+
+    def showMoves(self, endState):
+        """Makes a list of moves made to solve the puzzle"""
+
+        moveList = list()
+
+        while True:
+            # go back one move
+            row = self.moves[endState]
+            if len(row) == 2:
+                board = row[0]
+                move = row[1]
+
+                # add move to begin of list
+                moveList.append(move)
+            else:
+                break
+
+        moveList.reverse()
+        return moveList
