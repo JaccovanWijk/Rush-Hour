@@ -105,16 +105,25 @@ def solve(board):
 
     while not game.won():
             
-        possibleDrive = game.driveline(goalVehicles[-1])
+        # look possible moves
+        possibleMoves = game.searchMoves(goalVehicles[-1])
         
+        if len(possibleMoves) == 0:
+            # left or right/ up or down
+            
         
 
-        
-
-        # check voor auto's in de weg of ze kunnenbewegen
-        for letter in possibleDrive:
-            if letter != ".":
-                #do something
+                
+def prefWay(vehicle):
+    possibleDrive = game.driveline(vehicle)
+    directions = []
+    if possibleDrive[0] == vehicle.name:
+        return {1}
+    elif possibleDrive[-1] == vehicle.name:
+        return {-1}
+    else:
+        return {1, -1}
+       
 
 
 __main__()
