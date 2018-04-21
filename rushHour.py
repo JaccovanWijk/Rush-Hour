@@ -114,6 +114,11 @@ class rushHour:
                     moves[1] = moves[1] + 1
                 else:
                     moves[0] = moves[0] - 1
+            else:
+                if afterGoal:
+                    # zorgen dat hij niet meer groeit na n andere auto
+                else:
+                    moves[0] = 0
         return moves
                     
 
