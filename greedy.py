@@ -86,42 +86,73 @@ import rushHour as r
 #             else:
 #                 return -1
 
-def __main__():
-
-    f = open("Boards/Game 1", "r")
-    board = f.read()
-    f.close()
-    solve(board)
-
-
-def solve(board):
-
-    game = r.rushHour(board)
-
-    goalVehicles = []
-    for car in game.vehicles:
-            if car.name == "X":
-                goalVehicles.append(car)
-
-    while not game.won():
+class greedy(r.rushHour):
+    
+    def __init__(self, board):
+        
+        r.rushHour.__init__(board)
+        
+        
+    def solve(self, board):
+    
+        for car in self.vehicles:
+                if car.name == "X":
+                    newCar = car
+    
+        goalVehicles = []
+    
+        while not self.won():
             
-        # look possible moves
-        possibleMoves = game.searchMoves(goalVehicles[-1])
+            directions = self.pref(newCar)
+            
+            if newCar not in goalVehicles:
+                goalVehicles.append(newCar)
+                currentCar = newCar
+            else:
+                if len(self.neighbours(newCar)) < 2:
+                    currentCar = goalVehicles[-2]
+                else:
+                    # move to other option
+
+        
+    def pref(self, vehicle):
+        
+        possibleDrive = self.driveline(vehicle)
+        directions = []
+        if possibleDrive[0] == vehicle.name:
+            return 1
+        elif possibleDrive[-1] == vehicle.name:
+            return -1
+        else:
+            # Pas hier verschillende heuristieken toe
+            return 1
+        
+        
+    def neighboursFinder(self, vehicle):
+    
+        possibleDrive = self.driveline(vehicle)
+        
+        neighbours = []
+        length = len(possibleDrive)
+        for i in range(length):
+            if possibleDrive[i] == vehicle.name:
+                if i != length - 1:
+                    neighbours.append(possibleDrive[i + length])
+                if i != 0:
+                    neighbours.append(possibleDrive[i - 1])
+        return neighbours        
+        
+    def nextMove(self, vehicle, directions):
+        
+        possibleMoves = self.searchMoves(vehicle)
         
         if len(possibleMoves) == 0:
-            # left or right/ up or down
+            # Choose a car
+        elif len(possibleMoves) == 1:
             
-                
-def prefWay(vehicle):
-    possibleDrive = game.driveline(vehicle)
-    directions = []
-    if possibleDrive[0] == vehicle.name:
-        return {1}
-    elif possibleDrive[-1] == vehicle.name:
-        return {-1}
-    else:
-        return {1, -1}
-
-
-
-__main__()
+        
+        
+        
+        
+        
+        
