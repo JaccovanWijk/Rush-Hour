@@ -42,6 +42,7 @@ class rushHour:
 
         return boardStr
 
+
     def getVehicles(self, board):
         """Read in vehicle of a given board"""
 
@@ -73,52 +74,31 @@ class rushHour:
     def searchMoves(self, vehicle):
         """Search for available moves for a given vehicle"""
 
-#==============================================================================
-#         moves = []
-#         # search all moves horizontally
-#         if vehicle.orientation == 'H':
-#
-#             # search move right
-#             if vehicle.xBegin + vehicle.length < 6:
-#                 if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin + vehicle.length] == '.':
-#                     moves.append(1)
-#
-#             # search move left
-#             if vehicle.xBegin - 1 >= 0:
-#                 if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin - 1] == '.':
-#                     moves.append(-1)
-#
-#         elif vehicle.orientation == 'V':
-#
-#             # search move up
-#             if vehicle.yBegin - 1 >= 0:
-#                 if self.initBoard[(vehicle.yBegin - 1) * 6 + vehicle.xBegin] == ".":
-#                     moves.append(-1)
-#
-#             # search move down
-#             if vehicle.yBegin + vehicle.length < 6:
-#                 if self.initBoard[(vehicle.yBegin + vehicle.length) * 6 + vehicle.xBegin] == ".":
-#                     moves.append(1)
-#
-#         return moves
-#==============================================================================
-        moves = {0,0}
-        possibleDrive = self.driveline(vehicle)
-        afterGoal = False
+        moves = []
 
-        for i in range(len(possibleDrive)):
-            if possibleDrive[i] == vehicle.name:
-                afterGoal = True
-            elif possibleDrive[i] == ".":
-                if afterGoal:
-                    moves[1] = moves[1] + 1
-                else:
-                    moves[0] = moves[0] - 1
+        # get line of view
+        lineOfView = self.driveline(vehicle)
+        beginC = vehicle.dominantCoordinate()
+
+        # search for moves down/right
+        i = 1
+        while True:
+            if beginC + vehicle.length + i - 1 < len(lineOfView):
+                if lineOfView[beginC + vehicle.length + i - 1] == '.':
+                    moves.append(i)
+                    i += 1
             else:
-                if afterGoal:
-                    # zorgen dat hij niet meer groeit na n andere auto
-                else:
-                    moves[0] = 0
+                break
+
+        j = 1
+        while True:
+            if beginC - j >= 0:
+                if lineOfView[beginC - j] == '.':
+                    moves.append(-j)
+                    j += 1
+            else:
+                break
+
         return moves
 
 
@@ -128,6 +108,7 @@ class rushHour:
         car.move(direction)
         return self.update()
 
+
     def won(self):
         """Returns true if winning condition is satisfied"""
 
@@ -136,12 +117,13 @@ class rushHour:
                 return True
         return False
 
+
     def driveline(self, vehicle):
         """Return possible driveline"""
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
-            possibleDrive = self.initBoard[vehicle.yBegin - 1]
+            possibleDrive = self.initBoard[vehicle.yBegin * 6: vehicle.yBegin * 6 + 6]
         elif vehicle.orientation == "V":
             # pick everything in it's column
             possibleDrive = self.initBoard[vehicle.xBegin::self.size]

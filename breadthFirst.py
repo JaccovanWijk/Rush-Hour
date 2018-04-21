@@ -8,6 +8,9 @@ class breadthFirst(r.rushHour):
 
         r.rushHour.__init__(self,board)
 
+    def sortMoves(self, directions):
+        return sorted(directions, key=abs, reverse=True)
+
     def getSucessors(self):
         """Get next board states reachable by making one move"""
         sucessors = []
@@ -16,7 +19,7 @@ class breadthFirst(r.rushHour):
         # get all moves of all vehicles
         for vehicle in self.vehicles:
 
-            for i in self.searchMoves(vehicle):
+            for i in self.sortMoves(self.searchMoves(vehicle)):
 
                 newBoard = self.makingMove(vehicle, i)
                 move = vehicle.name + ' ' + str(i)
@@ -75,6 +78,7 @@ class breadthFirst(r.rushHour):
             # go back one move
             row = moves[endState]
             if len(row) == 2:
+                print(endState)
                 endState = row[0]
                 move = row[1]
 

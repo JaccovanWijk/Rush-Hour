@@ -9,6 +9,12 @@ class vehicle:
         self.length = length
         self.orientation = orientation
 
+    def dominantCoordinate(self):
+        if self.orientation == 'H':
+            return self.xBegin
+        elif self.orientation == 'V':
+            return self.yBegin
+
     # move orientation coord plus or minus 1
     def move(self, direction):
 
