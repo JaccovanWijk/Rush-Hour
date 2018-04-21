@@ -100,8 +100,8 @@ class greedy(r.rushHour):
                     newCar = car
     
         goalVehicles = []
-    
-        while not self.won():
+        move = 0
+        while move < 3:#not self.won():
             
             directions = self.pref(newCar)
             
@@ -113,19 +113,19 @@ class greedy(r.rushHour):
                     currentCar = goalVehicles[-2]
                 else:
                     # move to other option
-
+            move += 1
         
     def pref(self, vehicle):
         
         possibleDrive = self.driveline(vehicle)
         directions = []
         if possibleDrive[0] == vehicle.name:
-            return 1
+            return {1}
         elif possibleDrive[-1] == vehicle.name:
-            return -1
+            return {-1}
         else:
             # Pas hier verschillende heuristieken toe
-            return 1
+            return {1,-1}
         
         
     def neighboursFinder(self, vehicle):
@@ -149,6 +149,9 @@ class greedy(r.rushHour):
         if len(possibleMoves) == 0:
             # Choose a car
         elif len(possibleMoves) == 1:
+            # make move
+        else:
+            # choose move
             
         
         
