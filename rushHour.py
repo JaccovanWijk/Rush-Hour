@@ -73,33 +73,49 @@ class rushHour:
     def searchMoves(self, vehicle):
         """Search for available moves for a given vehicle"""
 
-        moves = []
-        # search all moves horizontally
-        if vehicle.orientation == 'H':
+#==============================================================================
+#         moves = []
+#         # search all moves horizontally
+#         if vehicle.orientation == 'H':
+#
+#             # search move right
+#             if vehicle.xBegin + vehicle.length < 6:
+#                 if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin + vehicle.length] == '.':
+#                     moves.append(1)
+#
+#             # search move left
+#             if vehicle.xBegin - 1 >= 0:
+#                 if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin - 1] == '.':
+#                     moves.append(-1)
+#
+#         elif vehicle.orientation == 'V':
+#
+#             # search move up
+#             if vehicle.yBegin - 1 >= 0:
+#                 if self.initBoard[(vehicle.yBegin - 1) * 6 + vehicle.xBegin] == ".":
+#                     moves.append(-1)
+#
+#             # search move down
+#             if vehicle.yBegin + vehicle.length < 6:
+#                 if self.initBoard[(vehicle.yBegin + vehicle.length) * 6 + vehicle.xBegin] == ".":
+#                     moves.append(1)
+#
+#         return moves
+#==============================================================================
+        moves = {0,0}
+        possibleDrive = self.driveline(vehicle)
+        afterGoal = False
 
-            # search move right
-            if vehicle.xBegin + vehicle.length < 6:
-                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin + vehicle.length] == '.':
-                    moves.append(1)
-
-            # search move left
-            if vehicle.xBegin - 1 >= 0:
-                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin - 1] == '.':
-                    moves.append(-1)
-
-        elif vehicle.orientation == 'V':
-
-            # search move up
-            if vehicle.yBegin - 1 >= 0:
-                if self.initBoard[(vehicle.yBegin - 1) * 6 + vehicle.xBegin] == ".":
-                    moves.append(-1)
-
-            # search move down
-            if vehicle.yBegin + vehicle.length < 6:
-                if self.initBoard[(vehicle.yBegin + vehicle.length) * 6 + vehicle.xBegin] == ".":
-                    moves.append(1)
-
+        for i in range(len(possibleDrive)):
+            if possibleDrive[i] == vehicle.name:
+                afterGoal = True
+            elif possibleDrive[i] == ".":
+                if afterGoal:
+                    moves[1] = moves[1] + 1
+                else:
+                    moves[0] = moves[0] - 1
         return moves
+
 
     def makingMove(self, car, direction):
         """Move a car in a given direction"""

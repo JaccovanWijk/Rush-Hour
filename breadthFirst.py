@@ -35,7 +35,6 @@ class breadthFirst(r.rushHour):
         # moves done
         moves = dict()
 
-
         # initialise search
         openBoards.append([self.initBoard, self.vehicles])
         moves[self.initBoard] = ()
@@ -66,8 +65,7 @@ class breadthFirst(r.rushHour):
             # finish processing current board
             closedBoards.add(self.initBoard)
 
-
-    def showMoves(self, board, moves):
+    def showMoves(self, endState, moves):
         """Makes a list of moves made to solve the puzzle"""
 
         moveList = list()
@@ -75,9 +73,9 @@ class breadthFirst(r.rushHour):
         while True:
 
             # go back one move
-            row = moves[board]
+            row = moves[endState]
             if len(row) == 2:
-                board = row[0]
+                endState = row[0]
                 move = row[1]
 
                 # add move to begin of list
