@@ -94,31 +94,39 @@ class greedy(r.rushHour):
         
         
     def solve(self, board):
-    
+        
+        print(self.initBoard)
         for car in self.vehicles:
                 if car.name == "X":
-                    newCar = car
+                    currentCar = car
     
         goalVehicles = []
+        testedVehicles = []
         move = 0
         while move < 3:#not self.won():
             
-            directions = self.pref(newCar)
+            directions = self.pref(currentCar)
             
-            if newCar not in goalVehicles:
-                goalVehicles.append(newCar)
-                currentCar = newCar
+            #self.nextMove(currentCar)
+            
+            if currentCar not in goalVehicles:
+                goalVehicles.append(currentCar)
+                testedVehicles.append(currentCar)
             else:
-                if len(self.neighbours(newCar)) < 2:
-                    currentCar = goalVehicles[-2]
-                else:
-                    # move to other option
+                directions.pop(0)
+            
+            if len(directions) == 0:
+                currentCar = goalVehicles[-2]
+                goalVehicles.pop()
+            else:
+                
+
             move += 1
+        print(self.initBoard)
         
     def pref(self, vehicle):
         
         possibleDrive = self.driveline(vehicle)
-        directions = []
         if possibleDrive[0] == vehicle.name:
             return {1}
         elif possibleDrive[-1] == vehicle.name:
@@ -136,22 +144,25 @@ class greedy(r.rushHour):
         length = len(possibleDrive)
         for i in range(length):
             if possibleDrive[i] == vehicle.name:
-                if i != length - 1:
+                if i != length - 1 and possibleDrive[i + length] != ".":
                     neighbours.append(possibleDrive[i + length])
-                if i != 0:
+                if i != 0 and possibleDrive[i - 1] != ".":
                     neighbours.append(possibleDrive[i - 1])
         return neighbours        
         
-    def nextMove(self, vehicle, directions):
-        
-        possibleMoves = self.searchMoves(vehicle)
-        
-        if len(possibleMoves) == 0:
-            # Choose a car
-        elif len(possibleMoves) == 1:
-            # make move
-        else:
-            # choose move
+#==============================================================================
+#     def nextMove(self, vehicle, directions):
+#         
+#         possibleMoves = self.searchMoves(vehicle)
+#         
+#         if len(possibleMoves) == 0:
+#             # Choose a car
+#         elif len(possibleMoves) == 1:
+#             self.makingMove(vehicle, directions[0])
+#             self.testHistory.append(vehicle)
+#         else:
+#             # choose move
+#==============================================================================
             
         
         
