@@ -12,7 +12,7 @@ print(game.initBoard)
 for vehicle in game.vehicles:
     if vehicle.name == "P":
         game.makingMove(vehicle,1)
-print(game.initBoard)
+#print(game.initBoard)
 
 game = br.breadthFirst(board)
 
