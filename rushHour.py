@@ -104,15 +104,8 @@ class rushHour:
     def makingMove(self, car, direction):
         """Move a car in a given direction"""
 
-        # move car
         car.move(direction)
-
-        # update board
-        newState = self.update()
-        move = car.name + " " + direction
-        car.moves[newState] = (self.initBoard, move)
-
-        return newState
+        return self.update()
 
     def won(self):
         """Returns true if winning condition is satisfied"""
@@ -132,23 +125,3 @@ class rushHour:
             # pick everything in it's column
             possibleDrive = self.initBoard[vehicle.xBegin::self.size]
         return possibleDrive
-
-    def showMoves(self, endState):
-        """Makes a list of moves made to solve the puzzle"""
-
-        moveList = list()
-
-        while True:
-            # go back one move
-            row = self.moves[endState]
-            if len(row) == 2:
-                board = row[0]
-                move = row[1]
-
-                # add move to begin of list
-                moveList.append(move)
-            else:
-                break
-
-        moveList.reverse()
-        return moveList

@@ -1,7 +1,7 @@
 import rushHour as r
 import breadthFirst as br
 
-f = open("Boards/Easy", "r")
+f = open("Boards/Test", "r")
 board = f.read()
 f.close()
 
