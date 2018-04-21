@@ -114,6 +114,7 @@ class rushHour:
                     moves[1] = moves[1] + 1
                 else:
                     moves[0] = moves[0] - 1
+        return moves
                     
 
     def makingMove(self, car, direction):
