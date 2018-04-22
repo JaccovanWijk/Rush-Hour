@@ -42,6 +42,7 @@ class rushHour:
 
         return boardStr
 
+
     def getVehicles(self, board):
         """Read in vehicle of a given board"""
 
@@ -74,45 +75,39 @@ class rushHour:
         """Search for available moves for a given vehicle"""
 
         moves = []
-        # search all moves horizontally
-        if vehicle.orientation == 'H':
 
-            # search move right
-            if vehicle.xBegin + vehicle.length < 6:
-                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin + vehicle.length] == '.':
-                    moves.append(1)
+        # get line of view
+        lineOfView = self.driveline(vehicle)
+        beginC = vehicle.dominantCoordinate()
 
-            # search move left
-            if vehicle.xBegin - 1 >= 0:
-                if self.initBoard[vehicle.yBegin * 6 + vehicle.xBegin - 1] == '.':
-                    moves.append(-1)
+        # search for moves down/right
+        i = 1
+        while True:
+            if beginC + vehicle.length + i - 1 < len(lineOfView):
+                if lineOfView[beginC + vehicle.length + i - 1] == '.':
+                    moves.append(i)
+                    i += 1
+            else:
+                break
 
-        elif vehicle.orientation == 'V':
-
-            # search move up
-            if vehicle.yBegin - 1 >= 0:
-                if self.initBoard[(vehicle.yBegin - 1) * 6 + vehicle.xBegin] == ".":
-                    moves.append(-1)
-
-            # search move down
-            if vehicle.yBegin + vehicle.length < 6:
-                if self.initBoard[(vehicle.yBegin + vehicle.length) * 6 + vehicle.xBegin] == ".":
-                    moves.append(1)
+        j = 1
+        while True:
+            if beginC - j >= 0:
+                if lineOfView[beginC - j] == '.':
+                    moves.append(-j)
+                    j += 1
+            else:
+                break
 
         return moves
+
 
     def makingMove(self, car, direction):
         """Move a car in a given direction"""
 
-        # move car
         car.move(direction)
+        return self.update()
 
-        # update board
-        newState = self.update()
-        move = car.name + " " + direction
-        car.moves[newState] = (self.initBoard, move)
-
-        return newState
 
     def won(self):
         """Returns true if winning condition is satisfied"""
@@ -122,33 +117,14 @@ class rushHour:
                 return True
         return False
 
+
     def driveline(self, vehicle):
         """Return possible driveline"""
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
-            possibleDrive = self.initBoard[vehicle.yBegin - 1]
+            possibleDrive = self.initBoard[vehicle.yBegin * 6: vehicle.yBegin * 6 + 6]
         elif vehicle.orientation == "V":
             # pick everything in it's column
             possibleDrive = self.initBoard[vehicle.xBegin::self.size]
         return possibleDrive
-
-    def showMoves(self, endState):
-        """Makes a list of moves made to solve the puzzle"""
-
-        moveList = list()
-
-        while True:
-            # go back one move
-            row = self.moves[endState]
-            if len(row) == 2:
-                board = row[0]
-                move = row[1]
-
-                # add move to begin of list
-                moveList.append(move)
-            else:
-                break
-
-        moveList.reverse()
-        return moveList
