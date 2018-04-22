@@ -105,6 +105,9 @@ class rushHour:
     def makingMove(self, car, direction):
         """Move a car in a given direction"""
 
+        test = [car, direction]
+        self.testHistory.append(test)
+        
         car.move(direction)
         return self.update()
 
