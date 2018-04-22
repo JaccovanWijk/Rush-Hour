@@ -82,22 +82,20 @@ class rushHour:
 
         # search for moves down/right
         i = 1
-        while True:
-            if beginC + vehicle.length + i - 1 < len(lineOfView):
-                if lineOfView[beginC + vehicle.length + i - 1] == '.':
-                    moves.append(i)
-                    i += 1
+        while beginC + vehicle.length + i - 1 < len(lineOfView):
+            if lineOfView[beginC + vehicle.length + i - 1] == '.':
+                moves.append(i)
             else:
                 break
+            i += 1
 
         j = 1
-        while True:
-            if beginC - j >= 0:
-                if lineOfView[beginC - j] == '.':
-                    moves.append(-j)
-                    j += 1
+        while beginC - j >= 0:
+            if lineOfView[beginC - j] == '.':
+                moves.append(-j)
             else:
                 break
+            j += 1
 
         return moves
 
@@ -107,7 +105,7 @@ class rushHour:
 
         test = [car, direction]
         self.testHistory.append(test)
-        
+
         car.move(direction)
         return self.update()
 
