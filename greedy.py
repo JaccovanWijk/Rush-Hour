@@ -28,15 +28,21 @@ class greedy(r.rushHour):
             if currentCar not in testedVehicles:
                 goalVehicles.append(currentCar)
                 testedVehicles.append(currentCar)
-            else:
-                moves.pop(0)
-            
-            if len(moves) == 0:
-                neighbours = self.neighboursFinder(currentCar)
-                currentCar = goalVehicles[-2]
-                goalVehicles.pop()
-            else:
                 
+            if len(moves) == 0:
+                
+                neighbours = self.neighboursFinder(currentCar)
+                
+                currentCar = neighbours[0]
+                
+                #currentCar = goalVehicles[-2]
+                #goalVehicles.pop()
+            elif len(moves) == 1:
+                
+            
+            else:
+                # take first argument of moves
+                self.makingMove(currentCar,moves[0])
                 
 
             move += 1
