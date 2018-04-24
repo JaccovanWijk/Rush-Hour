@@ -4,12 +4,12 @@ class greedy(r.rushHour):
     
     def __init__(self, board):
         
-        r.rushHour.__init__(board)
+        r.rushHour.__init__(self,board)
         
         
     def solve(self, board):
         
-        print(self.initBoard)
+        print(self.initBoard, 1)
         for car in self.vehicles:
                 if car.name == "X":
                     currentCar = car
@@ -17,36 +17,41 @@ class greedy(r.rushHour):
         goalVehicles = []
         testedVehicles = []
         move = 0
-        while move < 3:#not self.won():
-            
-            # zorg dat deze de maximale moves naar beide kanten wordt
-            possibleMoves = self.searchMoves(currentCar)
-            x = max(s for s in possibleMoves)
-            y = min(s for s in possibleMoves)
-            moves = [x,y]
-            
-            if currentCar not in testedVehicles:
-                goalVehicles.append(currentCar)
-                testedVehicles.append(currentCar)
-                
-            if len(moves) == 0:
-                
-                neighbours = self.neighboursFinder(currentCar)
-                
-                currentCar = neighbours[0]
-                
-                #currentCar = goalVehicles[-2]
-                #goalVehicles.pop()
-            elif len(moves) == 1:
-                
-            
-            else:
-                # take first argument of moves
-                self.makingMove(currentCar,moves[0])
-                
-
-            move += 1
-        print(self.initBoard)
+        
+         while move < 3:#not self.won():
+             print(self.initBoard, 2)
+             # zorg dat deze de maximale moves naar beide kanten wordt
+             # DIT KLOPT NIET AL HIJ ALLEEN POSITIEF HEEFT/ALLEEN NEGATIEF HEEFT
+             possibleMoves = self.searchMoves(currentCar)
+             x = max(s for s in possibleMoves)
+             y = min(s for s in possibleMoves)
+             moves = [x,y]
+             print(self.initBoard,3)
+             if currentCar not in testedVehicles:
+                 goalVehicles.append(currentCar)
+                 testedVehicles.append(currentCar)
+             #elif len(moves) > 0:
+             #    moves.pop(0)
+             #else:
+             print(self.initBoard,4)
+             if len(moves) == 0:
+                 print(self.initBoard,5)
+                 neighbours = self.neighboursFinder(currentCar)
+                 
+                 currentCar = neighbours[0]
+                 
+                 #currentCar = goalVehicles[-2]
+                 #goalVehicles.pop()
+             elif len(moves) == 1:
+                 self.makingMove(currentCar, moves[0])
+                 print(self.initBoard,6)
+             else:
+                 # take first argument of moves
+                 self.makingMove(currentCar,moves[0])
+                 print(self.initBoard,7)
+             print(self.initBoard, 8)
+ 
+             move += 1
         
         
     def neighboursFinder(self, vehicle):
@@ -71,10 +76,65 @@ class greedy(r.rushHour):
             
         return neighbourCars        
         
+    def greedysolve(self, board):
+        
+        print(self.initBoard, 1)
+        for car in self.vehicles:
+                if car.name == "X":
+                    currentCar = car
 
+        goalVehicles = []
+        testedVehicles = []   
+        
+        while not self.won:
             
-        
-        
+            # check of de vorige nu wel kan rijden
+            
+            # check of current car nog wel een kant op kan die nuttig is/ nog niet is geweest
+            
+            # check if current car is already tested
+            if currentCar not in testedVehicles:
+                 goalVehicles.append(currentCar.name)
+                 testedVehicles.append(currentCar.name)
+            
+            # find possible moves for current car
+            possibleMoves = self.searchMoves(currentCar)
+            
+            if len(possibleMoves) == 0:
+                
+                # find neighbours and 
+                neighbours = self.neighboursFinder(currentCar)
+                for neighbour in neighbours:
+                    if neighbour.name in testedVehicles:
+                        # check of die buur nog een andere move kan doen, zo niet verwijder hem
+                
+                if len(neighbours) != 0:
+                    currentCar = neighbours[0]
+                else:
+                    # ga terug naar de laatste auto die twee opties had
+                
+            elif len(possibleMoves) == 1:
+                
+                maxStep = max(x for x in possibleMoves)
+                if maxStep < 0:
+                    
+                    neighbours = self.neighboursFinder(currentCar)
+                    minStep = min(x for x in possibleMoves)
+                    
+                    if len(neighbours) != 0:
+                        if testedVehicles.count(neighbours[0]) < self.searchMoves(neighbours[0]):
+                            currentCar = neighbours[0]
+                        else:
+                            self.makingMove(currentCar, minStep)
+                    else:
+                        self.makingMove(currentCar, minStep)
+                
+                else:
+                    self.makingMove(currentCar, maxStep)
+                    
+            else:
+                maxStep = max(x for x in possibleMoves)
+                self.makingMove(currentCar, maxStep)
         
         
         
