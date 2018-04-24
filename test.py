@@ -1,19 +1,18 @@
-import rushHour as r
-import breadthFirst as br
-import greedy as gr
+import os, sys
+directory = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(directory, "code"))
+sys.path.append(os.path.join(directory, "code", "classes"))
+sys.path.append(os.path.join(directory, "code", "algoritmes"))
 
-f = open("Boards/Test", "r")
+# import shit
+import rushHour as r
+import greedy as gr
+import Astar as A
+import breadthFirst as br
+
+f = open("data/Boards/Test", "r")
 board = f.read()
 f.close()
 
 game = gr.greedy(board)
-game.greedysolve()
-
-print(game.board)
-
-for vehicle in game.vehicles:
-    if vehicle.name == "P":
-        car = vehicle
-game.makingMove(car, -1)
-
-print(game.board)
+print(game.greedysolve())

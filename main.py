@@ -5,11 +5,10 @@ sys.path.append(os.path.join(directory, "code", "classes"))
 sys.path.append(os.path.join(directory, "code", "algoritmes"))
 
 # import shit
-from vehicle import vehicle # moet dit?
-from rushHour import rushHour as r
-from greedy import greedy as gr
-from Astar import aStar as A
-from breadthFirst import BreadthFirst as br
+import rushHour as r
+import greedy as gr
+import Astar as A
+import breadthFirst as br
 
 def main():
     f = open("data/Boards/Test", "r")

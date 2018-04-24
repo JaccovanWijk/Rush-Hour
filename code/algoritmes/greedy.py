@@ -87,14 +87,17 @@ class greedy(r.rushHour):
 
         goalVehicles = []
         testedVehicles = []
-        print(1)
+        print("Voor whileloop")
+
+        board = self.initBoard
 
         move = 0
         while move < 3:#not self.won:
 
-            print(2)
+            print("begin Whileloop")
             # check of de vorige nu wel kan rijden
             if len(goalVehicles) > 1:
+                print("Meer dan 1 bekeken")
                 prevPossibleDrive = self.driveline(goalVehicles[-2])
                 if goalVehicles[-1] not in prevPossibleDrive:
                     currentCar = goalVehicles[-2]
@@ -107,24 +110,28 @@ class greedy(r.rushHour):
 
             # check if current car is already tested
             if currentCar.name not in testedVehicles:
-                 goalVehicles.append(currentCar)
-                 testedVehicles.append(currentCar.name)
+                print("is huidige auto al getest?")
+                goalVehicles.append(currentCar)
+                testedVehicles.append(currentCar.name)
 
 
             # find possible moves for current car
             possibleMoves = self.searchMoves(currentCar)
 
             if len(possibleMoves) == 0:
-
+                print("geen zetten mogelijk met huidige auto")
                 # find neighbours and
                 neighbours = self.neighboursFinder(currentCar)
-                for neighbour in neighbours:
-                    if neighbour.name in testedVehicles:
-                        # check of die buur nog een andere move kan doen, zo niet verwijder hem
-                        neighbours.pop(0)
+                # for neighbour in neighbours:
+                #     if neighbour.name in testedVehicles:
+                #         # check of die buur nog een andere move kan doen, zo niet verwijder hem
+                #         neighbours.pop(0)
+                # MAAK NOG EEN CHEKCER OM TE KIJKEN OF DE BUUR AL GECHECKT IS
 
                 if len(neighbours) != 0:
+
                     currentCar = neighbours[0]
+                    print("HUIDIGE AUTO HEEFT ALLEEN MAAR BUREN OMG")
                 else:
                     # ga terug naar de laatste auto die twee opties had
                     currentCar = goalVehicles[-2]
@@ -134,23 +141,46 @@ class greedy(r.rushHour):
 
                 maxStep = max(x for x in possibleMoves)
                 if maxStep < 0:
-
+                    print("HUIDIGE AUTO KAN ZETJE NAAR LINKS/BOVEN EN HEEFT RECHTS/ONDER EEN BUURTJE")
                     neighbours = self.neighboursFinder(currentCar)
                     minStep = min(x for x in possibleMoves)
 
                     if len(neighbours) != 0:
-                        if neighbours[0] in testedVehicles:
+                        if neighbours[0] not in testedVehicles:
                             currentCar = neighbours[0]
                         else:
-                            self.board = self.makingMove(currentCar, minStep)
+                            board = self.makingMove(currentCar, minStep)
+                            print(board)
                     else:
-                        self.board = self.makingMove(currentCar, minStep)
+                        board = self.makingMove(currentCar, minStep)
+                        print(board)
 
                 else:
-                    self.board = self.makingMove(currentCar, maxStep)
+                    print("stapje naar rechts rechts rechts")
+                    board = self.makingMove(currentCar, maxStep)
+                    print(board)
 
             else:
                 maxStep = max(x for x in possibleMoves)
-                self.board = self.makingMove(currentCar, maxStep)
+                board = self.makingMove(currentCar, maxStep)
+                print(board)
+                print("zetje naar RECHTS")
 
             move += 1
+        return board
+
+    def greedy(self):
+
+        for car in self.vehicles:
+                if car.name == "X":
+                    currentCar = car
+
+        goalVehicles = []
+        testedVehicles = []
+
+        board = self.initBoard
+
+
+    def greedysolver(self,board,car):
+
+        
