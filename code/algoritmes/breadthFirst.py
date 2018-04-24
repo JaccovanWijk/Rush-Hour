@@ -1,4 +1,5 @@
 import rushHour as r
+import queue
 from collections import deque
 
 class breadthFirst(r.rushHour):
@@ -8,9 +9,6 @@ class breadthFirst(r.rushHour):
 
         r.rushHour.__init__(self,board)
 
-    def sortMoves(self, directions):
-        return sorted(directions, key=abs, reverse=True)
-
     def getSucessors(self):
         """Get next board states reachable by making one move"""
         sucessors = []
@@ -18,7 +16,7 @@ class breadthFirst(r.rushHour):
 
         # get all moves of all vehicles
         for vehicle in self.vehicles:
-            for i in self.sortMoves(self.searchMoves(vehicle)):
+            for i in self.searchMoves(vehicle):
                 # determine new state
                 newBoard = self.makingMove(vehicle, i)
                 self.makingMove(vehicle, -i)
@@ -33,19 +31,19 @@ class breadthFirst(r.rushHour):
         """The breadth first search algorithm"""
 
         # open possibilities
-        openBoards = deque()
+        openBoards = queue.Queue()
         # closed possibilities
         closedBoards = set()
         # moves done
         moves = dict()
 
         # initialise search
-        openBoards.append([self.initBoard, self.vehicles])
+        openBoards.put_nowait([self.initBoard, self.vehicles])
         moves[self.initBoard] = ()
 
         while openBoards:
 
-            (self.initBoard, self.vehicles) = openBoards.popleft()
+            (self.initBoard, self.vehicles) = openBoards.get_nowait()
 
             # stop if puzzle is solved
             if self.won():
@@ -64,8 +62,9 @@ class breadthFirst(r.rushHour):
                     moves[newBoard] = (self.initBoard, move)
 
                     # add new board state to open boards
-                    openBoards.append([newBoard, self.getVehicles(newBoard)])
+                    openBoards.put_nowait([newBoard, self.getVehicles(newBoard)])
                     current_generation.append(newBoard)
+
             print("Generation: ")
             for i in range(self.size):
                 print(self.initBoard[i*6:(i+1)*6])
@@ -73,6 +72,7 @@ class breadthFirst(r.rushHour):
             for board in current_generation:
                 for i in range(self.size):
                     print(board[i*6:(i+1)*6])
+                print(self.showMoves(board, moves))
             input()
             # finish processing current board
             closedBoards.add(self.initBoard)

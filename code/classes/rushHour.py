@@ -39,7 +39,6 @@ class rushHour:
             for j in i:
                 boardStr += j
 
-
         return boardStr
 
 
@@ -71,7 +70,7 @@ class rushHour:
         return vehicles
 
 
-    def searchMoves(self, vehicle):
+    def searchMoves(self, vehicle, allMoves=True):
 
         """Search for available moves for a given vehicle"""
 
@@ -98,8 +97,11 @@ class rushHour:
                 break
             j += 1
 
-        return moves
-
+        # return all or maximum moves
+        if allMoves:
+            return moves
+        else:
+            return [-j,i]
 
     def makingMove(self, car, direction, remember=True):
         """Move a car in a given direction"""
