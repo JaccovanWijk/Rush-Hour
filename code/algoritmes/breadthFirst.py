@@ -31,19 +31,22 @@ class breadthFirst(r.rushHour):
         """The breadth first search algorithm"""
 
         # open possibilities
-        openBoards = queue.Queue()
+        openBoards = []
         # closed possibilities
         closedBoards = set()
         # moves done
         moves = dict()
 
         # initialise search
-        openBoards.put_nowait([self.initBoard, self.vehicles])
+        openBoards.insert(0 ,self.initBoard)
         moves[self.initBoard] = ()
 
         while openBoards:
 
-            (self.initBoard, self.vehicles) = openBoards.get_nowait()
+            self.initBoard = openBoards.pop()
+
+            # update cars
+            self.vehicles = self.getVehicles(self.initBoard)
 
             # stop if puzzle is solved
             if self.won():
@@ -51,35 +54,21 @@ class breadthFirst(r.rushHour):
             current_generation = []
             for (newBoard, move) in self.getSucessors():
 
+                cars = self.getVehicles(newBoard)
+
                 # board is already processed
                 if newBoard in closedBoards:
                     continue
 
                 # if board isn't already in queue
-                if newBoard not in openBoards:
+                if not newBoard in openBoards:
 
                     # add move to moves
                     moves[newBoard] = (self.initBoard, move)
 
                     # add new board state to open boards
-                    openBoards.put_nowait([newBoard, self.getVehicles(newBoard)])
+                    openBoards.insert(0, newBoard)
                     current_generation.append(newBoard)
 
-            print("Generation: ")
-            for i in range(self.size):
-                print(self.initBoard[i*6:(i+1)*6])
-            print("-----")
-            for board in current_generation:
-                for i in range(self.size):
-                    print(board[i*6:(i+1)*6])
-                print(self.showMoves(board, moves))
-            input()
             # finish processing current board
             closedBoards.add(self.initBoard)
-            # for vehicle in self.vehicles:
-            #     print(vehicle.name)
-            #     for i in self.sortMoves(self.searchMoves(vehicle)):
-            #         print(i)
-            # for i in range(self.size):
-            #     print(self.update()[i*6:(i+1)*6])
-            # input()
