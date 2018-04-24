@@ -7,6 +7,6 @@ Laten we hier nog even een foto plaatsen, vind Quinten vast leuk:).
 # Wat mooie kopjes:)
 
 # Auteurs
-Markup: *Dylan Wellner
-        *Ian Epping
-        *Jacco van Wijk
+* Dylan Wellner
+* Ian Epping
+* Jacco van Wijk
