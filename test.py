@@ -5,8 +5,13 @@ f = open("Boards/Test", "r")
 board = f.read()
 f.close()
 
+game = r.rushHour(board)
 
-game = br.breadthFirst(board)
+print(game.initBoard)
 
-moves = game.breadthFirstSearch()
-print(moves)
+for vehicle in game.vehicles:
+    if vehicle.name == "P":
+        car = vehicle
+game.makingMove(car, -1)
+
+print(game.makingMove(car, -1))

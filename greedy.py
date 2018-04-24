@@ -82,6 +82,8 @@ class greedy(r.rushHour):
         for car in self.vehicles:
                 if car.name == "X":
                     currentCar = car
+                    
+        board
 
         goalVehicles = []
         testedVehicles = []   
@@ -89,13 +91,22 @@ class greedy(r.rushHour):
         while not self.won:
             
             # check of de vorige nu wel kan rijden
+            if len(goalVehicles) > 1:
+                prevPossibleDrive = self.driveline(goalVehicles[-2])
+                if goalVehicles[-1] not in prevPossibleDrive:
+                    currentCar = goalVehicles[-2]
+                    goalVehicles.pop()
             
             # check of current car nog wel een kant op kan die nuttig is/ nog niet is geweest
+            if currentCar.name in testedVehicles:
+                if 
+            
             
             # check if current car is already tested
-            if currentCar not in testedVehicles:
-                 goalVehicles.append(currentCar.name)
+            if currentCar.name not in testedVehicles:
+                 goalVehicles.append(currentCar)
                  testedVehicles.append(currentCar.name)
+            
             
             # find possible moves for current car
             possibleMoves = self.searchMoves(currentCar)
@@ -107,11 +118,14 @@ class greedy(r.rushHour):
                 for neighbour in neighbours:
                     if neighbour.name in testedVehicles:
                         # check of die buur nog een andere move kan doen, zo niet verwijder hem
+                        neighbours.pop(0)
                 
                 if len(neighbours) != 0:
                     currentCar = neighbours[0]
                 else:
                     # ga terug naar de laatste auto die twee opties had
+                    currentCar = goalVehicles[-2]
+                    goalVehicles.pop()
                 
             elif len(possibleMoves) == 1:
                 
