@@ -15,6 +15,6 @@ f = open("data/Boards/Game 3", "r")
 board = f.read()
 f.close()
 
-game = bf.bruteForce(board)
+game = bf.bruteForce(board, 6)
 print(game.solver())
-print(game.initBoard)
+game.showBoard()

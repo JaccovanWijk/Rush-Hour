@@ -4,13 +4,16 @@ import math
 class rushHour:
     """A single Rush Hour board"""
 
-    def __init__(self, board):
+    def __init__(self, board, size):
 
         self.testHistory = []
         self.initBoard = board.replace("\n", "")
-        self.size = int(math.sqrt(len(self.initBoard)))
+        self.size = size
         self.vehicles = self.getVehicles(self.initBoard)
-        self.goal = v.vehicle('X', 4, 2, 2, 'H')
+        if size % 2 == 0:
+            self.goal = v.vehicle('X', size - 2, size//2 - 1, 2, 'H')
+        else:
+            self.goal = v.vehicle('X', size - 2, size//2, 2, 'H')
         self.moves = dict()
 
 
@@ -125,7 +128,7 @@ class rushHour:
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
-            possibleDrive = self.initBoard[vehicle.yBegin * 6: vehicle.yBegin * 6 + 6]
+            possibleDrive = self.initBoard[vehicle.yBegin * self.size: vehicle.yBegin * self.size + self.size]
         elif vehicle.orientation == "V":
             # pick everything in it's column
             possibleDrive = self.initBoard[vehicle.xBegin::self.size]
@@ -151,3 +154,8 @@ class rushHour:
 
         moveList.reverse()
         return moveList
+
+    def showBoard(self):
+
+        for i in range(self.size):
+            print(self.initBoard[i*self.size:(i+1)*self.size])

@@ -3,11 +3,13 @@ import random
 
 class bruteForce(r.rushHour):
 
-    def __init__(self,board):
+    def __init__(self, board, size):
 
-        r.rushHour.__init__(self,board)
+        r.rushHour.__init__(self, board, size)
 
     def solver(self):
+
+        print(self.goal.xBegin, self.goal.yBegin)
 
         moves = 0
         while not self.won():
