@@ -72,6 +72,7 @@ class rushHour:
 
 
     def searchMoves(self, vehicle):
+
         """Search for available moves for a given vehicle"""
 
         moves = []
