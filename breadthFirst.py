@@ -18,13 +18,10 @@ class breadthFirst(r.rushHour):
 
         # get all moves of all vehicles
         for vehicle in self.vehicles:
-
             for i in self.sortMoves(self.searchMoves(vehicle)):
-
                 # determine new state
                 newBoard = self.makingMove(vehicle, i)
                 self.makingMove(vehicle, -i)
-
                 # make move string
                 move = vehicle.name + ' ' + str(i)
 
@@ -53,7 +50,7 @@ class breadthFirst(r.rushHour):
             # stop if puzzle is solved
             if self.won():
                 return self.showMoves(self.initBoard, moves)
-
+            current_generation = []
             for (newBoard, move) in self.getSucessors():
 
                 # board is already processed
@@ -68,6 +65,21 @@ class breadthFirst(r.rushHour):
 
                     # add new board state to open boards
                     openBoards.append([newBoard, self.getVehicles(newBoard)])
-
+                    current_generation.append(newBoard)
+            print("Generation: ")
+            for i in range(self.size):
+                print(self.initBoard[i*6:(i+1)*6])
+            print("-----")
+            for board in current_generation:
+                for i in range(self.size):
+                    print(board[i*6:(i+1)*6])
+            input()
             # finish processing current board
             closedBoards.add(self.initBoard)
+            # for vehicle in self.vehicles:
+            #     print(vehicle.name)
+            #     for i in self.sortMoves(self.searchMoves(vehicle)):
+            #         print(i)
+            # for i in range(self.size):
+            #     print(self.update()[i*6:(i+1)*6])
+            # input()
