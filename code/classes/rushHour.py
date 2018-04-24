@@ -39,7 +39,6 @@ class rushHour:
             for j in i:
                 boardStr += j
 
-
         return boardStr
 
 
@@ -71,7 +70,7 @@ class rushHour:
         return vehicles
 
 
-    def searchMoves(self, vehicle):
+    def searchMoves(self, vehicle, allMoves=True):
 
         """Search for available moves for a given vehicle"""
 
@@ -98,16 +97,17 @@ class rushHour:
                 break
             j += 1
 
-        return moves
+        # return all or maximum moves
+        if allMoves:
+            return moves
+        else:
+            return [-j,i]
 
-
-    def makingMove(self, car, direction):
+    def makingMove(self, car, direction, remember=True):
         """Move a car in a given direction"""
 
-        test = [car, direction]
-        self.testHistory.append(test)
-
         car.move(direction)
+
         return self.update()
 
 
@@ -130,3 +130,24 @@ class rushHour:
             # pick everything in it's column
             possibleDrive = self.initBoard[vehicle.xBegin::self.size]
         return possibleDrive
+
+    def showMoves(self, endState, moves):
+        """Makes a list of moves made to solve the puzzle"""
+
+        moveList = list()
+
+        while True:
+
+            # go back one move
+            row = moves[endState]
+            if len(row) == 2:
+                endState = row[0]
+                move = row[1]
+
+                # add move to list
+                moveList.append(move)
+            else:
+                break
+
+        moveList.reverse()
+        return moveList
