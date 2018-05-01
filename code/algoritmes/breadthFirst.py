@@ -37,6 +37,8 @@ class breadthFirst(r.rushHour):
         # moves done
         moves = dict()
 
+        count = 0
+
         # initialise search
         openBoards.insert(0 ,self.initBoard)
         moves[self.initBoard] = ()
@@ -49,8 +51,9 @@ class breadthFirst(r.rushHour):
             self.vehicles = self.getVehicles(self.initBoard)
 
             # stop if puzzle is solved
+            count += 1
             if self.won():
-                return self.showMoves(self.initBoard, moves)
+                return [self.showMoves(self.initBoard, moves), count]
             current_generation = []
             for (newBoard, move) in self.getSucessors():
 
