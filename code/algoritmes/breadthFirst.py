@@ -5,9 +5,9 @@ from collections import deque
 class breadthFirst(r.rushHour):
     """A breadth first search algorithm for Rush Hour"""
 
-    def __init__(self,board):
+    def __init__(self,board,size):
 
-        r.rushHour.__init__(self,board)
+        r.rushHour.__init__(self,board,size)
 
     def getSucessors(self):
         """Get next board states reachable by making one move"""
@@ -36,6 +36,8 @@ class breadthFirst(r.rushHour):
         closedBoards = set()
         # moves done
         moves = dict()
+        # iteration counter
+        count = 0
 
         # initialise search
         openBoards.insert(0 ,self.initBoard)
@@ -50,8 +52,10 @@ class breadthFirst(r.rushHour):
 
             # stop if puzzle is solved
             if self.won():
-                return self.showMoves(self.initBoard, moves)
-            current_generation = []
+                return (self.showMoves(self.initBoard, moves), count)
+
+            count += 1
+
             for (newBoard, move) in self.getSucessors():
 
                 cars = self.getVehicles(newBoard)
@@ -68,7 +72,6 @@ class breadthFirst(r.rushHour):
 
                     # add new board state to open boards
                     openBoards.insert(0, newBoard)
-                    current_generation.append(newBoard)
 
             # finish processing current board
             closedBoards.add(self.initBoard)
