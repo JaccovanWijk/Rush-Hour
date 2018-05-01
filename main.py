@@ -8,15 +8,17 @@ sys.path.append(os.path.join(directory, "code", "algoritmes"))
 import rushHour as r
 import greedy as gr
 import Astar as A
-import breadthFirst as br
+#import breadthFirst as br
+import BruteForce as bf
 
 def main():
-    f = open("data/Boards/Test", "r")
+    f = open("data/Boards/Game 1", "r")
     board = f.read()
     f.close()
 
-    game = gr.greedy(board)
-    gr.greedysolve()
+    game = bf.bruteForce(board, 6)
+    moves = game.solver()
+    print(moves)
 
 if __name__ == "__main__":
     main()

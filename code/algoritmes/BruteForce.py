@@ -7,7 +7,7 @@ class bruteForce(r.rushHour):
 
         r.rushHour.__init__(self, board, size)
 
-    def solver(self, restrictions=False):
+    def solver(self):
 
         for vehicle in self.vehicles:
             if vehicle.name == "X":
