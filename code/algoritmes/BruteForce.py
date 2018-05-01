@@ -7,18 +7,65 @@ class bruteForce(r.rushHour):
 
         r.rushHour.__init__(self, board, size)
 
-    def solver(self):
+    def solver(self, restrictions=False):
 
-        print(self.goal.xBegin, self.goal.yBegin)
+        for vehicle in self.vehicles:
+            if vehicle.name == "X":
+                carX = vehicle
 
-        moves = 0
+        moves1 = 0
+        moves2 = 0
+        # if not restrictions:
+        #     while not self.won():
+        #
+        #         car = random.choice(self.vehicles)
+        #
+        #         possibleMoves = self.searchMoves(car)
+        #         if possibleMoves:
+        #             moves1 += 1
+        #
+        #             move = random.choice(possibleMoves)
+        #             self.initBoard = self.makingMove(car, move)
+        #
+        #     return moves1
+
+
+        # else:
+        lastCar = [""]
         while not self.won():
 
             car = random.choice(self.vehicles)
 
             possibleMoves = self.searchMoves(car)
-            if possibleMoves:
-                moves += 1
+            if possibleMoves and car.name != lastCar[-1]:
+                moves2 += 1
+
                 move = random.choice(possibleMoves)
                 self.initBoard = self.makingMove(car, move)
-        return moves
+
+                lastCar.append(car.name)
+
+                possibleDriveX = self.driveline(carX)
+
+                afterGoal = False
+                ended = True
+                for letter in possibleDriveX:
+                    if letter == 'X':
+                        afterGoal = True
+                    elif letter != '.':
+                        if afterGoal:
+                            ended = False
+
+                if ended:
+                    moves2 += 1
+                    break
+            # possibleMovesX = self.searchMoves(carX, False)
+            #
+            # if possibleMovesX:
+            #     if possibleMovesX[1] > 0:
+            #         moves2 += 1
+            #         self.initBoard = self.makingMove(carX, possibleMovesX[1])
+            #
+            # print(self.won())
+
+        return moves2
