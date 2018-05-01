@@ -2,11 +2,11 @@
 import rushHour as r
 #from heapq import PriorityQueue (Import wont cooperate?)
 
-class aStar(r.rushHour):
+class aStar(r.RushHour):
 
     def __init__(self, value, point):
 
-        r.rushHour.__init__(self,board)
+        r.RushHour.__init__(self,board)
 
         self.value = value
         self.point = point

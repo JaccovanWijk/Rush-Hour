@@ -1,7 +1,7 @@
 import rushHour as r
 import random
 
-class BruteForce(r.rushHour):
+class BruteForce(r.RushHour):
 
     def __init__(self, board, size):
 
@@ -28,7 +28,7 @@ class BruteForce(r.rushHour):
                 moves += 1
 
                 move = random.choice(possibleMoves)
-                self.currentBoard = self.makingMove(self.CurrentVehicles,car, move)
+                self.currentBoard = self.makingMove(self.currentVehicles,car, move)
 
                 if restrictie:
                     lastCar = car.name

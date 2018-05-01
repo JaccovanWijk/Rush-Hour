@@ -114,14 +114,13 @@ class RushHour:
         return self.update(vehicles)
 
 
-    def won(self):
+    def won(self, vehicles):
         """Returns true if winning condition is satisfied"""
 
-        for vehicle in self.vehicles:
+        for vehicle in vehicles:
             if vehicle.name == 'X' and vehicle.xBegin == self.size - 2 and vehicle.yBegin == self.yGoal:
                 return True
         return False
-
 
     def driveline(self, vehicle):
         """Return possible driveline"""
