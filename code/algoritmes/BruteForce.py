@@ -13,24 +13,8 @@ class bruteForce(r.rushHour):
             if vehicle.name == "X":
                 carX = vehicle
 
-        moves1 = 0
-        moves2 = 0
-        # if not restrictions:
-        #     while not self.won():
-        #
-        #         car = random.choice(self.vehicles)
-        #
-        #         possibleMoves = self.searchMoves(car)
-        #         if possibleMoves:
-        #             moves1 += 1
-        #
-        #             move = random.choice(possibleMoves)
-        #             self.initBoard = self.makingMove(car, move)
-        #
-        #     return moves1
+        moves = 0
 
-
-        # else:
         lastCar = [""]
         while not self.won():
 
@@ -38,7 +22,7 @@ class bruteForce(r.rushHour):
 
             possibleMoves = self.searchMoves(car)
             if possibleMoves and car.name != lastCar[-1]:
-                moves2 += 1
+                moves += 1
 
                 move = random.choice(possibleMoves)
                 self.initBoard = self.makingMove(car, move)
@@ -57,15 +41,7 @@ class bruteForce(r.rushHour):
                             ended = False
 
                 if ended:
-                    moves2 += 1
+                    moves += 1
                     break
-            # possibleMovesX = self.searchMoves(carX, False)
-            #
-            # if possibleMovesX:
-            #     if possibleMovesX[1] > 0:
-            #         moves2 += 1
-            #         self.initBoard = self.makingMove(carX, possibleMovesX[1])
-            #
-            # print(self.won())
 
-        return moves2
+        return moves
