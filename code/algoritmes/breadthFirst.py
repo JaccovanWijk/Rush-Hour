@@ -2,24 +2,28 @@ import rushHour as r
 import queue
 from collections import deque
 
-class breadthFirst(r.rushHour):
+class breadthFirst(r.RushHour):
     """A breadth first search algorithm for Rush Hour"""
 
     def __init__(self,board,size):
 
-        r.rushHour.__init__(self,board,size)
+        r.RushHour.__init__(self,board,size)
+
+        # model game
+        self.currentBoard = self.initBoard
+        self.currentVehicles = self.vehicles
 
     def getSucessors(self):
         """Get next board states reachable by making one move"""
         sucessors = []
-        cars = self.vehicles
+        cars = self.currentVehicles
 
         # get all moves of all vehicles
-        for vehicle in self.vehicles:
-            for i in self.searchMoves(vehicle):
+        for vehicle in self.currentVehicles:
+            for i in self.searchMoves(self.currentBoard, vehicle):
                 # determine new state
-                newBoard = self.makingMove(vehicle, i)
-                self.makingMove(vehicle, -i)
+                newBoard = self.makingMove(self.currentVehicles,vehicle, i)
+                self.makingMove(self.currentVehicles,vehicle, -i)
                 # make move string
                 move = vehicle.name + ' ' + str(i)
 
@@ -40,25 +44,23 @@ class breadthFirst(r.rushHour):
         count = 0
 
         # initialise search
-        openBoards.insert(0 ,self.initBoard)
-        moves[self.initBoard] = ()
+        openBoards.insert(0, self.currentBoard)
+        moves[self.currentBoard] = ()
 
         while openBoards:
 
-            self.initBoard = openBoards.pop()
+            self.currentBoard = openBoards.pop()
 
             # update cars
-            self.vehicles = self.getVehicles(self.initBoard)
+            self.currentVehicles = self.getVehicles(self.currentBoard)
 
             # stop if puzzle is solved
-            if self.won():
-                return (self.showMoves(self.initBoard, moves), count)
+            if self.won(self.currentVehicles):
+                return (self.showMoves(self.currentBoard, moves), count)
 
             count += 1
 
             for (newBoard, move) in self.getSucessors():
-
-                cars = self.getVehicles(newBoard)
 
                 # board is already processed
                 if newBoard in closedBoards:
@@ -68,10 +70,10 @@ class breadthFirst(r.rushHour):
                 if not newBoard in openBoards:
 
                     # add move to moves
-                    moves[newBoard] = (self.initBoard, move)
+                    moves[newBoard] = (self.currentBoard, move)
 
                     # add new board state to open boards
                     openBoards.insert(0, newBoard)
 
             # finish processing current board
-            closedBoards.add(self.initBoard)
+            closedBoards.add(self.currentBoard)
