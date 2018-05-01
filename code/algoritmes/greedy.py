@@ -1,11 +1,11 @@
 import rushHour as r
 import vehicle as v
 
-class greedy(r.rushHour):
+class greedy(r.RushHour):
 
     def __init__(self, board):
 
-        r.rushHour.__init__(self,board)
+        r.RushHour.__init__(self,board)
         self.board = self.initBoard
         self.goalVehicles = []
         self.testedVehicles = []
