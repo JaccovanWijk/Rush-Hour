@@ -8,6 +8,7 @@ sys.path.append(os.path.join(directory, "code", "algoritmes"))
 import rushHour as r
 import greedy as gr
 import Astar as A
+import breadthFirst as br
 import BruteForce as bf
 
 f = open("data/Boards/Game 3", "r")
