@@ -1,13 +1,15 @@
 import rushHour as r
 import random
 
-class bruteForce(r.rushHour):
+class BruteForce(r.rushHour):
 
     def __init__(self, board, size):
 
         r.rushHour.__init__(self, board, size)
+        self.currentBoard = self.initBoard
+        self.currentVehicles = self.vehicles
 
-    def solver(self):
+    def solver(self, restrictie=False):
 
         for vehicle in self.vehicles:
             if vehicle.name == "X":
@@ -15,33 +17,40 @@ class bruteForce(r.rushHour):
 
         moves = 0
 
-        lastCar = [""]
+        lastCar = None
+        board = []
         while not self.won():
 
             car = random.choice(self.vehicles)
 
             possibleMoves = self.searchMoves(car)
-            if possibleMoves and car.name != lastCar[-1]:
+            if possibleMoves and car.name != lastCar:
                 moves += 1
 
                 move = random.choice(possibleMoves)
-                self.initBoard = self.makingMove(car, move)
+                self.currentBoard = self.makingMove(self.CurrentVehicles,car, move)
 
-                lastCar.append(car.name)
+                if restrictie:
+                    lastCar = car.name
 
                 possibleDriveX = self.driveline(carX)
-
-                afterGoal = False
-                ended = True
-                for letter in possibleDriveX:
-                    if letter == 'X':
-                        afterGoal = True
-                    elif letter != '.':
-                        if afterGoal:
-                            ended = False
-
-                if ended:
-                    moves += 1
+                if ended(possibleDriveX):
                     break
 
         return moves
+
+
+    def ended(self, possibleDrive):
+
+        afterGoal = False
+        ended = True
+        for letter in possibleDrive:
+            if letter == 'X':
+                afterGoal = True
+            elif letter != '.':
+                if afterGoal:
+                    return False
+            elif afterGoal and letter == ".":
+                moves += 1
+
+        return True

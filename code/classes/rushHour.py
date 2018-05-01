@@ -1,7 +1,7 @@
 import vehicle as v
 import math
 
-class rushHour:
+class RushHour:
     """A single Rush Hour board"""
 
     def __init__(self, board, size):
@@ -11,13 +11,13 @@ class rushHour:
         self.size = size
         self.vehicles = self.getVehicles(self.initBoard)
         if size % 2 == 0:
-            self.goal = v.vehicle('X', size - 2, size//2 - 1, 2, 'H')
+            self.yGoal = self.size//2 - 1
         else:
-            self.goal = v.vehicle('X', size - 2, size//2, 2, 'H')
+            self.yGoal = self.size//2
         self.moves = dict()
 
 
-    def update(self):
+    def update(self, vehicles):
         """Update board with new set of cars"""
 
         # initialise board
@@ -29,7 +29,7 @@ class rushHour:
             board.append(row)
 
         # show all vehicles
-        for vehicle in self.vehicles:
+        for vehicle in vehicles:
             for i in range(vehicle.length):
                 if vehicle.orientation == 'V':
                     board[vehicle.yBegin + i][vehicle.xBegin] = vehicle.name
@@ -106,19 +106,19 @@ class rushHour:
         else:
             return [-j,i]
 
-    def makingMove(self, car, direction, remember=True):
+    def makingMove(self, vehicles, car, direction):
         """Move a car in a given direction"""
 
         car.move(direction)
 
-        return self.update()
+        return self.update(vehicles)
 
 
     def won(self):
         """Returns true if winning condition is satisfied"""
 
         for vehicle in self.vehicles:
-            if vehicle.name == 'X' and vehicle.xBegin == 4 and vehicle.yBegin == 2:
+            if vehicle.name == 'X' and vehicle.xBegin == self.size - 2 and vehicle.yBegin == self.yGoal:
                 return True
         return False
 
