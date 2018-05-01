@@ -7,18 +7,41 @@ class bruteForce(r.rushHour):
 
         r.rushHour.__init__(self, board, size)
 
-    def solver(self):
+    def solver(self, restrictions=False):
 
-        print(self.goal.xBegin, self.goal.yBegin)
+        for vehicle in self.vehicles:
+            if vehicle.name == "X":
+                carX = vehicle
 
         moves = 0
+
+        lastCar = [""]
         while not self.won():
 
             car = random.choice(self.vehicles)
 
             possibleMoves = self.searchMoves(car)
-            if possibleMoves:
+            if possibleMoves and car.name != lastCar[-1]:
                 moves += 1
+
                 move = random.choice(possibleMoves)
                 self.initBoard = self.makingMove(car, move)
+
+                lastCar.append(car.name)
+
+                possibleDriveX = self.driveline(carX)
+
+                afterGoal = False
+                ended = True
+                for letter in possibleDriveX:
+                    if letter == 'X':
+                        afterGoal = True
+                    elif letter != '.':
+                        if afterGoal:
+                            ended = False
+
+                if ended:
+                    moves += 1
+                    break
+
         return moves
