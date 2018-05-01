@@ -33,7 +33,7 @@ class BruteForce(r.RushHour):
                 if restrictie:
                     lastCar = car.name
 
-                possibleDriveX = self.driveline(carX)
+                possibleDriveX = self.driveline(self.currentBoard, carX)
                 if ended(possibleDriveX):
                     break
 

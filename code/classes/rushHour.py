@@ -73,14 +73,14 @@ class RushHour:
         return vehicles
 
 
-    def searchMoves(self, vehicle, allMoves=True):
+    def searchMoves(self, board, vehicle, allMoves=True):
 
         """Search for available moves for a given vehicle"""
 
         moves = []
 
         # get line of view
-        lineOfView = self.driveline(vehicle)
+        lineOfView = self.driveline(board, vehicle)
         beginC = vehicle.dominantCoordinate()
 
         # search for moves down/right
@@ -122,15 +122,15 @@ class RushHour:
                 return True
         return False
 
-    def driveline(self, vehicle):
+    def driveline(self, board, vehicle):
         """Return possible driveline"""
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
-            possibleDrive = self.initBoard[vehicle.yBegin * self.size: vehicle.yBegin * self.size + self.size]
+            possibleDrive = board[vehicle.yBegin * self.size: vehicle.yBegin * self.size + self.size]
         elif vehicle.orientation == "V":
             # pick everything in it's column
-            possibleDrive = self.initBoard[vehicle.xBegin::self.size]
+            possibleDrive = board[vehicle.xBegin::self.size]
         return possibleDrive
 
     def showMoves(self, endState, moves):

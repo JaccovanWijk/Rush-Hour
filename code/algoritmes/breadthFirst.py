@@ -20,7 +20,7 @@ class breadthFirst(r.RushHour):
 
         # get all moves of all vehicles
         for vehicle in self.currentVehicles:
-            for i in self.searchMoves(vehicle):
+            for i in self.searchMoves(self.currentBoard, vehicle):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
@@ -56,7 +56,6 @@ class breadthFirst(r.RushHour):
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles):
-                print(count)
                 return (self.showMoves(self.currentBoard, moves), count)
 
             count += 1
