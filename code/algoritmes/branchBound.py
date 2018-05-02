@@ -1,6 +1,5 @@
 import rushHour as r
 import BruteForce as bf
-import numpy as np
 
 class BranchBound(r.RushHour):
 
@@ -8,87 +7,77 @@ class BranchBound(r.RushHour):
 
         r.RushHour.__init__(self, board, size)
         self.currentBoard = self.initBoard
-        self.boardHistory = [self.initBoard]
-        self.vehiclesHistory = [self.vehicles]
+        self.currentVehicles = self.vehicles
         self.moves = []
         self.moveCount = []
+        self.moveSum = 0
 
-    def solve(self):
 
-        # find upperbound by random solver
-        upperBound = self.RandomSolve(self.currentBoard)
-
-        while not self.won(self.currentVehicles):
-
-            # search all possible moves on current board
-            possibleMoves = []
-            for vehicle in self.vehiclesHistory[-1]:
-                possibleMoves.append(self.searchMoves(self.currentBoard, vehicle))
-
-            self.moves.append(possibleMoves)
-
-            for list in self.moves:
-                for move in list:
-                    self.currentBoard = self.makingMove()
-
-    def RandomSolve(self, board):
-
-        # bruteForce 10 times
-        moves = 0
-        for j in range(10):
-            game = bf.BruteForce(board, self.size)
-            moves += game.solver()
-        return int(moves/10)
-
-    def branchBoundSolve(self):
+    def branchBoundSolve(self, amount):
 
         # find upperbound by random solver
         upperBound = self.RandomSolve(self.currentBoard)
 
-        # open possibilities
-        openBoards = []
-        # closed possibilities
-        closedBoards = set()
-        # moves done
-        moves = dict()
+        moves = None
 
-        # initialise search
-        openBoards.append(self.currentBoard)
-        moves[self.currentBoard] = ()
+        for i in range(amount):
 
-        while openBoards:
+            print(upperBound)
+            # open possibilities
+            openBoards = []
+            # closed possibilities
+            closedBoards = set()
+            # moves done
+            moves = dict()
 
-            self.currentBoard = openBoards.pop()
+            self.currentBoard = self.initBoard
+            self.currentVehicles = self.vehicles
+            self.moveSum = 0
+            self.moveCount = []
+            self.moves = []
 
-            # if current branch is too big
-            if np.sum(self.moveCount) > upperBound:
-                moveCount.pop()
-                continue
+            # initialise search
+            openBoards.append(self.currentBoard)
+            moves[self.currentBoard] = ()
+            while openBoards:
 
-            # update cars
-            self.currentVehicles = self.getVehicles(self.currentBoard)
+                self.currentBoard = openBoards.pop()
 
-            # stop if puzzle is solved
-            if self.won(self.currentVehicles):
-                return self.showMoves(self.currentBoard, moves)
-
-            for (newBoard, move) in self.getSucessors():
-
-                # board is already processed
-                if newBoard in closedBoards:
+                # if current branch is too big
+                if self.moveSum > upperBound:
+                    self.moveSum -= moveCount.pop()
                     continue
 
-                # if board isn't already in queue
-                if not newBoard in openBoards:
+                # update cars
+                self.currentVehicles = self.getVehicles(self.currentBoard)
 
-                    # add move to moves
-                    moves[newBoard] = (self.currentBoard, move)
+                # stop if puzzle is solved
+                if self.won(self.currentVehicles):
+                    #return self.showMoves(self.currentBoard, moves)
+                    upperBound = self.moveSum
+                    print(upperBound)
+                    break
 
-                    # add new board state to open boards
-                    openBoards.append(newBoard)
+                for (newBoard, move) in self.getSucessors():
 
-            # finish processing current board
-            closedBoards.add(self.currentBoard)
+                    # board is already processed
+                    if newBoard in closedBoards:
+                        continue
+
+                    # if board isn't already in queue
+                    if not newBoard in openBoards:
+                        # add move to moves
+                        moves[newBoard] = (self.currentBoard, move)
+                        self.moveCount.append(move)
+                        self.moveSum += abs(move)
+
+                        # add new board state to open boards
+                        openBoards.append(newBoard)
+
+                # finish processing current board
+                closedBoards.add(self.currentBoard)
+
+        return upperBound
 
     def getSucessors(self):
         """Get next board states reachable by making one move"""
@@ -101,11 +90,16 @@ class BranchBound(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
-                # make move string
-                move = vehicle.name + ' ' + str(i)
 
-                sucessors.append([newBoard, move])
-
-                self.moveCount.append(i)
+                sucessors.append([newBoard, i])
 
         return sucessors
+
+    def RandomSolve(self, board):
+
+        # bruteForce 10 times
+        moves = 0
+        for j in range(10):
+            game = bf.BruteForce(board, self.size)
+            moves += game.solver()
+        return int(moves/10)
