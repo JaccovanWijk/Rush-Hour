@@ -15,7 +15,10 @@ class RushHour:
         else:
             self.yGoal = self.size//2
         self.moves = dict()
+        self.weights = {}
 
+    def cost(self, from_node, to_node):
+        return self.weights.get(to_node, 1)
 
     def update(self, vehicles):
         """Update board with new set of cars"""
