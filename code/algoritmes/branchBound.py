@@ -44,8 +44,8 @@ class BranchBound(r.RushHour):
                 self.currentBoard = openBoards.pop()
 
                 # if current branch is too big
-                if self.moveSum > upperBound:
-                    self.moveSum -= moveCount.pop()
+                if self.moveSum >= upperBound:
+                    self.moveSum -= self.moveCount.pop()
                     continue
 
                 # update cars
@@ -55,7 +55,7 @@ class BranchBound(r.RushHour):
                 if self.won(self.currentVehicles):
                     #return self.showMoves(self.currentBoard, moves)
                     upperBound = self.moveSum
-                    print(upperBound)
+                    print("hoi")
                     break
 
                 for (newBoard, move) in self.getSucessors():
