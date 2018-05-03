@@ -98,8 +98,10 @@ class BranchBound(r.RushHour):
     def RandomSolve(self, board):
 
         # bruteForce 10 times
-        moves = 0
+        movemin = 100000
         for j in range(10):
             game = bf.BruteForce(board, self.size)
-            moves += game.solver()
-        return int(moves/10)
+            move = game.solver()
+            if move < movemin:
+                movemin = move
+        return movemin
