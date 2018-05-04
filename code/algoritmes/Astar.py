@@ -1,84 +1,130 @@
 
 import rushHour as r
-#from heapq import PriorityQueue (Import wont cooperate?)
+import vehicle as v
+import heapq
 
-class aStar(r.RushHour):
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
 
-    def __init__(self, value, point):
+    def empty(self):
+        return len(self.elements) == 0
 
-        r.RushHour.__init__(self,board)
+    def put(self, item, priority):
+        heapq.heappush(self.elements, (priority, item))
 
-        self.value = value
+    def get(self):
+        return heapq.heappop(self.elements)[1]
+
+class A_Star(r.RushHour):
+    """"An A* search algorithm for Rush Hour"""
+
+    def __init__(self, board, point):
+
+        r.rushHour.__init__(self,board)
+
+        self.board = board
         self.point = point
         self.parent = None
 
-    #Not yet done converting this to a rush hour board.
-    #def children(self, point):
-        #(x1, y1) = point
-        #(x2, y2) = point2
-    #def distance(self, point, point2):
-        #return abs(x1 - x2) + abs(y1 - y2)
+        # cost of path from start to end-nodes
+        self.G_Cost = {}
 
-    def aStar(self, board, start, goal):
+        # estimated cost of the cheapest path to goal
+        self.H_Cost = {}
 
-        # Open and closed possibilities
-        openBoards = set()
-        #openBoards = PriorityQueue()
+    def children(self, point):
+        """Get next board states reachable by making one move"""
+        children = []
+        cars = self.vehicles
+
+        # get all moves of all vehicles
+        for vehicle in self.vehicles:
+            for i in self.searchMoves(vehicle):
+                # determine new state
+                newBoard = self.makingMove(vehicle, i)
+                self.makingMove(vehicle, -i)
+                # make move string
+                move = vehicle.name + ' ' + str(i)
+
+                children.append([newBoard, move])
+
+        return children
+
+    # heuristic function
+    def distance(self, point1, point2):
+        (x1, y1) = point1
+        (x2, y2) = point2
+        return abs(x1 - x2) + abs(y1 - y2)
+
+    def aStar(self, board, start, won):
+
+        # open and closed possibilities
+        openBoards = PriorityQueue()
         closedBoards = set()
-        #moves = dict()
+        # moves done
+        moves = dict()
 
-        # Create the starting point
-        current = start
-        openBoards.add(current)
+        # initialise search and cost
+        self.currentBoard = start
+        self.G_Cost[start] = 0
 
-        # Set movement values
-        self.parent= None
+        while not openBoards.empty():
+            currentBoard = openBoards.get()
+            #newBoard = self.Board()
 
-        # Cost of path from start to end-nodes
-        self.G_cost = 0
+            # update cars
+            self.currentVehicles = self.getVehicles(self.currentBoard)
 
-        # Estimated cost of the cheapest path to goal
-        self.H_cost = 0
+            # stop if puzzle is goal is met
+            if self.won(self.currentVehicles):
+            #if currentBoard == won:
+                break
 
-        #while openBoards:
+            # loop through the newBoard's children/siblings
+            for newBoard in self.children(currentBoard):
 
-            #if current == goal:
-                #break
+                # if it is already in the closed set, skip it
+                if newBoard in closedBoards:
+                    continue
 
-            #Remove the item from the open set
-            #openBoards.remove(current)
+                # otherwise if it is already in the queue
+                if newBoard in self.openBoards:
 
-            #Add it to the closed set
-            #closedBoards.add(current)
+                    # Check if we beat the cost and update if so.
+                    new_cost = currentBoard.G_Cost + board.cost(currentBoard, newBoard)
+                    if newBoard not in self.G_Cost or new_cost < newBoard.G_Cost:
+                        newBoard.G_Cost = new_cost
+                        priority = new_cost + self.distance(won, next)
+                        openBoards.put(next, priority)
+                        newBoard.parent = currentBoard
 
-            #Loop through the newBoard's children/siblings
-            #for newBoard in children(currentd):
+                else:
+                    # if it isn't in the open board yet
+                    newBoard.G_Cost = currentBoard.G_Cost + currentBoard.cost(newBoard)
+                    newBoard.H_Cost = self.distance(newBoard, won)
 
-                #If it is already in the closed set, skip it
-                #if newBoard in closedBoards:
-                    #continue
+                    # set the parent to our currentBoard item
+                    newBoard.parent = currentBoard
 
-                #Otherwise if it is already in the open set
-                #if newBoard in openBoards:
+                    # add it to the queue
+                    newBoard = openBoards.get()
 
-                    #Check if we beat the cost and update if so.
-                    #new_cost = current.G_cost + board.G_cost(newBoard)
-                    #if newBoard.G_cost > new_cost or newBoard not in cost:
-                        #newBoard.G_cost = new_cost
-                        #priority = new_cost + children(goal, next)
-                        #frontier.put(next, priority)
-                        #newBoard.parent = current
+            # move the item from the queue and add to the closed set
+            currentBoard = openBoards.empty()
+            closedBoards.add(currentBoard)
 
-                #else:
-                    #If it isn't in the open board yet
-                    #newBoard.G_cost = current.G_cost + board.G_cost(newBoard)
-                    #newBoard.H_cost = distance(newBoard, goal)
+            # resulting costs of moves
+            #return self.parent, self.G_Cost
+            raise ValueError('No Path Found')
 
-                    #Set the parent to our current item
-                    #newBoard.parent = current
-
-                    #Add it to the set
-                    #openBoards.add(newBoard)
-
-            # Resulting costs of moves
-            #return parent, cost
+        # recount the path of all moves
+        def reconstruct_path(G_Cost, start, won):
+            currentBoard = won
+            path = []
+            while currentBoard != start:
+                path.append(currentBoard)
+                currentBoard = self.G_Cost[currentBoard]
+            # path.append(start)
+            # path.reverse()
+            return path

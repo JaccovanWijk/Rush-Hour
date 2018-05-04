@@ -21,6 +21,7 @@ def main():
         game = bf.BruteForce(board, 6)
         moves += game.solver()
     print(moves/100)
+    
 
 if __name__ == "__main__":
     main()
