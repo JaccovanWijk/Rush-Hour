@@ -4,3 +4,4 @@ queue
 collection
 os
 sys
+numpy
