@@ -1,5 +1,6 @@
 import rushHour as r
 import queue
+from time import time
 from collections import deque
 
 class breadthFirst(r.RushHour):
@@ -42,6 +43,7 @@ class breadthFirst(r.RushHour):
         moves = dict()
         # iteration counter
         count = 0
+        beginTime = time()
 
         # initialise search
         openBoards.insert(0, self.currentBoard)
@@ -56,7 +58,7 @@ class breadthFirst(r.RushHour):
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles):
-                return (self.showMoves(self.currentBoard, moves), count)
+                return (self.showMoves(self.currentBoard, moves), count, time() - beginTime)
 
             count += 1
 
