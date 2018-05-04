@@ -33,7 +33,9 @@ class breadthFirst(r.RushHour):
         return sucessors
 
     def breadthFirstSearch(self):
-        """The breadth first search algorithm"""
+        """The breadth first search algorithm
+
+        Returns solution, amount of moves and iterations"""
 
         # open possibilities
         openBoards = []

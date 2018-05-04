@@ -27,7 +27,7 @@ class BruteForce(r.RushHour):
             if possibleMoves and car.name != lastCar:
 
                 move = random.choice(possibleMoves)
-                self.moves += abs(move)
+                self.moves += 1
                 self.currentBoard = self.makingMove(self.currentVehicles,car, move)
 
                 if restriction:
