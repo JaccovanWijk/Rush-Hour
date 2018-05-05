@@ -5,3 +5,4 @@ collection
 os
 sys
 numpy
+heapq
