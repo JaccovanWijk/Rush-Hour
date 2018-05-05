@@ -40,7 +40,6 @@ class BranchBound(r.RushHour):
             openBoards.append(self.currentBoard)
             moves[self.currentBoard] = ()
             while openBoards:
-
                 self.currentBoard = openBoards.pop()
 
                 # if current branch is too big
