@@ -4,11 +4,11 @@ import math
 class RushHour:
     """A single Rush Hour board"""
 
-    def __init__(self, board, size):
+    def __init__(self, board):
 
         self.testHistory = []
         self.initBoard = board.replace("\n", "")
-        self.size = size
+        self.size = int(sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
         if size % 2 == 0:
             self.yGoal = self.size//2 - 1
