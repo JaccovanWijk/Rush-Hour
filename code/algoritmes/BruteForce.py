@@ -3,39 +3,41 @@ import random
 import math
 
 class BruteForce(r.RushHour):
+    """A random algorithm for Rush Hour"""
 
-    def __init__(self, board, size):
+    def __init__(self, board):
 
-        r.RushHour.__init__(self, board, size)
+        r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
         self.moves = 0
 
-    def solver(self, restriction=False):
+    def solver(self):
+    """Get a random solution"""
 
+        # find goalcar
         for vehicle in self.vehicles:
             if vehicle.name == "X":
                 carX = vehicle
 
-        lastCar = None
         board = []
         while not self.won(self.currentVehicles):
 
+            # choose random car
             car = random.choice(self.vehicles)
 
+            # search moves selected car
             possibleMoves = self.searchMoves(self.currentBoard,car)
             if possibleMoves and car.name != lastCar:
 
+                # make random move
                 move = random.choice(possibleMoves)
+                # keep track of moves
                 self.moves += 1
+                # update current board
                 self.currentBoard = self.makingMove(self.currentVehicles,car, move)
 
-                if restriction:
-                    if lastCar == car.name:
-                        lastCar = None
-                    else:
-                        lastCar = car.name
-
+                # check if you've won
                 possibleDriveX = self.driveline(self.currentBoard, carX)
                 if self.ended(possibleDriveX):
                     break
@@ -44,7 +46,9 @@ class BruteForce(r.RushHour):
 
 
     def ended(self, possibleDrive):
+    """Check if it's possible to end game"""
 
+        # if there's only dots after goalcar, game is won
         afterGoal = False
         for letter in possibleDrive:
             if letter == 'X':

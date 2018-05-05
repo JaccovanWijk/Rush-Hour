@@ -8,9 +8,9 @@ class RushHour:
 
         self.testHistory = []
         self.initBoard = board.replace("\n", "")
-        self.size = int(sqrt(len(self.initBoard)))
+        self.size = int(math.sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
-        if size % 2 == 0:
+        if self.size % 2 == 0:
             self.yGoal = self.size//2 - 1
         else:
             self.yGoal = self.size//2

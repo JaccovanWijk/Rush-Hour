@@ -3,9 +3,9 @@ import BruteForce as bf
 
 class BranchBound(r.RushHour):
 
-    def __init__(self,board,size):
+    def __init__(self,board):
 
-        r.RushHour.__init__(self, board, size)
+        r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
         self.moves = []
@@ -22,7 +22,7 @@ class BranchBound(r.RushHour):
 
         for i in range(amount):
 
-            print(upperBound)
+            print("U", upperBound)
             # open possibilities
             openBoards = []
             # closed possibilities
@@ -68,7 +68,7 @@ class BranchBound(r.RushHour):
                         # add move to moves
                         moves[newBoard] = (self.currentBoard, move)
                         self.moveCount.append(move)
-                        self.moveSum += abs(move)
+                        self.moveSum += 1
 
                         # add new board state to open boards
                         openBoards.append(newBoard)
@@ -99,7 +99,7 @@ class BranchBound(r.RushHour):
         # bruteForce 10 times
         movemin = 100000
         for j in range(10):
-            game = bf.BruteForce(board, self.size)
+            game = bf.BruteForce(board)
             move = game.solver()
             if move < movemin:
                 movemin = move
