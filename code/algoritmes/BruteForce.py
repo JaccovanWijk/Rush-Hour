@@ -13,7 +13,7 @@ class BruteForce(r.RushHour):
         self.moves = 0
 
     def solver(self):
-    """Get a random solution"""
+        """Get a random solution"""
 
         # find goalcar
         for vehicle in self.vehicles:
@@ -28,7 +28,7 @@ class BruteForce(r.RushHour):
 
             # search moves selected car
             possibleMoves = self.searchMoves(self.currentBoard,car)
-            if possibleMoves and car.name != lastCar:
+            if possibleMoves:
 
                 # make random move
                 move = random.choice(possibleMoves)
@@ -46,7 +46,7 @@ class BruteForce(r.RushHour):
 
 
     def ended(self, possibleDrive):
-    """Check if it's possible to end game"""
+        """Check if it's possible to end game"""
 
         # if there's only dots after goalcar, game is won
         afterGoal = False
