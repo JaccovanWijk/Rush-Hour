@@ -13,14 +13,17 @@ class BruteForce(r.RushHour):
 
     def solver(self, restriction=False):
 
+        memory = dict()
+        memory[self.currentBoard] = ()
+
         for vehicle in self.vehicles:
             if vehicle.name == "X":
                 carX = vehicle
 
         lastCar = None
-        board = []
         while not self.won(self.currentVehicles):
 
+            board = self.currentBoard
             car = random.choice(self.vehicles)
 
             possibleMoves = self.searchMoves(self.currentBoard,car)
@@ -29,6 +32,9 @@ class BruteForce(r.RushHour):
                 move = random.choice(possibleMoves)
                 self.moves += 1
                 self.currentBoard = self.makingMove(self.currentVehicles,car, move)
+
+                if self.currentBoard not in memory:
+                    memory[self.currentBoard] = (board, "HOI")
 
                 if restriction:
                     if lastCar == car.name:
@@ -40,7 +46,8 @@ class BruteForce(r.RushHour):
                 if self.ended(possibleDriveX):
                     break
 
-        return self.moves
+        moveList = self.showMoves(self.currentBoard, memory)
+        return self.moves, len(moveList)
 
 
     def ended(self, possibleDrive):
