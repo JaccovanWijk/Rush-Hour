@@ -47,11 +47,12 @@ class BranchBound(r.RushHour):
                     print("win")
                     break
 
+                self.closedBoards.add(currentBoard)
+
                 for (newBoard, move) in self.getSucessors():
 
                     # board is already processed
                     #if newBoard in closedBoards:
-
                         #continue
 
                     # if board isn't already in queue
