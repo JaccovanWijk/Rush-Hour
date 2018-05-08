@@ -42,12 +42,6 @@ class BruteForce(r.RushHour):
                 if self.currentBoard not in memory:
                     memory[self.currentBoard] = (board, "HOI")
 
-                if restriction:
-                    if lastCar == car.name:
-                        lastCar = None
-                    else:
-                        lastCar = car.name
-
                 possibleDriveX = self.driveline(self.currentBoard, carX)
                 if self.ended(possibleDriveX):
                     break
