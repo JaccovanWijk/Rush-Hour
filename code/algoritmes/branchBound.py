@@ -11,7 +11,7 @@ class BranchBound(r.RushHour):
         self.currentVehicles = self.vehicles
         self.moves = []
         self.moveSum = 0
-        self.openBoards = set()
+        self.openBoards = []
         self.upperBound = 0
         self.amount = 0
         self.iterations = 0
@@ -21,49 +21,50 @@ class BranchBound(r.RushHour):
         start_time = time.time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
+        print(self.upperBound)
         self.amount = amount
-
+        print(self.currentBoard)
         self.solver(self.currentBoard, 0)
 
         print("time: ",time.time() - start_time)
         return self.upperBound
 
     def solver(self, board, moves):
-
         # check limit
         if moves >= self.upperBound or self.iterations == self.amount or board in self.openBoards:
             return
-
+            
         # if won, set new upperlimit
         if self.won(self.getVehicles(board)):
             self.upperBound = moves
             self.iterations += 1
             print("U: ", moves)
+            print("U: ", board)
             return
 
         # add current board to stack
-        self.openBoards.add(board)
+        self.openBoards.append(board)
 
         #
-        self.currentBoard = board
-        for (newBoard, move) in self.getSucessors():
+        # self.currentBoard = board
+        for (newBoard, move) in self.getSucessors(board):
 
             # request recursive solve
             self.solver(newBoard, moves + 1)
 
-        self.openBoards.remove(board)
+        self.openBoards.pop()
 
-    def getSucessors(self):
+    def getSucessors(self, board):
         """Get next board states reachable by making one move"""
         sucessors = []
-        cars = self.currentVehicles
+        cars = self.getVehicles(board)
 
         # get all moves of all vehicles
-        for vehicle in self.currentVehicles:
-            for i in self.searchMoves(self.currentBoard, vehicle):
+        for vehicle in cars:
+            for i in self.searchMoves(board, vehicle):
                 # determine new state
-                newBoard = self.makingMove(self.currentVehicles,vehicle, i)
-                self.makingMove(self.currentVehicles,vehicle, -i)
+                newBoard = self.makingMove(cars,vehicle, i)
+                self.makingMove(cars,vehicle, -i)
 
                 sucessors.append([newBoard, i])
 
