@@ -7,4 +7,4 @@ Dit is een (voorlopig mislukte) poging om een soort stappenplan voor de computer
 ## breadthfirst.py
 Deze gaat alle zetten af en slaat elk mogelijk bord op, tot hij bij een oplossing is. Deze duurt lang maar geeft geheid de kortste oplossing.
 ## Astar.py
-Deze werkt net zoals breadthfirst, maar berekent de kosten van elke step en geeft prioriteit aan de stap met de minste kosten.
+Deze werkt net zoals breadthfirst, maar berekent de kosten van elke stap en geeft prioriteit aan de stap met de minste kosten.
