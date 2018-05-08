@@ -1,7 +1,7 @@
 # Algoritmes
 In deze folder zijn de volgende bestanden te vinden:
 ## bruteForce.py
-
+Dit algoritme doet een willekeurige zet van een willekeurige auto elke iteratie, net zo lang totdat het bij het antwoord komt. Bovendien kunnen alle herhaalde zetten verwijdert worden, wat een goede upperbound an de oplossing oplevert.
 ## greedy.py
 Dit is een (voorlopig mislukte) poging om een soort stappenplan voor de computer te maken, zoals een mens het ook zou doen.
 ## breadthfirst.py
