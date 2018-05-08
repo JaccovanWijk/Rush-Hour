@@ -1,5 +1,6 @@
 import rushHour as r
 import BruteForce as bf
+import time
 
 class BranchBound(r.RushHour):
 
@@ -10,63 +11,47 @@ class BranchBound(r.RushHour):
         self.currentVehicles = self.vehicles
         self.moves = []
         self.moveSum = 0
-        self.openBoards = []
-        self.closedBoards = set()
+        self.openBoards = set()
+        self.upperBound = 0
+        self.amount = 0
+        self.iterations = 0
 
 
     def branchBoundSolve(self, amount):
-
+        start_time = time.time()
         # find upperbound by random solver
-        upperBound = self.RandomSolve(self.currentBoard)
+        self.upperBound = self.RandomSolve(self.currentBoard)
+        self.amount = amount
 
-        for i in range(amount):
+        self.solver(self.currentBoard, 0)
 
-            print("U", upperBound)
+        print("time: ",time.time() - start_time)
+        return self.upperBound
 
-            self.__init__(self.initBoard)
+    def solver(self, board, moves):
 
-            # initialise search
-            self.openBoards.append(self.currentBoard)
-            while self.openBoards:
-                self.currentBoard = self.openBoards[-1]
+        # check limit
+        if moves >= self.upperBound or self.iterations == self.amount or board in self.openBoards:
+            return
 
-                #print(self.moveSum)
-                # if current branch is too big
-                if self.moveSum >= upperBound:
-                    self.moveSum -= 1
-                    self.openBoards.pop()
-                    continue
-                #print("hoi", self.moveSum)
-                # update cars
-                self.currentVehicles = self.getVehicles(self.currentBoard)
+        # if won, set new upperlimit
+        if self.won(self.getVehicles(board)):
+            self.upperBound = moves
+            self.iterations += 1
+            print("U: ", moves)
+            return
 
-                # stop if puzzle is solved
-                if self.won(self.currentVehicles):
-                    #return self.showMoves(self.currentBoard, moves)
-                    upperBound = self.moveSum
-                    print("win")
-                    break
+        # add current board to stack
+        self.openBoards.add(board)
 
-                self.closedBoards.add(currentBoard)
+        #
+        self.currentBoard = board
+        for (newBoard, move) in self.getSucessors():
 
-                for (newBoard, move) in self.getSucessors():
+            # request recursive solve
+            self.solver(newBoard, moves + 1)
 
-                    # board is already processed
-                    #if newBoard in closedBoards:
-                        #continue
-
-                    # if board isn't already in queue
-                    if not newBoard in self.openBoards:
-                        # add move to movesum
-                        self.moveSum += 1
-
-                        # add new board state to open boards
-                        self.openBoards.append(newBoard)
-
-                # finish processing current board
-                self.closedBoards.add(self.currentBoard)
-
-        return upperBound
+        self.openBoards.remove(board)
 
     def getSucessors(self):
         """Get next board states reachable by making one move"""

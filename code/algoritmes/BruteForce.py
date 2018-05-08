@@ -5,7 +5,7 @@ import math
 class BruteForce(r.RushHour):
     """A random algorithm for Rush Hour"""
 
-    def __init__(self, board, size):
+    def __init__(self, board):
 
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
@@ -39,14 +39,14 @@ class BruteForce(r.RushHour):
                 # update current board
                 self.currentBoard = self.makingMove(self.currentVehicles,car, move)
 
-                if self.currentBoard not in memory:
-                    memory[self.currentBoard] = (board, "HOI")
+                if self.currentBoard not in self.memory:
+                    self.memory[self.currentBoard] = (board, "HOI")
 
                 possibleDriveX = self.driveline(self.currentBoard, self.carX)
                 if self.ended(possibleDriveX):
                     break
 
-        moveList = self.showMoves(self.currentBoard, memory)
+        moveList = self.showMoves(self.currentBoard, self.memory)
         return self.moves, len(moveList)
 
 
