@@ -9,8 +9,9 @@ class BranchBound(r.RushHour):
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
         self.moves = []
-        self.moveCount = []
         self.moveSum = 0
+        self.openBoards = []
+        self.closedBoards = set()
 
 
     def branchBoundSolve(self, amount):
@@ -18,36 +19,24 @@ class BranchBound(r.RushHour):
         # find upperbound by random solver
         upperBound = self.RandomSolve(self.currentBoard)
 
-        moves = None
-
         for i in range(amount):
 
             print("U", upperBound)
-            # open possibilities
-            openBoards = []
-            # closed possibilities
-            closedBoards = set()
-            # moves done
-            moves = dict()
 
-            self.currentBoard = self.initBoard
-            self.currentVehicles = self.vehicles
-            self.moveSum = 0
-            self.moveCount = []
-            self.moves = []
+            self.__init__(self.initBoard)
 
             # initialise search
-            openBoards.append(self.currentBoard)
-            moves[self.currentBoard] = ()
-            while openBoards:
-                self.currentBoard = openBoards.pop()
+            self.openBoards.append(self.currentBoard)
+            while self.openBoards:
+                self.currentBoard = self.openBoards[-1]
 
-                print(self.moveSum)
+                #print(self.moveSum)
                 # if current branch is too big
                 if self.moveSum >= upperBound:
-                    self.moveSum -= self.moveCount.pop()
+                    self.moveSum -= 1
+                    self.openBoards.pop()
                     continue
-
+                #print("hoi", self.moveSum)
                 # update cars
                 self.currentVehicles = self.getVehicles(self.currentBoard)
 
@@ -58,24 +47,24 @@ class BranchBound(r.RushHour):
                     print("win")
                     break
 
+                self.closedBoards.add(currentBoard)
+
                 for (newBoard, move) in self.getSucessors():
 
                     # board is already processed
-                    if newBoard in closedBoards:
-                        continue
+                    #if newBoard in closedBoards:
+                        #continue
 
                     # if board isn't already in queue
-                    if not newBoard in openBoards:
-                        # add move to moves
-                        moves[newBoard] = (self.currentBoard, move)
-                        self.moveCount.append(move)
+                    if not newBoard in self.openBoards:
+                        # add move to movesum
                         self.moveSum += 1
 
                         # add new board state to open boards
-                        openBoards.append(newBoard)
+                        self.openBoards.append(newBoard)
 
                 # finish processing current board
-                closedBoards.add(self.currentBoard)
+                self.closedBoards.add(self.currentBoard)
 
         return upperBound
 
@@ -101,7 +90,7 @@ class BranchBound(r.RushHour):
         movemin = 100000
         for j in range(10):
             game = bf.BruteForce(board)
-            move = game.solver()
+            amount, move = game.solver()
             if move < movemin:
                 movemin = move
         return movemin

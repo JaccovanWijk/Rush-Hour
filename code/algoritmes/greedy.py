@@ -11,10 +11,11 @@ class greedy(r.RushHour):
         self.testedVehicles = []
         self.errorCar = v.vehicle('Error',2,0,0,'H')
         self.errorBoard = 'Error'
+        self.closedBoards = set()
 
-    def neighboursFinder(self, vehicle):
+    def neighboursFinder(self, board, vehicle):
 
-        possibleDrive = self.driveline(vehicle)
+        possibleDrive = self.driveline(board, vehicle)
 
         neighbours = []
         length = len(possibleDrive)
@@ -89,19 +90,58 @@ class greedy(r.RushHour):
         return board
 
 
-    def testNeighbours(self,car):
+    # def testNeighbours(self, board, car):
+    #
+    #     neighbours = self.neighboursFinder(board, car)
+    #     for neighbour in neighbours:
+    #         # maak deze check beter, MAYBE DICT, DAN KAN JE DE ZET ALS WAARDE DOEN BIJ DE AUTO TODO
+    #         if self.goalVehicles.count(neighbour) > 1:
+    #             neighbours.remove(neighbour)
+    #
+    #     if neighbours:
+    #         return neighbours
+    #     else:
+    #         return self.errorCar
 
-        neighbours = self.neighboursFinder(car)
-        for neighbour in neighbours:
-            # maak deze check beter
-            if self.goalVehicles.count(neighbour) > 1:
-                neighbours.remove(neighbour)
 
-        if neighbours:
-            return neighbours[0]
-        else:
-            return self.errorCar
 
+    def solver(self, currentBoard, car):
+
+        if currentBoard in self.closedBoards:
+            return (self.errorBoard,self.errorCar)
+
+        self.closedBoards.add(currentBoard)
+
+        while True:
+
+            maxMove = max(x for x in possibleMoves)
+            minMove = min(x for x in possibleMoves)
+
+            possibleMoves = self.searchMoves(car)
+            neighbours = self.neighboursFinder(currentBoard, car)
+
+            if not possibleMoves:
+
+                # check if he has neighbours
+                if not neighbours:
+                    return (self.errorBoard, self.errorCar)
+
+                # check next car TODO nextState met of zonder auto?
+                nextState, nextCar = self.solver(currentBoard, neighbours[0])
+                # check for error
+                if nextState == self.errorBoard:
+                    return nextState
+
+                else:
+                    currentBoard = nextState
+
+            else:
+                if maxMove > 0 and minMove < 0:
+                    maxMove = maxMove
+                    # pas heuristiek toe
+                elif maxMove < 0:
+
+                    nextState, nextCar = self.solver(currentBoard, car)
 
 
 
