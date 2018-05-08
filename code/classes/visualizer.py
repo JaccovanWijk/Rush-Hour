@@ -41,7 +41,7 @@ def hue(number):
         return (255, 0, 255 * (1 - (number-5/6) * 6))
 
 def readBoard(vehicles):
-    """ Read in board and make hue map"""
+    """Read in board and make hue map"""
 
     # read in all unique names
     names = [vehicle.name for vehicle in vehicles]
