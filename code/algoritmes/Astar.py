@@ -1,6 +1,7 @@
 
 import rushHour as r
 import vehicle as v
+from time import time
 import heapq
 
 class PriorityQueue:
@@ -19,12 +20,15 @@ class PriorityQueue:
 class A_Star(r.RushHour):
     """"An A* search algorithm for Rush Hour"""
 
-    def __init__(self, board, point):
+    def __init__(self, board, size):
 
-        r.rushHour.__init__(self,board)
+        r.RushHour.__init__(self,board, size)
 
-        self.board = board
-        self.point = point
+        # model game
+        self.currentBoard = self.initBoard
+        self.currentVehicles = self.vehicles
+        #self.board = board
+        #self.size = size
         self.parent = None
 
         # cost of path from start to end-nodes
@@ -33,23 +37,23 @@ class A_Star(r.RushHour):
         # estimated cost of the cheapest path to goal
         self.H_Cost = {}
 
-    def children(self, point):
+    def getSucessors(self, point):
         """Get next board states reachable by making one move"""
-        children = []
+        sucessors = []
         cars = self.vehicles
 
         # get all moves of all vehicles
         for vehicle in self.vehicles:
-            for i in self.searchMoves(vehicle):
+            for i in self.searchMoves(self.currentBoard, vehicle):
                 # determine new state
-                newBoard = self.makingMove(vehicle, i)
-                self.makingMove(vehicle, -i)
+                newBoard = self.makingMove(self.currentVehicles, vehicle, i)
+                self.makingMove(self.currentVehicles, vehicle, -i)
                 # make move string
                 move = vehicle.name + ' ' + str(i)
 
-                children.append([newBoard, move])
+                sucessors.append([newBoard, move])
 
-        return children
+        return sucessors
 
     # heuristic function
     def distance(self, point1, point2):
@@ -57,13 +61,17 @@ class A_Star(r.RushHour):
         (x2, y2) = point2
         return abs(x1 - x2) + abs(y1 - y2)
 
-    def aStar(self, board, start, won):
+    def solver(self, board, start, won):
 
         # open and closed possibilities
         openBoards = PriorityQueue()
         closedBoards = set()
         # moves done
         moves = dict()
+
+        # iteration counter
+        count = 0
+        beginTime = time()
 
         # initialise search and cost
         self.currentBoard = start
@@ -78,11 +86,14 @@ class A_Star(r.RushHour):
 
             # stop if puzzle is goal is met
             if self.won(self.currentVehicles):
+                return (self.showMoves(self.currentBoard, moves), count, time() - beginTime)
             #if currentBoard == won:
-                break
+                #break
 
-            # loop through the newBoard's children/siblings
-            for newBoard in self.children(currentBoard):
+            count += 1
+
+            # loop through the newBoard's sucessors/siblings
+            for newBoard in self.getSucessors(currentBoard):
 
                 # if it is already in the closed set, skip it
                 if newBoard in closedBoards:
