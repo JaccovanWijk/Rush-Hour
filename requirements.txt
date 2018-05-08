@@ -6,3 +6,4 @@ os
 sys
 numpy
 heapq
+pygame
