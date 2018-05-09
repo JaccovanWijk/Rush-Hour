@@ -12,6 +12,7 @@ class BranchBound(r.RushHour):
         self.moves = []
         self.moveSum = 0
         self.openBoards = []
+        self.closedBoards = set()
         self.upperBound = 0
         self.amount = 0
         self.iterations = 0
@@ -31,9 +32,9 @@ class BranchBound(r.RushHour):
 
     def solver(self, board, moves):
         # check limit
-        if moves >= self.upperBound or self.iterations == self.amount or board in self.openBoards:
+        if moves >= self.upperBound or self.iterations == self.amount or (board, moves) in self.closedBoards:
             return
-            
+
         # if won, set new upperlimit
         if self.won(self.getVehicles(board)):
             self.upperBound = moves
@@ -44,8 +45,8 @@ class BranchBound(r.RushHour):
 
         # add current board to stack
         self.openBoards.append(board)
+        self.closedBoards.add((board, moves))
 
-        #
         # self.currentBoard = board
         for (newBoard, move) in self.getSucessors(board):
 
