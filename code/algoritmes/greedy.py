@@ -114,10 +114,10 @@ class greedy(r.RushHour):
 
         while True:
 
+            possibleMoves = self.searchMoves(car)
             maxMove = max(x for x in possibleMoves)
             minMove = min(x for x in possibleMoves)
 
-            possibleMoves = self.searchMoves(car)
             neighbours = self.neighboursFinder(currentBoard, car)
 
             if not possibleMoves:

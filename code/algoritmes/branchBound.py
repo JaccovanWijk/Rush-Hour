@@ -1,6 +1,7 @@
 import rushHour as r
 import BruteForce as bf
 import time
+import random
 
 class BranchBound(r.RushHour):
 
@@ -9,22 +10,20 @@ class BranchBound(r.RushHour):
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
-        self.moves = []
-        self.moveSum = 0
-        self.openBoards = []
         self.closedBoards = set()
         self.upperBound = 0
         self.amount = 0
         self.iterations = 0
+        self.done = False
 
 
     def branchBoundSolve(self, amount):
         start_time = time.time()
         # find upperbound by random solver
-        self.upperBound = self.RandomSolve(self.currentBoard)
-        print(self.upperBound)
+        self.upperBound = 50#self.RandomSolve(self.currentBoard)
+
         self.amount = amount
-        print(self.currentBoard)
+
         self.solver(self.currentBoard, 0)
 
         print("time: ",time.time() - start_time)
@@ -39,12 +38,12 @@ class BranchBound(r.RushHour):
         if self.won(self.getVehicles(board)):
             self.upperBound = moves
             self.iterations += 1
+            #self.done = True
             print("U: ", moves)
             print("U: ", board)
             return
 
         # add current board to stack
-        self.openBoards.append(board)
         self.closedBoards.add((board, moves))
 
         # self.currentBoard = board
@@ -52,8 +51,6 @@ class BranchBound(r.RushHour):
 
             # request recursive solve
             self.solver(newBoard, moves + 1)
-
-        self.openBoards.pop()
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
@@ -69,6 +66,7 @@ class BranchBound(r.RushHour):
 
                 sucessors.append([newBoard, i])
 
+        #random.shuffle(sucessors)
         return sucessors
 
     def RandomSolve(self, board):
