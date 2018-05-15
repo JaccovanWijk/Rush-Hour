@@ -142,16 +142,3 @@ class greedy(r.RushHour):
                 elif maxMove < 0:
 
                     nextState, nextCar = self.solver(currentBoard, car)
-
-
-
-
-
-
-
-
-
-
-
-
-        #

@@ -47,7 +47,7 @@ class BruteForce(r.RushHour):
                     break
 
         moveList = self.showMoves(self.currentBoard, self.memory)
-        return self.moves, len(moveList)
+        return self.moves, len(moveList) + 1
 
 
     def ended(self, possibleDrive):

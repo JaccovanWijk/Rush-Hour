@@ -1,7 +1,7 @@
 import pygame
 import random
 
-def drawBoard(vehicles, size, huemap):
+def drawBoard(vehicles, size, huemap, name):
 
     # initialise image
     image = pygame.Surface((size * 50, size * 50))
@@ -30,7 +30,7 @@ def drawBoard(vehicles, size, huemap):
             pygame.draw.line(image, WHITE, ne, sw, 2)
 
     # save image
-    pygame.image.save(image, "drawing.png")
+    pygame.image.save(image, name + ".png")
 
 
 def readBoard(vehicles):
