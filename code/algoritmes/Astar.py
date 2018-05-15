@@ -31,7 +31,7 @@ class ZeroHeuristic:
 class BlockingCarsHeuristic:
 
     #Calculate the number of blocking vehicles
-    def obstruction(self, board):
+    def calculate(self, board):
         red_vehicle = [
             vehicle for vehicle in board.vehicles if vehicle.name == 'X'][0]
         if red_vehicle.coord['x'] == 4:
@@ -52,14 +52,12 @@ class A_Star(r.RushHour):
 
     def __init__(self, board, heuristic, size):
 
-        r.RushHour.__init__(board, heuristic)
+        r.RushHour.__init__(self, board)
 
         # model game
-        self.board = board
         self.heuristic = heuristic
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
-        self.size = size
         #self.parent = None
         #self.map = []
 
@@ -68,8 +66,8 @@ class A_Star(r.RushHour):
 
         # open and closed possibilities
         openBoards = PriorityQueue()
-        board = self.board
-        closedBoards = set()
+        board = self.currentBoard
+        closedBoards = tuple()
         # moves done
         moves = dict()
 
@@ -86,9 +84,10 @@ class A_Star(r.RushHour):
         beginTime = time()
 
         # initialise search, move count and cost
-        self.openBoards.insert(0, self.currentBoard)
-        self.moves[self.currentBoard] = ()
-        self.G_Cost[self.currentBoard] = 0
+        openBoards.push([[], board], 0)
+        #self.openBoards.insert(0, self.currentBoard)
+        self.moves[board] = ()
+        G_Cost[board] = 0
 
         while not openBoards.empty():
             currentBoard = openBoards.pop()
@@ -105,32 +104,32 @@ class A_Star(r.RushHour):
             # loop through the newBoard's sucessors/siblings
             for newBoard in self.getSucessors(currentBoard):
 
-                # if it is already in the closed set, skip it
-                if newBoard in closedBoards:
-                    continue
+                # if it is already in the queue
+                new_cost = currentBoard.G_Cost + board.cost(currentBoard, newBoard)
+                priority = new_cost + self.heuristic.calculate(newBoard)
+                if newBoard not in closedBoards:
 
-                # otherwise if it is already in the queue
-                if newBoard in self.openBoards:
-
-                    # Check if we beat the cost and update if so.
-                    new_cost = currentBoard.G_Cost + board.cost(currentBoard, newBoard)
-                    priority = new_cost + self.heuristic.obstruction(newBoard)
+                    # check if we beat the cost and update if so.
                     if newBoard not in self.G_Cost or new_cost < newBoard.G_Cost:
                         newBoard.G_Cost = new_cost
                         openBoards.push(next, priority)
                         #closedBoards.add(currentBoard)
                         newBoard.parent = currentBoard
 
+                    else:
+                        # if it isn't in the queue yet
+                        newBoard.G_Cost = currentBoard.G_Cost + currentBoard.cost(newBoard)
+                        #newBoard.H_Cost = self.obstruction(newBoard, won)
+
+                        # set the parent to our currentBoard item
+                        newBoard.parent = currentBoard
+
+                        # add it to the queue
+                        newBoard = openBoards.pop()
+
+                # if it is already in the closed set, skip it
                 else:
-                    # if it isn't in the open board yet
-                    newBoard.G_Cost = currentBoard.G_Cost + currentBoard.cost(newBoard)
-                    #newBoard.H_Cost = self.obstruction(newBoard, won)
-
-                    # set the parent to our currentBoard item
-                    newBoard.parent = currentBoard
-
-                    # add it to the queue
-                    newBoard = openBoards.pop()
+                    continue
 
             # move the item from the queue and add to the closed set
             currentBoard = openBoards.empty()
@@ -138,6 +137,7 @@ class A_Star(r.RushHour):
 
             # check for errors
             raise ValueError('Not Solvable')
+
 
         # step by step guide of all moves used to solve the puzzle
         def solution(self, board):
@@ -150,7 +150,6 @@ class A_Star(r.RushHour):
                 vehicle.move(move[1], 1)
                 output += self.board.prettify(vehicles)
             return output
-
 
 
     def getSucessors(self, point):
