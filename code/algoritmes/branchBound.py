@@ -2,6 +2,7 @@ import rushHour as r
 import BruteForce as bf
 import time
 import random
+import math
 
 class BranchBound(r.RushHour):
 
@@ -25,6 +26,7 @@ class BranchBound(r.RushHour):
         start_time = time.time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
+        self.upperBound = 35
         print("Random upperbound =", self.upperBound)
 
         self.amount = amount
@@ -55,14 +57,14 @@ class BranchBound(r.RushHour):
         self.tempOpenBoards.append((board, moves))
 
         # self.currentBoard = board
-        for (newBoard, move) in self.getSucessors(board):
+        for (j, (newBoard, move)) in self.getSucessors(board):
 
             # request recursive solve
             if (newBoard, moves + 1) not in self.closedBoards:
                 self.solver(newBoard, moves + 1)
 
         if not self.done:
-            self.closedBoards.add(self.tempOenBoards.pop())
+            self.closedBoards.add(self.tempOpenBoards.pop())
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
@@ -78,8 +80,8 @@ class BranchBound(r.RushHour):
 
                 sucessors.append([newBoard, i])
 
-        random.shuffle(sucessors)
-        return sucessors
+        #random.shuffle(sucessors)
+        return self.heuristic2(sucessors)
 
     def RandomSolve(self, board):
 
@@ -87,7 +89,7 @@ class BranchBound(r.RushHour):
         movemin = 100000
         for j in range(10):
             game = bf.BruteForce(board)
-            amount, move,board = game.solver()
+            amount, move = game.solver()
             if move < movemin:
                 movemin = move
                 self.goalBoard = board
@@ -95,6 +97,38 @@ class BranchBound(r.RushHour):
 
     def heuristic (self, boards):
 
-        for board in boards:
+        goalVehicles = self.getVehicles(self.goalBoard)
+        scores = []
 
-            
+        for (board, i) in boards:
+
+            score = 0
+            vehicles = self.getVehicles(board)
+            for vehicle in vehicles:
+                 for goalVehicle in goalVehicles:
+
+                     if vehicle.name == goalVehicle.name:
+                         score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+
+            scores.append((score, (board, i)))
+
+        return sorted(scores, key=lambda score: score[0])
+
+    def heuristic2 (self, boards):
+        """Afstand van punten naar uitgang"""
+
+        scores = []
+        for (board, i) in boards:
+
+            score = 0
+            for j in range(self.size*self.size):
+                if board[j] == ".":
+
+                    # add x difference
+                    score += self.size - j % self.size
+                    # add y difference
+                    score += abs(1 - j // self.size)
+
+            scores.append((score, (board, i)))
+
+        return sorted(scores, key=lambda score: score[0])
