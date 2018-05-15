@@ -1,12 +1,12 @@
 import vehicle as v
 import math
+import visualizer as vis
 
 class RushHour:
     """A single Rush Hour board"""
 
     def __init__(self, board):
 
-        self.testHistory = []
         self.initBoard = board.replace("\n", "")
         self.size = int(math.sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
@@ -16,6 +16,7 @@ class RushHour:
             self.yGoal = self.size//2
         self.moves = dict()
         self.weights = {}
+        self.huemap = vis.readBoard(self.vehicles)
 
     def cost(self, from_node, to_node):
         return self.weights.get(to_node, 1)
@@ -162,3 +163,7 @@ class RushHour:
         for i in range(self.size):
             print(board[i*self.size:(i+1)*self.size])
         print("")
+
+    def visualise(self, board, name):
+
+        vis.drawBoard(self.getVehicles(board, self.huemap, name)

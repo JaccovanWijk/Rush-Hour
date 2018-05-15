@@ -5,7 +5,7 @@ from collections import deque
 import rushHour as r
 import visualizer as v
 
-class breadthFirst(r.RushHour):
+class BreadthFirst(r.RushHour):
     """A breadth first search algorithm for Rush Hour"""
 
     def __init__(self,board):
