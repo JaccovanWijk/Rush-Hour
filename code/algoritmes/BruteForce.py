@@ -47,7 +47,8 @@ class BruteForce(r.RushHour):
                     break
 
         moveList = self.showMoves(self.currentBoard, self.memory)
-        return self.moves, len(moveList)
+        print(len(moveList))
+        return self.moves, len(moveList)#, self.currentBoard
 
 
     def ended(self, possibleDrive):
@@ -61,7 +62,6 @@ class BruteForce(r.RushHour):
             elif letter != '.':
                 if afterGoal:
                     return False
-            elif afterGoal and letter == ".":
-                self.moves += 1
 
+        self.moves += 1
         return True

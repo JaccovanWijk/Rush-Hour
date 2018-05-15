@@ -9,6 +9,7 @@ class BranchBound(r.RushHour):
 
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
+        self.goalBoard = ""
         self.currentVehicles = self.vehicles
         self.closedBoards = set()
         self.finalClosedBoards = set()
@@ -56,13 +57,12 @@ class BranchBound(r.RushHour):
         # self.currentBoard = board
         for (newBoard, move) in self.getSucessors(board):
 
-            #TODO maybe ifstatement of hij in closed/openboards zit
             # request recursive solve
             if (newBoard, moves + 1) not in self.closedBoards:
                 self.solver(newBoard, moves + 1)
 
         if not self.done:
-            self.closedBoards.add(self.tempOpenBoards.pop())
+            self.closedBoards.add(self.tempOenBoards.pop())
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
@@ -87,7 +87,14 @@ class BranchBound(r.RushHour):
         movemin = 100000
         for j in range(10):
             game = bf.BruteForce(board)
-            amount, move = game.solver()
+            amount, move,board = game.solver()
             if move < movemin:
                 movemin = move
+                self.goalBoard = board
         return movemin
+
+    def heuristic (self, boards):
+
+        for board in boards:
+
+            
