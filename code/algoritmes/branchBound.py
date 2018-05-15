@@ -11,6 +11,9 @@ class BranchBound(r.RushHour):
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
         self.closedBoards = set()
+        self.finalClosedBoards = set()
+        self.openBoards = []
+        self.tempOpenBoards = []
         self.upperBound = 0
         self.amount = 0
         self.iterations = 0
@@ -20,37 +23,46 @@ class BranchBound(r.RushHour):
     def branchBoundSolve(self, amount):
         start_time = time.time()
         # find upperbound by random solver
-        self.upperBound = 50#self.RandomSolve(self.currentBoard)
+        self.upperBound = self.RandomSolve(self.currentBoard)
+        print("Random upperbound =", self.upperBound)
 
         self.amount = amount
 
-        self.solver(self.currentBoard, 0)
+        for i in range(amount):
+            self.solver(self.currentBoard, 0)
+            self.done = False
 
         print("time: ",time.time() - start_time)
         return self.upperBound
 
     def solver(self, board, moves):
         # check limit
-        if moves >= self.upperBound or self.iterations == self.amount or (board, moves) in self.closedBoards:
+        if moves >= self.upperBound or (board, moves) in self.closedBoards or self.done or self.iterations == self.amount:
             return
 
         # if won, set new upperlimit
         if self.won(self.getVehicles(board)):
             self.upperBound = moves
             self.iterations += 1
-            #self.done = True
-            print("U: ", moves)
-            print("U: ", board)
+            self.openBoards = self.tempOpenBoards
+            self.done = True
+            print("New upperbound =", moves)
             return
 
         # add current board to stack
-        self.closedBoards.add((board, moves))
+        #self.closedBoards.add((board, moves))
+        self.tempOpenBoards.append((board, moves))
 
         # self.currentBoard = board
         for (newBoard, move) in self.getSucessors(board):
 
+            #TODO maybe ifstatement of hij in closed/openboards zit
             # request recursive solve
-            self.solver(newBoard, moves + 1)
+            if (newBoard, moves + 1) not in self.closedBoards:
+                self.solver(newBoard, moves + 1)
+
+        if not self.done:
+            self.closedBoards.add(self.tempOpenBoards.pop())
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
@@ -66,7 +78,7 @@ class BranchBound(r.RushHour):
 
                 sucessors.append([newBoard, i])
 
-        #random.shuffle(sucessors)
+        random.shuffle(sucessors)
         return sucessors
 
     def RandomSolve(self, board):
