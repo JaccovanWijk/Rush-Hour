@@ -1,7 +1,9 @@
-import rushHour as r
 import queue
 from time import time
 from collections import deque
+
+import rushHour as r
+import visualizer as v
 
 class breadthFirst(r.RushHour):
     """A breadth first search algorithm for Rush Hour"""
@@ -18,7 +20,9 @@ class breadthFirst(r.RushHour):
         self.closedBoards = set()
         self.count = 0
 
-    def breadthFirstSearch(self):
+        self.visualizer = v.readBoard(self.currentVehicles)
+
+    def breadthFirstSearch(self, all=False):
         """The breadth first search algorithm
 
         Returns solution, amount of moves and iterations"""
@@ -38,7 +42,8 @@ class breadthFirst(r.RushHour):
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles):
-                return (self.showMoves(self.currentBoard, self.moves), self.count, time() - beginTime)
+                if not all:
+                    return (self.showMoves(self.currentBoard, self.moves), self.count, time() - beginTime)
 
             self.count += 1
 
@@ -59,6 +64,8 @@ class breadthFirst(r.RushHour):
 
             # finish processing current board
             self.closedBoards.add(self.currentBoard)
+
+        return self.count
 
     def getSucessors(self):
         """Get next board states reachable by making one move"""

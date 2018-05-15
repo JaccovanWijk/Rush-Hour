@@ -50,7 +50,7 @@ class BlockingCarsHeuristic:
 class A_Star(r.RushHour):
     """"An A* search algorithm for Rush Hour"""
 
-    def __init__(self, board, heuristic, size):
+    def __init__(self, board, heuristic):
 
         r.RushHour.__init__(board, heuristic)
 
@@ -59,7 +59,6 @@ class A_Star(r.RushHour):
         self.heuristic = heuristic
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
-        self.size = size
         #self.parent = None
         #self.map = []
 
@@ -140,7 +139,7 @@ class A_Star(r.RushHour):
             raise ValueError('Not Solvable')
 
         # step by step guide of all moves used to solve the puzzle
-        def solution(self, board):
+        def solution(self, board, won):
             output = ''
             output += "; ".join(["{} {}".format(move[0], move[1]) for move in moves])
             vehicles = deepcopy(board.vehicles)

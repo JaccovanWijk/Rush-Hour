@@ -22,6 +22,7 @@ class Genetic(r.RushHour):
         for i in range(symbolCount):
             self.values[symbols[i]] = i / symbolCount
 
+        self.currentGen = np.random.uniform(0,1,(100,2,36))
 
     def convertBoard(self, board):
         """Converts board into an array of floats"""
@@ -38,5 +39,3 @@ class Genetic(r.RushHour):
         return np.array(numberBoard)
 
     def solve(self, array):
-
-        
