@@ -20,13 +20,11 @@ class BruteForce(r.RushHour):
         self.memory = dict()
         self.memory[self.currentBoard] = ()
 
-        self.visualizer = vis.readBoard(self.currentVehicles)
-
     def solver(self):
         """Get a random solution"""
 
         name = "Groot0"
-        vis.drawBoard(self.vehicles, self.size, name)
+        self.visualise(self.currentVehicles, name)
 
         lastCar = None
         i = 0
