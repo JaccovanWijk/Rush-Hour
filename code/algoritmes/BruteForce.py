@@ -1,6 +1,7 @@
 import rushHour as r
 import random
 import math
+import visualizer as vis
 
 class BruteForce(r.RushHour):
     """A random algorithm for Rush Hour"""
@@ -19,11 +20,21 @@ class BruteForce(r.RushHour):
         self.memory = dict()
         self.memory[self.currentBoard] = ()
 
+        self.visualizer = vis.readBoard(self.currentVehicles)
+
     def solver(self):
         """Get a random solution"""
 
+        name = "Groot0"
+        vis.drawBoard(self.vehicles, self.size, self.visualizer, name)
+
         lastCar = None
+        i = 0
         while not self.won(self.currentVehicles):
+
+            i += 1
+            name = "Random" + str(i)
+            print(name)
 
             board = self.currentBoard
             car = random.choice(self.vehicles)
@@ -39,11 +50,13 @@ class BruteForce(r.RushHour):
                 # update current board
                 self.currentBoard = self.makingMove(self.currentVehicles,car, move)
 
+                #vis.drawBoard(self.vehicles, self.size, self.visualizer, name)
+
                 if self.currentBoard not in self.memory:
                     self.memory[self.currentBoard] = (board, "HOI")
 
                 possibleDriveX = self.driveline(self.currentBoard, self.carX)
-                if self.ended(possibleDriveX):
+                if self.won(self.currentVehicles):#ended(possibleDriveX):
                     break
 
         moveList = self.showMoves(self.currentBoard, self.memory)
@@ -61,7 +74,6 @@ class BruteForce(r.RushHour):
             elif letter != '.':
                 if afterGoal:
                     return False
-            elif afterGoal and letter == ".":
-                self.moves += 1
 
+        self.moves += 1
         return True

@@ -4,7 +4,7 @@ import random
 def drawBoard(vehicles, size, huemap, name):
 
     # initialise image
-    image = pygame.Surface((size * 50, size * 50))
+    image = pygame.Surface((size * 500, size * 500))
     image.fill((127, 127, 127))
     WHITE = (255,255,255)
 
@@ -13,21 +13,21 @@ def drawBoard(vehicles, size, huemap, name):
         vehicle = vehicles[i]
         rect = []
         if vehicle.orientation == 'H':
-            rect = [vehicle.xBegin * 50 + 5, vehicle.yBegin * 50 + 5, 50 * vehicle.length - 10, 40]
+            rect = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 50, 500 * vehicle.length - 100, 400]
         elif vehicle.orientation == 'V':
-            rect = [vehicle.xBegin * 50 + 5, vehicle.yBegin * 50 + 5, 40, 50 * vehicle.length - 10]
+            rect = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 50, 400, 500 * vehicle.length - 100]
         image.fill(huemap[vehicle.name], rect)
 
         if vehicle.name == 'X':
             # corners of goal car
-            nw = [vehicle.xBegin * 50 + 5, vehicle.yBegin * 50 + 5]
-            ne = [(vehicle.xBegin + vehicle.length) * 50 - 6, vehicle.yBegin * 50 + 5]
-            sw = [vehicle.xBegin * 50 + 5, vehicle.yBegin * 50 + 43]
-            se = [(vehicle.xBegin + vehicle.length) * 50 - 6, vehicle.yBegin * 50 + 43]
+            nw = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 50]
+            ne = [(vehicle.xBegin + vehicle.length) * 500 - 60, vehicle.yBegin * 500 + 50]
+            sw = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 430]
+            se = [(vehicle.xBegin + vehicle.length) * 500 - 60, vehicle.yBegin * 500 + 430]
 
             # draw a cross
-            pygame.draw.line(image, WHITE, nw, se, 2)
-            pygame.draw.line(image, WHITE, ne, sw, 2)
+            pygame.draw.line(image, WHITE, nw, se, 20)
+            pygame.draw.line(image, WHITE, ne, sw, 20)
 
     # save image
     pygame.image.save(image, name + ".png")

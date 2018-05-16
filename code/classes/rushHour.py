@@ -158,10 +158,11 @@ class RushHour:
         moveList.reverse()
         return moveList
 
-    def showBoard(self):
+    def showBoard(self, board):
         """Print board in a better way"""
         for i in range(self.size):
-            print(self.initBoard[i*self.size:(i+1)*self.size])
+            print(board[i*self.size:(i+1)*self.size])
+        print("")
 
     def visualise(self, board, name):
 
