@@ -165,4 +165,4 @@ class RushHour:
 
     def visualise(self, board, name):
 
-        vis.drawBoard(self.getVehicles(board, self.huemap, name)
+        vis.drawBoard(self.getVehicles(board, self.huemap, name))
