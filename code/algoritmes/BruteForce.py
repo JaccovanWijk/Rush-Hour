@@ -26,7 +26,7 @@ class BruteForce(r.RushHour):
         """Get a random solution"""
 
         name = "Groot0"
-        vis.drawBoard(self.vehicles, self.size, self.visualizer, name)
+        vis.drawBoard(self.vehicles, self.size, name)
 
         lastCar = None
         i = 0

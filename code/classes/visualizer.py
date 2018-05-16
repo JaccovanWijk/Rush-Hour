@@ -6,11 +6,12 @@ CAR_SIZE = 500
 # color constants
 WHITE = (255,255,255)
 GREY = (127,127,127)
+RED = (255,0,0)
 
 def drawBoard(vehicles, size, huemap, name):
-
+    """Visualises a rush-hour board"""
     # initialise image
-    image = pygame.Surface((size * 500, size * 500))
+    image = pygame.Surface((size * CAR_SIZE, size * CAR_SIZE))
     image.fill(GREY)
 
     # draw all cars
@@ -71,7 +72,7 @@ def readBoard(vehicles):
     huemap = dict()
     for i in range(nameCount):
         huemap[names[i]] = (hue(i / nameCount))
-    huemap['X'] = ((255,0,0))
+    huemap['X'] = (RED)
     return huemap
 
 def hue(number):
