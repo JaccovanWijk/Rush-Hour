@@ -35,6 +35,10 @@ coverage.xml
 # Translations
 *.mo
 
-# Test file
+# Test files
 test.py
 test2.py
+
+# visualisation (TEMPORARY)
+*.png
+*.gif

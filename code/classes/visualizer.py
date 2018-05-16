@@ -1,6 +1,9 @@
 import pygame
 import random
 
+# size constant
+CAR_SIZE = 500
+
 def drawBoard(vehicles, size, huemap, name):
 
     # initialise image
@@ -12,10 +15,22 @@ def drawBoard(vehicles, size, huemap, name):
     for i in range(len(vehicles)):
         vehicle = vehicles[i]
         rect = []
+        # x of NW corner
+        rect.append(vehicle.xBegin * CAR_SIZE + CAR_SIZE//10)
+        # y of NW corner
+        rect.append(vehicle.yBegin * CAR_SIZE + 50)
+
         if vehicle.orientation == 'H':
-            rect = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 50, 500 * vehicle.length - 100, 400]
+            # width of rect
+            rect.append(CAR_SIZE * vehicle.length - CAR_SIZE//5)
+            # length of rect
+            rect.append(CAR_SIZE*4//5)
         elif vehicle.orientation == 'V':
-            rect = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 50, 400, 500 * vehicle.length - 100]
+            # width of rect
+            rect.append(CAR_SIZE*4//5)
+            # length of rect
+            rect.append(CAR_SIZE * vehicle.length - CAR_SIZE//5)
+
         image.fill(huemap[vehicle.name], rect)
 
         if vehicle.name == 'X':
