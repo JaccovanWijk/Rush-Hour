@@ -1,5 +1,7 @@
 import rushHour as r
 import vehicle as v
+import visualizer as vis
+
 from time import time
 from copy import deepcopy
 import heapq
@@ -56,19 +58,18 @@ class A_Star(r.RushHour):
 
         # model game
         self.heuristic = heuristic
+        self.size = size
+        self.board = board
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
-        #self.parent = None
-        #self.map = []
 
     # the searching algorithm
     def solver(self):
 
         # open and closed possibilities
         openBoards = PriorityQueue()
-        board = self.currentBoard
-        closedBoards = tuple()
-        # moves done
+        Board = self.Board
+        closedBoards = set()
         moves = dict()
 
         # cost of path from start to end-nodes
@@ -77,17 +78,17 @@ class A_Star(r.RushHour):
         # estimated cost of the cheapest path to goal
         #H_Cost = {}
 
-        # iteration counter
+        # initiate counter for nodes and timer
         count = 0
-
-        # returns solution, amount of moves, G_Cost and iterations
         beginTime = time()
 
+        self.visualizer = v.readBoard(self.currentVehicles)
+        vis.drawBoard(self.vehicles, self.size, self.visualizer)
+
         # initialise search, move count and cost
-        openBoards.push([[], board], 0)
-        #self.openBoards.insert(0, self.currentBoard)
-        self.moves[board] = ()
-        G_Cost[board] = 0
+        openBoards.push([[], self.currentBoard], 0)
+        self.moves[self.currentBoard] = ()
+        G_Cost[self.currentBoard] = 0
 
         while not openBoards.empty():
             currentBoard = openBoards.pop()
@@ -105,7 +106,7 @@ class A_Star(r.RushHour):
             for newBoard in self.getSucessors(currentBoard):
 
                 # if it is already in the queue
-                new_cost = currentBoard.G_Cost + board.cost(currentBoard, newBoard)
+                new_cost = currentBoard.G_Cost + currentBoard.cost(currentBoard, newBoard)
                 priority = new_cost + self.heuristic.calculate(newBoard)
                 if newBoard not in closedBoards:
 
