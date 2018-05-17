@@ -3,50 +3,59 @@ import random
 
 # size constant
 CAR_SIZE = 500
+# color constants
+WHITE = (255,255,255)
+GREY = (127,127,127)
 
 def drawBoard(vehicles, size, huemap, name):
 
     # initialise image
     image = pygame.Surface((size * 500, size * 500))
-    image.fill((127, 127, 127))
-    WHITE = (255,255,255)
+    image.fill(GREY)
 
     # draw all cars
-    for i in range(len(vehicles)):
-        vehicle = vehicles[i]
-        rect = []
-        # x of NW corner
-        rect.append(vehicle.xBegin * CAR_SIZE + CAR_SIZE//10)
-        # y of NW corner
-        rect.append(vehicle.yBegin * CAR_SIZE + 50)
+    for vehicle in vehicles:
 
-        if vehicle.orientation == 'H':
-            # width of rect
-            rect.append(CAR_SIZE * vehicle.length - CAR_SIZE//5)
-            # length of rect
-            rect.append(CAR_SIZE*4//5)
-        elif vehicle.orientation == 'V':
-            # width of rect
-            rect.append(CAR_SIZE*4//5)
-            # length of rect
-            rect.append(CAR_SIZE * vehicle.length - CAR_SIZE//5)
-
-        image.fill(huemap[vehicle.name], rect)
+        drawRect(image, huemap, vehicle)
 
         if vehicle.name == 'X':
-            # corners of goal car
-            nw = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 50]
-            ne = [(vehicle.xBegin + vehicle.length) * 500 - 60, vehicle.yBegin * 500 + 50]
-            sw = [vehicle.xBegin * 500 + 50, vehicle.yBegin * 500 + 430]
-            se = [(vehicle.xBegin + vehicle.length) * 500 - 60, vehicle.yBegin * 500 + 430]
-
-            # draw a cross
-            pygame.draw.line(image, WHITE, nw, se, 20)
-            pygame.draw.line(image, WHITE, ne, sw, 20)
+            drawCross(image, vehicle, 20)
 
     # save image
     pygame.image.save(image, name + ".png")
 
+def drawCross(image, vehicle, width):
+    """Marks a vehicle with a cross"""
+    # calculate rectangle bounds
+    up = vehicle.yBegin * CAR_SIZE + CAR_SIZE//10 + width//2 - 1
+    down = vehicle.yBegin * CAR_SIZE + CAR_SIZE*9//10 - width//2 - 1
+    left = vehicle.xBegin * CAR_SIZE + CAR_SIZE//10
+    right = (vehicle.xBegin + vehicle.length) * CAR_SIZE - CAR_SIZE//10 - 1
+
+    # draw a cross
+    pygame.draw.line(image, WHITE, [left,up], [right,down], width)
+    pygame.draw.line(image, WHITE, [right,up], [left,down], width)
+
+def drawRect(image, huemap, vehicle):
+    """Draws a rectangle to represent the vehicle"""
+    rect = []
+    # x of NW corner
+    rect.append(vehicle.xBegin * CAR_SIZE + CAR_SIZE//10)
+    # y of NW corner
+    rect.append(vehicle.yBegin * CAR_SIZE + 50)
+
+    if vehicle.orientation == 'H':
+        # width of rect
+        rect.append(CAR_SIZE * vehicle.length - CAR_SIZE//5)
+        # length of rect
+        rect.append(CAR_SIZE*4//5)
+    elif vehicle.orientation == 'V':
+        # width of rect
+        rect.append(CAR_SIZE*4//5)
+        # length of rect
+        rect.append(CAR_SIZE * vehicle.length - CAR_SIZE//5)
+
+    image.fill(huemap[vehicle.name], rect)
 
 def readBoard(vehicles):
     """Read in board and make hue map"""
