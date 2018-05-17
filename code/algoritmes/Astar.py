@@ -1,6 +1,6 @@
 import rushHour as r
 import vehicle as v
-import visualizer as v
+import visualizer as vis
 
 from time import time
 from copy import deepcopy
@@ -58,16 +58,17 @@ class A_Star(r.RushHour):
 
         # model game
         self.heuristic = heuristic
+        self.size = size
+        self.board = board
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
-        #self.parent = None
-        #self.map = []
 
     # the searching algorithm
     def solver(self):
 
         # open and closed possibilities
         openBoards = PriorityQueue()
+        Board = self.Board
         closedBoards = set()
         moves = dict()
 
@@ -77,10 +78,12 @@ class A_Star(r.RushHour):
         # estimated cost of the cheapest path to goal
         #H_Cost = {}
 
-        # initiate counter, timer and visualizer
+        # initiate counter for nodes and timer
         count = 0
         beginTime = time()
+
         self.visualizer = v.readBoard(self.currentVehicles)
+        vis.drawBoard(self.vehicles, self.size, self.visualizer)
 
         # initialise search, move count and cost
         openBoards.push([[], self.currentBoard], 0)
