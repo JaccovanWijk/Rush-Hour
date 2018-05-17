@@ -25,16 +25,16 @@ class BruteForce(r.RushHour):
     def solver(self):
         """Get a random solution"""
 
-        name = "Groot0"
-        vis.drawBoard(self.vehicles, self.size, self.visualizer, name)
+        # name = "Random0"
+        #vis.drawBoard(self.vehicles, self.size, self.visualizer, name)
 
         lastCar = None
-        i = 0
+        # i = 0
         while not self.won(self.currentVehicles):
 
-            i += 1
-            name = "Random" + str(i)
-            print(name)
+            # i += 1
+            # name = "Random" + str(i)
+            # print(name)
 
             board = self.currentBoard
             car = random.choice(self.vehicles)
