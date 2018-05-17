@@ -1,9 +1,9 @@
+from time import time
+from copy import deepcopy
+
 import rushHour as r
 import vehicle as v
 import visualizer as vis
-
-from time import time
-from copy import deepcopy
 import heapq
 
 class PriorityQueue:
@@ -59,18 +59,18 @@ class A_Star(r.RushHour):
         # model game
         self.heuristic = heuristic
         self.size = size
-        self.board = board
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
+        #self.parent = None
+        #self.map = []
 
     # the searching algorithm
     def solver(self):
 
         # open and closed possibilities
         openBoards = PriorityQueue()
-        Board = self.Board
+        currentBoard = self.currentBoard
         closedBoards = set()
-        moves = dict()
 
         # cost of path from start to end-nodes
         G_Cost = {}
@@ -78,40 +78,46 @@ class A_Star(r.RushHour):
         # estimated cost of the cheapest path to goal
         #H_Cost = {}
 
-        # initiate counter for nodes and timer
+        # initiate counter, timer and visualizer
         count = 0
         beginTime = time()
-
         self.visualizer = v.readBoard(self.currentVehicles)
-        vis.drawBoard(self.vehicles, self.size, self.visualizer)
 
         # initialise search, move count and cost
         openBoards.push([[], self.currentBoard], 0)
         self.moves[self.currentBoard] = ()
         G_Cost[self.currentBoard] = 0
 
+        name = "A_Star0"
+        v.drawBoard(self.vehicles, self.size, self.visualizer, name)
+        i = 0
+
         while not openBoards.empty():
             currentBoard = openBoards.pop()
-            #newBoard = self.Board()
 
             # update cars
             self.currentVehicles = self.getVehicles(self.currentBoard)
 
-            # stop if puzzle is goal is met
+            name = "BreadthFirst" + str(self.count) + "-" + str(i)
+            v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
+            i += 1
+
+            # stop if puzzle is puzzle is solved
             if self.won(self.currentVehicles):
-                return (self.showMoves(self.currentBoard, moves), count, time() - beginTime)
+                return (self.showMoves(self.currentBoard, self.moves), count, time() - beginTime)
             count += 1
 
             # loop through the newBoard's sucessors/siblings
-            for newBoard in self.getSucessors(currentBoard):
+            for (newBoard, move) in self.getSucessors(currentBoard):
 
                 # if it is already in the queue
-                new_cost = currentBoard.G_Cost + currentBoard.cost(currentBoard, newBoard)
+                new_cost = newBoard.G_Cost + currentBoard.cost(currentBoard, newBoard)
                 priority = new_cost + self.heuristic.calculate(newBoard)
                 if newBoard not in closedBoards:
 
                     # check if we beat the cost and update if so.
                     if newBoard not in self.G_Cost or new_cost < newBoard.G_Cost:
+                        self.moves[newBoard] = (self.currentBoard, move)
                         newBoard.G_Cost = new_cost
                         openBoards.push(next, priority)
                         #closedBoards.add(currentBoard)
@@ -143,9 +149,9 @@ class A_Star(r.RushHour):
         # step by step guide of all moves used to solve the puzzle
         def solution(self, board):
             output = ''
-            output += "; ".join(["{} {}".format(move[0], move[1]) for move in moves])
+            output += "; ".join(["{} {}".format(move[0], move[1]) for move in self.moves])
             vehicles = deepcopy(board.vehicles)
-            for move in moves:
+            for move in self.moves:
                 vehicle = [x for x in vehicles if x.vehicles == move[0]][0]
                 output += '\nMOVE {} {}\n'.format(move[0], move[1])
                 vehicle.move(move[1], 1)
