@@ -3,6 +3,7 @@ import BruteForce as bf
 import time
 import random
 import math
+import visualizer as v
 
 class BranchBound(r.RushHour):
 
@@ -20,13 +21,16 @@ class BranchBound(r.RushHour):
         self.amount = 0
         self.iterations = 0
         self.done = False
+        self.i = 0
+
+        self.visualizer = v.readBoard(self.currentVehicles)
 
 
     def branchBoundSolve(self, amount):
         start_time = time.time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
-        self.upperBound = 35
+        self.upperBound = 4
         print("Random upperbound =", self.upperBound)
 
         self.amount = amount
@@ -43,8 +47,14 @@ class BranchBound(r.RushHour):
         if moves >= self.upperBound or (board, moves) in self.closedBoards or self.done or self.iterations == self.amount:
             return
 
+        self.currentVehicles = self.getVehicles(board)
+
+        name = "Branch&Bound" + str(self.i)
+        v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
+        self.i += 1
+
         # if won, set new upperlimit
-        if self.won(self.getVehicles(board)):
+        if self.won(self.currentVehicles):
             self.upperBound = moves
             self.iterations += 1
             self.openBoards = self.tempOpenBoards

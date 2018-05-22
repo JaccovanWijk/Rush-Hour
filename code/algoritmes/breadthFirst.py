@@ -33,12 +33,20 @@ class BreadthFirst(r.RushHour):
         self.openBoards.insert(0, self.currentBoard)
         self.moves[self.currentBoard] = ()
 
+        name = "BreadthFirst0"
+        v.drawBoard(self.vehicles, self.size, self.visualizer, name)
+        i = 0
+
         while self.openBoards:
 
             self.currentBoard = self.openBoards.pop()
 
             # update cars
             self.currentVehicles = self.getVehicles(self.currentBoard)
+
+            name = "BreadthFirst" + str(self.count) + "-" + str(i)
+            v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
+            i += 1
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles):
