@@ -70,7 +70,7 @@ class BranchBound(r.RushHour):
         self.tempOpenBoards.append((board, moves))
 
         # self.currentBoard = board
-        for (newBoard, move) in self.sortedSucessors(board):
+        for newBoard in self.sortedSucessors(board):
 
             # request recursive solve
             if (newBoard, moves + 1) not in self.closedBoards:
@@ -83,7 +83,7 @@ class BranchBound(r.RushHour):
     def sortedSucessors(self, boards):
         """Sort list of boards"""
         sucessors = self.getSucessors(boards)
-
+        
         return sucessors
 
     def getSucessors(self, board):
@@ -98,7 +98,7 @@ class BranchBound(r.RushHour):
                 newBoard = self.makingMove(cars,vehicle, i)
                 self.makingMove(cars,vehicle, -i)
 
-                sucessors.append([newBoard, i])
+                sucessors.append(newBoard)
 
         return sucessors
 
