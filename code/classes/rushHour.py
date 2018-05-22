@@ -3,7 +3,7 @@ import math
 import visualizer as vis
 
 class RushHour:
-    """A single Rush Hour board."""
+    """A single Rush Hour board"""
 
     def __init__(self, board):
 
@@ -15,10 +15,14 @@ class RushHour:
         else:
             self.yGoal = self.size//2
         self.moves = dict()
+        self.weights = {}
         self.huemap = vis.readBoard(self.vehicles)
 
+    def cost(self, from_node, to_node):
+        return self.weights.get(to_node, 1)
+
     def update(self, vehicles):
-        """Update board with new set of cars."""
+        """Update board with new set of cars"""
 
         # initialise board
         board = []
@@ -46,7 +50,7 @@ class RushHour:
 
 
     def getVehicles(self, board):
-        """Read in vehicle of a given board."""
+        """Read in vehicle of a given board"""
 
         names = []
         vehicles = []
@@ -75,13 +79,14 @@ class RushHour:
 
     def searchMoves(self, board, vehicle, allMoves=True):
 
-        """Search for available moves for a given vehicle."""
+        """Search for available moves for a given vehicle"""
 
         moves = []
 
         # get line of view
         lineOfView = self.driveline(board, vehicle)
         beginC = vehicle.dominantCoordinate()
+        print(lineOfView)
 
         # search for moves down/right
         i = 1
@@ -107,7 +112,7 @@ class RushHour:
             return [-j,i]
 
     def makingMove(self, vehicles, car, direction):
-        """Move a car in a given direction."""
+        """Move a car in a given direction"""
 
         car.move(direction)
 
@@ -115,24 +120,15 @@ class RushHour:
 
 
     def won(self, vehicles):
-        """Returns true if winning condition is satisfied."""
+        """Returns true if winning condition is satisfied"""
 
         for vehicle in vehicles:
             if vehicle.name == 'X' and vehicle.xBegin == self.size - 2 and vehicle.yBegin == self.yGoal:
                 return True
         return False
 
-    def getGoalCar(self):
-        """Returns pointer to goal car"""
-
-        for vehicle in vehicles:
-            if vehicle.name == 'X':
-                return vehicle
-            else:
-                print("ERROR")
-
     def driveline(self, board, vehicle):
-        """Return possible driveline."""
+        """Return possible driveline"""
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
@@ -143,7 +139,7 @@ class RushHour:
         return possibleDrive
 
     def showMoves(self, endState, moves):
-        """Makes a list of moves made to solve the puzzle."""
+        """Makes a list of moves made to solve the puzzle"""
 
         moveList = list()
 
@@ -153,9 +149,10 @@ class RushHour:
             row = moves[endState]
             if len(row) == 2:
                 endState = row[0]
+                move = row[1]
 
                 # add move to list
-                moveList.append(endState)
+                moveList.append(move)
             else:
                 break
 
@@ -163,43 +160,11 @@ class RushHour:
         return moveList
 
     def showBoard(self, board):
-        """Print board in a better way."""
+        """Print board in a better way"""
         for i in range(self.size):
             print(board[i*self.size:(i+1)*self.size])
         print("")
 
-    def visualise(self, vehicles, fileName):
-        """Visualises board, saves image as '<fileName>.jpg'."""
+    def visualise(self, board, name):
 
-        vis.drawBoard(vehicles, self.size, self.huemap, fileName)
-
-    def zeroHeuristic(self, board):
-        """The trivial heuristic"""
-        return 0
-
-    def blockingCarsHeuristic(self, board):
-        """Heuristic that checks blocking cars"""
-        vehicles = self.getVehicles(board)
-
-        # check if game is won
-        if self.won(vehicles):
-            return 0
-
-        redCar = self.getGoalCar()
-        blockingVehicles = 1
-        for vehicle in vehicles:
-            blockedY = range(vehicle.yBegin,vehicle.yBegin + vehicle.length)
-            if vehicle.xBegin > redCar.xBegin + 1:
-                if redCar.yBegin in blockedY:
-                    blockingVehicles += 1
-
-        return blockingVehicles
-
-    def advancedBCHeuristic(self, board):
-
-        # check if game is won
-        if self.won(vehicles):
-            return 0
-
-        redCar = self.getGoalCar()
-        lineOfView = self.driveline(board,redCar)
+        vis.drawBoard(self.getVehicles(board, self.huemap, name))
