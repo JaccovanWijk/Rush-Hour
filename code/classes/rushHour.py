@@ -164,6 +164,7 @@ class RushHour:
             print(board[i*self.size:(i+1)*self.size])
         print("")
 
-    def visualise(self, vehicles, name):
+    def visualise(self, vehicles, fileName):
+        """Creates an image of the board, named <fileName>"""
 
-        vis.drawBoard(vehicles, self.size, self.huemap, name)
+        vis.drawBoard(vehicles, self.size, self.huemap, fileName)
