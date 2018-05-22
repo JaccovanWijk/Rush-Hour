@@ -1,6 +1,6 @@
 import rushHour as r
 import BruteForce as bf
-import time
+from time import time
 import random
 import math
 import visualizer as v
@@ -28,34 +28,29 @@ class BranchBound(r.RushHour):
 
 
     def branchBoundSolve(self, amount):
-        start_time = time.time()
+        start_time = time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
-        self.upperBound = 35
-        print("Random upperbound =", self.upperBound)
 
         self.amount = amount
 
         for i in range(amount):
-            timez = time.time()
+            timez = time()
             self.solver(self.currentBoard, 0)
             self.done = False
-            print("time", i, "=", time.time() - timez)
-            timez = time.time()
+            print("time", i, "=", time() - timez)
+            timez = time()
 
-        print("time: ",time.time() - start_time)
+        print("time: ", time() - start_time)
         return self.upperBound
 
     def solver(self, board, moves):
+        """Recursive branch and bound solver"""
         # check limit
         if moves >= self.upperBound or (board, moves) in self.closedBoards or self.done or self.iterations == self.amount:
             return
 
         self.currentVehicles = self.getVehicles(board)
-
-        # name = "Branch&Bound" + str(self.i)
-        # v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
-        # self.i += 1
 
         # if won, set new upperlimit
         if self.won(self.currentVehicles):
@@ -88,7 +83,7 @@ class BranchBound(r.RushHour):
         for board in sucessors:
             sort.append((board, self.heuristic(board)))
 
-        return sorted(sort, key=lambda score: score[1])
+        return [item[0] for item in sorted(sort, key=lambda score: score[1])]
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
@@ -101,9 +96,7 @@ class BranchBound(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(vehicles, vehicle, i)
                 self.makingMove(vehicles,vehicle, -i)
-
                 sucessors.append(newBoard)
-
         return sucessors
 
     def RandomSolve(self, board):
