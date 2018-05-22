@@ -59,8 +59,13 @@ class A_Star(r.RushHour):
         self.heuristic = heuristic
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
+        self.weights = {}
         #self.parent = None
         #self.map = []
+
+
+    def cost(self, from_node, to_node):
+        return self.weights.get(to_node, 1)
 
     # the searching algorithm
     def solver(self):

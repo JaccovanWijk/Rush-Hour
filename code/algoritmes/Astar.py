@@ -60,8 +60,13 @@ class A_Star(r.RushHour):
         self.size = size
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
+        self.weights = {}
         self.G_Cost = {}
         self.visualizer = v.readBoard(self.currentVehicles)
+
+
+    def cost(self, from_node, to_node):
+        return self.weights.get(to_node, 1)
 
     # the searching algorithm
     def solver(self):

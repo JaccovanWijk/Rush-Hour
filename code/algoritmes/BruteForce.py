@@ -23,13 +23,8 @@ class BruteForce(r.RushHour):
     def solver(self):
         """Get a random solution"""
 
-<<<<<<< HEAD
         name = "Groot0"
         self.visualise(self.currentVehicles, name)
-=======
-        # name = "Random0"
-        #vis.drawBoard(self.vehicles, self.size, self.visualizer, name)
->>>>>>> 268867a9df29d838e82487ab564e593f1a81539a
 
         lastCar = None
         # i = 0
