@@ -1,9 +1,7 @@
-import queue
 from time import time
 from collections import deque
 
 import rushHour as r
-import visualizer as v
 
 class BreadthFirst(r.RushHour):
     """A breadth first search algorithm for Rush Hour"""
@@ -16,37 +14,26 @@ class BreadthFirst(r.RushHour):
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
 
-        self.openBoards = []
+        self.openBoards = deque()
         self.closedBoards = set()
         self.count = 0
-
-        self.visualizer = v.readBoard(self.currentVehicles)
 
     def breadthFirstSearch(self, all=False):
         """The breadth first search algorithm
 
         Returns solution, amount of moves and iterations"""
-
         beginTime = time()
 
         # initialise search
-        self.openBoards.insert(0, self.currentBoard)
+        self.openBoards.append(self.currentBoard)
         self.moves[self.currentBoard] = ()
-
-        name = "BreadthFirst0"
-        v.drawBoard(self.vehicles, self.size, self.visualizer, name)
-        i = 0
 
         while self.openBoards:
 
-            self.currentBoard = self.openBoards.pop()
+            self.currentBoard = self.openBoards.popleft()
 
             # update cars
             self.currentVehicles = self.getVehicles(self.currentBoard)
-
-            name = "BreadthFirst" + str(self.count) + "-" + str(i)
-            v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
-            i += 1
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles):
@@ -55,7 +42,7 @@ class BreadthFirst(r.RushHour):
 
             self.count += 1
 
-            for (newBoard, move) in self.getSucessors():
+            for newBoard in self.getSucessors():
 
                 # board is already processed
                 if newBoard in self.closedBoards:
@@ -65,10 +52,10 @@ class BreadthFirst(r.RushHour):
                 if not newBoard in self.openBoards:
 
                     # add move to moves
-                    self.moves[newBoard] = (self.currentBoard, move)
+                    self.moves[newBoard] = self.currentBoard
 
                     # add new board state to open boards
-                    self.openBoards.insert(0, newBoard)
+                    self.openBoards.append(newBoard)
 
             # finish processing current board
             self.closedBoards.add(self.currentBoard)
@@ -86,9 +73,7 @@ class BreadthFirst(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
-                # make move string
-                move = vehicle.name + ' ' + str(i)
 
-                sucessors.append([newBoard, move])
+                sucessors.append(newBoard)
 
         return sucessors
