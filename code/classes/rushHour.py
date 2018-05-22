@@ -86,7 +86,6 @@ class RushHour:
         # get line of view
         lineOfView = self.driveline(board, vehicle)
         beginC = vehicle.dominantCoordinate()
-        print(lineOfView)
 
         # search for moves down/right
         i = 1
@@ -165,6 +164,6 @@ class RushHour:
             print(board[i*self.size:(i+1)*self.size])
         print("")
 
-    def visualise(self, board, name):
+    def visualise(self, vehicles, name):
 
-        vis.drawBoard(self.getVehicles(board, self.huemap, name))
+        vis.drawBoard(vehicles, self.size, self.huemap, name)

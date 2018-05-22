@@ -12,20 +12,15 @@ class BranchBound(r.RushHour):
 
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
-        self.goalBoard = ""
+        self.endState = ""
         self.currentVehicles = self.vehicles
         self.closedBoards = set()
         self.finalClosedBoards = set()
         self.openBoards = []
-        self.tempOpenBoards = []
         self.upperBound = 0
         self.amount = 0
         self.iterations = 0
         self.done = False
-        self.i = 0
-
-        self.visualizer = v.readBoard(self.currentVehicles)
-
 
     def branchBoundSolve(self, amount):
         start_time = time.time()
@@ -53,21 +48,16 @@ class BranchBound(r.RushHour):
 
         self.currentVehicles = self.getVehicles(board)
 
-        # name = "Branch&Bound" + str(self.i)
-        # v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
-        # self.i += 1
-
         # if won, set new upperlimit
         if self.won(self.currentVehicles):
             self.upperBound = moves
             self.iterations += 1
-            self.openBoards = self.tempOpenBoards
             self.done = True
             print("New upperbound =", moves)
             return
 
         # add current board to queue
-        self.tempOpenBoards.append((board, moves))
+        self.openBoards.append((board, moves))
 
         # self.currentBoard = board
         for newBoard in self.sortedSucessors(board):
@@ -77,18 +67,23 @@ class BranchBound(r.RushHour):
                 self.solver(newBoard, moves + 1)
 
         if not self.done:
-            self.closedBoards.add(self.tempOpenBoards.pop())
+            self.closedBoards.add(self.openBoards.pop())
 
 
     def sortedSucessors(self, board):
         """Sort list of boards"""
         sucessors = self.getSucessors(board)
         sort = []
+        sortedSucessors = []
 
         for board in sucessors:
-            sort.append((board, self.heuristic(board)))
+            sort.append((self.heuristic(board), board))
+        sort = sorted(sort, key=lambda score: score[0])
 
-        return sorted(sort, key=lambda score: score[1])
+        for (score, board) in sort:
+            sortedSucessors.append(board)
+
+        return sortedSucessors
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
@@ -112,13 +107,19 @@ class BranchBound(r.RushHour):
         movemin = 100000
         for j in range(10):
             game = bf.BruteForce(board)
-            amount, move = game.solver()
+            amount, move, self.endState = game.solver(True)
             if move < movemin:
                 movemin = move
-                self.goalBoard = board
         return movemin
 
     def heuristic (self, board):
+
+        score = 0
+        score += self.heuristic1(board) + self.heuristic2(board)
+        return score
+
+    def heuristic1 (self, board):
+        """Afstand van punten naar uitgang"""
 
         score = 0
         for i in range(self.size*self.size):
@@ -129,45 +130,25 @@ class BranchBound(r.RushHour):
                 score += abs(1 - i // self.size)
         return score
 
-        # goalVehicles = self.getVehicles(self.goalBoard)
-        # scores = []
-        #
-        # for (board, i) in boards:
-        #
-        #     score = 0
-        #     vehicles = self.getVehicles(board)
-        #
-        #     for vehicle in vehicles:
-        #         if vehicle.name == car.name:
-        #             score += abs(vehicle.dominantCoordinate() - car.dominantCoordinate())
-        #     # for vehicle in vehicles:
-        #     #      for goalVehicle in goalVehicles:
-        #     #
-        #     #          if vehicle.name == goalVehicle.name:
-        #     #              score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
-        #     #
-        #     # scores.append((score, (board, i)))
-        #
-        # return
-
     def heuristic2 (self, board):
-        """Afstand van punten naar uitgang"""
 
-        scores = []
-        for (board, i) in boards:
+        score = 0
 
-            score = 0
-            for j in range(self.size*self.size):
-                if board[j] == ".":
+        goalVehicles = self.getVehicles(self.endState)
+        vehicles = self.getVehicles(board)
 
-                    # add x difference
-                    score += self.size - j % self.size
-                    # add y difference
-                    score += abs(1 - j // self.size)
-
-            scores.append((score, (board, i)))
-
-        return sorted(scores, key=lambda score: score[0])
+        for vehicle in vehicles:
+            for goalVehicle in goalVehicles:
+                if vehicle.name == goalVehicle.name:
+                    score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+        # for vehicle in vehicles:
+        #      for goalVehicle in goalVehicles:
+        #
+        #          if vehicle.name == goalVehicle.name:
+        #              score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+        #
+        # scores.append((score, (board, i)))
+        return score
 
 # class PriorityQueue(Queue.Queue):
 #

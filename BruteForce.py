@@ -20,7 +20,7 @@ class BruteForce(r.RushHour):
         self.memory = dict()
         self.memory[self.currentBoard] = ()
 
-    def solver(self):
+    def solver(self, endState=False):
         """Get a random solution."""
 
         name = "Groot0"
@@ -53,25 +53,10 @@ class BruteForce(r.RushHour):
                 if self.currentBoard not in self.memory:
                     self.memory[self.currentBoard] = (board, "HOI")
 
-                possibleDriveX = self.driveline(self.currentBoard, self.carX)
-                if self.won(self.currentVehicles):#ended(possibleDriveX):
+                if self.won(self.currentVehicles):
                     break
 
         moveList = self.showMoves(self.currentBoard, self.memory)
+        if endState:
+            return self.moves, len(moveList), self.currentBoard
         return self.moves, len(moveList) + 1
-
-
-    def ended(self, possibleDrive):
-        """Check if it's possible to end game"""
-
-        # if there's only dots after goalcar, game is won
-        afterGoal = False
-        for letter in possibleDrive:
-            if letter == 'X':
-                afterGoal = True
-            elif letter != '.':
-                if afterGoal:
-                    return False
-
-        self.moves += 1
-        return True
