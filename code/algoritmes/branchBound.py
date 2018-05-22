@@ -4,6 +4,7 @@ import time
 import random
 import math
 import visualizer as v
+# import Queue
 
 class BranchBound(r.RushHour):
 
@@ -30,14 +31,17 @@ class BranchBound(r.RushHour):
         start_time = time.time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
-        self.upperBound = 4
+        self.upperBound = 35
         print("Random upperbound =", self.upperBound)
 
         self.amount = amount
 
         for i in range(amount):
+            timez = time.time()
             self.solver(self.currentBoard, 0)
             self.done = False
+            print("time", i, "=", time.time() - timez)
+            timez = time.time()
 
         print("time: ",time.time() - start_time)
         return self.upperBound
@@ -49,9 +53,9 @@ class BranchBound(r.RushHour):
 
         self.currentVehicles = self.getVehicles(board)
 
-        name = "Branch&Bound" + str(self.i)
-        v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
-        self.i += 1
+        # name = "Branch&Bound" + str(self.i)
+        # v.drawBoard(self.currentVehicles, self.size, self.visualizer, name)
+        # self.i += 1
 
         # if won, set new upperlimit
         if self.won(self.currentVehicles):
@@ -62,12 +66,11 @@ class BranchBound(r.RushHour):
             print("New upperbound =", moves)
             return
 
-        # add current board to stack
-        #self.closedBoards.add((board, moves))
+        # add current board to queue
         self.tempOpenBoards.append((board, moves))
 
         # self.currentBoard = board
-        for (j, (newBoard, move)) in self.getSucessors(board):
+        for (newBoard, move) in self.sortedSucessors(board):
 
             # request recursive solve
             if (newBoard, moves + 1) not in self.closedBoards:
@@ -75,6 +78,13 @@ class BranchBound(r.RushHour):
 
         if not self.done:
             self.closedBoards.add(self.tempOpenBoards.pop())
+
+
+    def sortedSucessors(self, boards):
+        """Sort list of boards"""
+        sucessors = self.getSucessors(boards)
+
+        return sucessors
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
@@ -90,8 +100,7 @@ class BranchBound(r.RushHour):
 
                 sucessors.append([newBoard, i])
 
-        #random.shuffle(sucessors)
-        return self.heuristic2(sucessors)
+        return sucessors
 
     def RandomSolve(self, board):
 
@@ -105,7 +114,7 @@ class BranchBound(r.RushHour):
                 self.goalBoard = board
         return movemin
 
-    def heuristic (self, boards):
+    def heuristic (self, boards, car):
 
         goalVehicles = self.getVehicles(self.goalBoard)
         scores = []
@@ -114,15 +123,19 @@ class BranchBound(r.RushHour):
 
             score = 0
             vehicles = self.getVehicles(board)
+
             for vehicle in vehicles:
-                 for goalVehicle in goalVehicles:
+                if vehicle.name == car.name:
+                    score += abs(vehicle.dominantCoordinate() - car.dominantCoordinate())
+            # for vehicle in vehicles:
+            #      for goalVehicle in goalVehicles:
+            #
+            #          if vehicle.name == goalVehicle.name:
+            #              score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+            #
+            # scores.append((score, (board, i)))
 
-                     if vehicle.name == goalVehicle.name:
-                         score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
-
-            scores.append((score, (board, i)))
-
-        return sorted(scores, key=lambda score: score[0])
+        return
 
     def heuristic2 (self, boards):
         """Afstand van punten naar uitgang"""
@@ -142,3 +155,25 @@ class BranchBound(r.RushHour):
             scores.append((score, (board, i)))
 
         return sorted(scores, key=lambda score: score[0])
+
+# class PriorityQueue(Queue.Queue):
+#
+#     def _insert(self, item):
+#         board, score = item
+#         self.place((board, score))
+#
+#     def _get(self):
+#         return self.queue.pop(0)[1]
+#
+#     def place(self, item):
+#         openBoards = self.queue
+#         low = 0
+#         high = len(openBoards)
+#
+#         while low < high:
+#             mid = (low+high)/2
+#             if item[0] < openBoards[mid][0]:
+#                 high = mid
+#             else:
+#                 low = mid + 1
+#         openBoards.insert(low, item)
