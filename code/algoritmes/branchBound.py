@@ -79,14 +79,7 @@ class BranchBound(r.RushHour):
             sort.append((self.heuristic(board), board))
         sort = sorted(sort, key=lambda score: score[0])
 
-<<<<<<< HEAD
         return [item[0] for item in sorted(sort, key=lambda score: score[1])]
-=======
-        for (score, board) in sort:
-            sortedSucessors.append(board)
-
-        return sortedSucessors
->>>>>>> a9cf0c97c56867d106aefc0a05461d5e2cb66831
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
