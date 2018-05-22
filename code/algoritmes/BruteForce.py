@@ -4,7 +4,7 @@ import math
 import visualizer as vis
 
 class BruteForce(r.RushHour):
-    """A random algorithm for Rush Hour"""
+    """A random algorithm for Rush Hour."""
 
     def __init__(self, board):
 
@@ -21,7 +21,7 @@ class BruteForce(r.RushHour):
         self.memory[self.currentBoard] = ()
 
     def solver(self):
-        """Get a random solution"""
+        """Get a random solution."""
 
         name = "Groot0"
         self.visualise(self.currentVehicles, name)

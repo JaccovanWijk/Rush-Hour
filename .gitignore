@@ -42,3 +42,7 @@ test2.py
 # visualisation (TEMPORARY)
 *.png
 *.gif
+
+# abandoned algorithms
+Genetic.py
+greedy.py

@@ -173,11 +173,11 @@ class RushHour:
 
         vis.drawBoard(vehicles, self.size, self.huemap, fileName)
 
-    def zeroHeuristic(self,board):
+    def zeroHeuristic(self, board):
         """The trivial heuristic"""
         return 0
 
-    def blockingCarsHeuristic(self,board):
+    def blockingCarsHeuristic(self, board):
         """Heuristic that checks blocking cars"""
         vehicles = self.getVehicles(board)
 
@@ -189,8 +189,17 @@ class RushHour:
         blockingVehicles = 1
         for vehicle in vehicles:
             blockedY = range(vehicle.yBegin,vehicle.yBegin + vehicle.length)
-            if vehicle.xBegin > redCar.xBegin + 1 and :
+            if vehicle.xBegin > redCar.xBegin + 1:
                 if redCar.yBegin in blockedY:
                     blockingVehicles += 1
 
         return blockingVehicles
+
+    def advancedBCHeuristic(self, board):
+
+        # check if game is won
+        if self.won(vehicles):
+            return 0
+
+        redCar = self.getGoalCar()
+        lineOfView = self.driveline(board,redCar)
