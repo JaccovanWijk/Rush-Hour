@@ -1,9 +1,1 @@
-math
-random
-queue
-collection
-os
-sys
-numpy
-heapq
-pygame
+pygame==1.9.3
