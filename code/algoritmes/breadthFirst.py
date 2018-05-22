@@ -42,7 +42,7 @@ class BreadthFirst(r.RushHour):
 
             self.count += 1
 
-            for newBoard in self.getSucessors():
+            for (newBoard, move) in self.getSucessors():
 
                 # board is already processed
                 if newBoard in self.closedBoards:
@@ -52,7 +52,7 @@ class BreadthFirst(r.RushHour):
                 if not newBoard in self.openBoards:
 
                     # add move to moves
-                    self.moves[newBoard] = self.currentBoard
+                    self.moves[newBoard] = (self.currentBoard, move)
 
                     # add new board state to open boards
                     self.openBoards.append(newBoard)
@@ -73,7 +73,8 @@ class BreadthFirst(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
+                move = vehicle.name + " " + str(i)
 
-                sucessors.append(newBoard)
+                sucessors.append([newBoard,move])
 
         return sucessors

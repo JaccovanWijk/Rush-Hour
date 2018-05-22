@@ -153,9 +153,10 @@ class RushHour:
             row = moves[endState]
             if len(row) == 2:
                 endState = row[0]
+                move = row[1]
 
                 # add move to list
-                moveList.append(endState)
+                moveList.append(move)
             else:
                 break
 
