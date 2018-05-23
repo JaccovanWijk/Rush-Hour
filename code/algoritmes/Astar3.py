@@ -9,22 +9,29 @@ class aStar(r.RushHour):
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.closedBoards = set()
-        self.priorityQueue = Qu.PriorityQueue()
+        self.tempOpenBoards = []
+        self.openBoards = Qu.PriorityQueue()
         self.moves = dict()
         self.count = 0
+        self.Gcost = {}
+        game = bf.BruteForce(self.currentBoard)
+        x, y, self.endState = game.solver(True)
 
 
     def aStarSolve(self):
-        i = 0
-        self.priorityQueue.put((0, self.currentBoard))
+
+        self.openBoards.put((0, self.currentBoard))
+        self.tempOpenBoards.append(self.currentBoard)
 
         self.moves[self.currentBoard] = ()
 
-        while not self.priorityQueue.empty():
+        while not self.openBoards.empty():
 
-            self.currentBoard = self.priorityQueue.get()[1]
+            self.currentBoard = self.openBoards.get()[1]
+            self.tempOpenBoards.remove(self.currentBoard)
+            self.Gcost[self.currentBoard] = 0
 
-            self.closedBoards.add(self.currentBoard)
+            #self.closedBoards.add(self.currentBoard)
 
             self.currentVehicles = self.getVehicles(self.currentBoard)
 
@@ -32,16 +39,26 @@ class aStar(r.RushHour):
                 print("won:", self.currentBoard)
                 break
 
-            self.count += 1
+            #self.count += 1
 
-            for newBoard in self.getSucessors():
+            for (newBoard, move) in self.getSucessors():
                 if newBoard in self.closedBoards:
                     continue
 
-                self.moves[newBoard] = (self.currentBoard)
+                if not newBoard in self.tempOpenBoards:
+                    self.moves[newBoard] = (self.currentBoard, move)
+                    self.tempOpenBoards.append(newBoard)
 
-                score = 0
-                self.priorityQueue.put((score, newBoard))
+                    cost = self.Gcost[self.currentBoard] + 1
+                    self.Gcost[newBoard] = (cost)
+
+                    score = cost + self.heuristic(newBoard)
+
+                    self.openBoards.put((1, newBoard))
+
+            self.closedBoards.add(self.currentBoard)
+        print(self.showMoves(self.currentBoard, self.moves))
+        return len(self.showMoves(self.currentBoard, self.moves))
 
 
 
@@ -56,28 +73,39 @@ class aStar(r.RushHour):
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
 
-                sucessors.append(newBoard)
+                move = vehicle.name + str(i)
+
+                sucessors.append((newBoard, move))
 
         return sucessors
 
+    def heuristic(self, board):
 
-# class PriorityQueue(Queue.Queue):
-#
-#     def _put(self, item):
-#         self.place(item)
-#
-#     def _get(self):
-#         return self.queue.pop(0)[1]
-#
-#     def place(self, item):
-#         openBoards = self.queue
-#         low = 0
-#         high = len(openBoards)
-#
-#         while low < high:
-#             mid = (low+high)/2
-#             if item[0] < openBoards[mid][0]:
-#                 high = mid
-#             else:
-#                 low = mid + 1
-#         openBoards.insert(low, item)
+        score = self.heuristic2(board)
+        return score
+
+
+    def heuristic1 (self, board):
+        """Afstand van punten naar uitgang"""
+
+        score = 0
+        for i in range(self.size*self.size):
+            if board[i] == ".":
+                # add x difference
+                score += self.size - i % self.size
+                # add y difference
+                score += abs(1 - i // self.size)
+        return score/100
+
+    def heuristic2 (self, board):
+
+        score = 0
+
+        goalVehicles = self.getVehicles(self.endState)
+        vehicles = self.getVehicles(board)
+
+        for vehicle in vehicles:
+            for goalVehicle in goalVehicles:
+                if vehicle.name == goalVehicle.name:
+                    score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+        return score
