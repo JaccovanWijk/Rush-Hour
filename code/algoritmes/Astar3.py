@@ -7,7 +7,7 @@ class aStar(r.RushHour):
     def __init__(self, board):
 
         r.RushHour.__init__(self, board)
-        self.currentBoard = board
+        self.currentBoard = self.initBoard
         self.closedBoards = set()
         self.priorityQueue = Qu.PriorityQueue()
         self.moves = dict()
@@ -15,25 +15,26 @@ class aStar(r.RushHour):
 
 
     def aStarSolve(self):
-
-        self.priorityQueue.put((self.currentBoard, 0))
+        i = 0
+        self.priorityQueue.put((0, self.currentBoard))
 
         self.moves[self.currentBoard] = ()
 
         while not self.priorityQueue.empty():
 
-            self.currentBoard = self.priorityQueue.get()
+            self.currentBoard = self.priorityQueue.get()[1]
+
             self.closedBoards.add(self.currentBoard)
 
             self.currentVehicles = self.getVehicles(self.currentBoard)
 
             if self.won(self.currentVehicles):
+                print("won:", self.currentBoard)
                 break
 
             self.count += 1
 
             for newBoard in self.getSucessors():
-
                 if newBoard in self.closedBoards:
                     continue
 
@@ -47,7 +48,6 @@ class aStar(r.RushHour):
     def getSucessors(self):
         """Get next board states reachable by making one move"""
         sucessors = []
-        cars = self.currentVehicles
 
         # get all moves of all vehicles
         for vehicle in self.currentVehicles:
@@ -55,7 +55,6 @@ class aStar(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
-                move = vehicle.name + " " + str(i)
 
                 sucessors.append(newBoard)
 

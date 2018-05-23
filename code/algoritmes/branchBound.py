@@ -26,6 +26,7 @@ class BranchBound(r.RushHour):
         start_time = time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
+        print("First upperbound =",self.upperBound)
 
         self.amount = amount
 
@@ -58,7 +59,6 @@ class BranchBound(r.RushHour):
         # add current board to queue
         self.openBoards.append((board, moves))
 
-        # self.currentBoard = board
         for newBoard in self.sortedSucessors(board):
 
             # request recursive solve
@@ -77,9 +77,9 @@ class BranchBound(r.RushHour):
 
         for board in sucessors:
             sort.append((self.heuristic(board), board))
-        sort = sorted(sort, key=lambda score: score[0])
+        #sort = sorted(sort, key=lambda score: score[0])
 
-        return [item[0] for item in sorted(sort, key=lambda score: score[1])]
+        return [item[1] for item in sorted(sort, key=lambda score: score[0])]
 
     def getSucessors(self, board):
         """Get next board states reachable by making one move"""
