@@ -1,34 +1,37 @@
 import rushHour as r
 import BruteForce as bf
+import breadthFirst as brF
 import queue as Qu
 
 class aStar(r.RushHour):
 
     def __init__(self, board):
 
+        # model game
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.closedBoards = set()
-        self.tempOpenBoards = []
-        self.openBoards = Qu.PriorityQueue()
+        self.openBoards = []
+        self.priorityQueue = Qu.PriorityQueue()
         self.moves = dict()
         self.count = 0
         self.Gcost = {}
         game = bf.BruteForce(self.currentBoard)
-        x, y, self.endState = game.solver(True)
+        self.endState = game.solver()[-1]
 
 
     def aStarSolve(self):
 
-        self.openBoards.put((0, self.currentBoard))
-        self.tempOpenBoards.append(self.currentBoard)
-
+        # initialise search
+        self.priorityQueue.put((0, self.currentBoard))
+        self.openBoards.append(self.currentBoard)
         self.moves[self.currentBoard] = ()
 
-        while not self.openBoards.empty():
+        while not self.priorityQueue.empty():
 
-            self.currentBoard = self.openBoards.get()[1]
-            self.tempOpenBoards.remove(self.currentBoard)
+            # update constants
+            self.currentBoard = self.priorityQueue.get()[1]
+            self.openBoards.remove(self.currentBoard)
             self.Gcost[self.currentBoard] = 0
 
             #self.closedBoards.add(self.currentBoard)
@@ -45,16 +48,17 @@ class aStar(r.RushHour):
                 if newBoard in self.closedBoards:
                     continue
 
-                if not newBoard in self.tempOpenBoards:
+                if not newBoard in self.openBoards:
                     self.moves[newBoard] = (self.currentBoard, move)
-                    self.tempOpenBoards.append(newBoard)
+                    self.openBoards.append(newBoard)
 
                     cost = self.Gcost[self.currentBoard] + 1
                     self.Gcost[newBoard] = (cost)
+                    print(cost)
 
-                    score = cost + self.heuristic(newBoard)
+                    score = cost #+ self.heuristic(newBoard)
 
-                    self.openBoards.put((1, newBoard))
+                    self.priorityQueue.put((score, newBoard))
 
             self.closedBoards.add(self.currentBoard)
         print(self.showMoves(self.currentBoard, self.moves))
@@ -109,3 +113,11 @@ class aStar(r.RushHour):
                 if vehicle.name == goalVehicle.name:
                     score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
         return score
+
+
+
+#state > children > inside queue
+#get from queue, check if closed, if not make children, put children in closedboard
+#best possible random endstate?
+#pay attention to cars
+#what happens when?
