@@ -22,9 +22,6 @@ class BranchBound(r.RushHour):
         self.iterations = 0
         self.done = False
 
-        game = bf.BruteForce(self.currentBoard)
-        self.endState = game.solver()[-1]
-
     def solver(self, amount):
         start_time = time()
         # find upperbound by random solver
@@ -104,7 +101,7 @@ class BranchBound(r.RushHour):
         movemin = 100000
         for j in range(10):
             game = bf.BruteForce(board)
-            amount, move, self.endState = game.solver(True)
+            amount, move, self.endState = game.solver()
             if move < movemin:
                 movemin = move
         return movemin

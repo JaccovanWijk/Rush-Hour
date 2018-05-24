@@ -16,8 +16,8 @@ class aStar(r.RushHour):
         self.moves = dict()
         self.count = 0
         self.Gcost = {}
-        # game = bf.BruteForce(self.currentBoard)
-        # self.endState = game.solver()[-1]
+        game = bf.BruteForce(self.currentBoard)
+        self.endState = game.solver()[-1]
 
 
     def solver(self):

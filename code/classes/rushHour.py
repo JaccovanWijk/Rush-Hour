@@ -207,7 +207,7 @@ class RushHour:
 
         vehicles = self.getVehicles(board)
         redVehicle = [vehicle for vehicle in vehicles if vehicle.name == 'X'][0]
-        if redVehicle.xBegin == self.size - 2 and redVehicle.yBegin == self.yGoal:
+        if redVehicle.xBegin == self.size - 2:
             return 0
 
         for vehicle in vehicles:
