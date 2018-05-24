@@ -55,19 +55,3 @@ class BruteForce(r.RushHour):
         # remove repetitive moves
         moveList = self.showMoves(self.currentBoard, self.memory)
         return self.moves, len(moveList) + 1, self.currentBoard
-
-
-    def ended(self, possibleDrive):
-        """Check if it's possible to end game"""
-
-        # if there's only dots after goalcar, game is won
-        afterGoal = False
-        for letter in possibleDrive:
-            if letter == 'X':
-                afterGoal = True
-            elif letter != '.':
-                if afterGoal:
-                    return False
-
-        self.moves += 1
-        return True
