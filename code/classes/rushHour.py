@@ -168,3 +168,35 @@ class RushHour:
         """Creates an image of the board, named <fileName>"""
 
         vis.drawBoard(vehicles, self.size, self.huemap, fileName)
+
+    def heuristic1 (self, board):
+        """Returns score for a given board, looks at average distance
+        from all empty spots to the exit"""
+
+        score = 0
+        amount = 0
+        for i in range(self.size*self.size):
+            if board[i] == ".":
+                # add x difference
+                score += self.size - i % self.size
+                # add y difference
+                score += abs(1 - i // self.size)
+                amount += 1
+        return score/amount
+
+    def heuristic2 (self, board, endState):
+        """Returns score for a given board, looks at the difference from
+        a random endState"""
+
+        score = 0
+
+        goalVehicles = self.getVehicles(endState)
+        vehicles = self.getVehicles(board)
+
+        for vehicle in vehicles:
+            for goalVehicle in goalVehicles:
+                if vehicle.name == goalVehicle.name:
+                    score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+        return score
+
+    
