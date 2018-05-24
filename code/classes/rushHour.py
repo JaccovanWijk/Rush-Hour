@@ -7,6 +7,7 @@ class RushHour:
 
     def __init__(self, board):
 
+        # create board
         self.initBoard = board.replace("\n", "")
         self.size = int(math.sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
@@ -15,11 +16,8 @@ class RushHour:
         else:
             self.yGoal = self.size//2
         self.moves = dict()
-        self.weights = {}
         self.huemap = vis.readBoard(self.vehicles)
 
-    def cost(self, from_node, to_node):
-        return self.weights.get(to_node, 1)
 
     def update(self, vehicles):
         """Update board with new set of cars"""
@@ -168,3 +166,51 @@ class RushHour:
         """Creates an image of the board, named <fileName>"""
 
         vis.drawBoard(vehicles, self.size, self.huemap, fileName)
+
+    def heuristic1 (self, board):
+        """Returns score for a given board, looks at average distance
+        from all empty spots to the exit"""
+
+        score = 0
+        amount = 0
+        for i in range(self.size*self.size):
+            if board[i] == ".":
+                # add x difference
+                score += self.size - i % self.size
+                # add y difference
+                score += abs(1 - i // self.size)
+                amount += 1
+        return score/amount
+
+    def heuristic2 (self, board, endState):
+        """Returns score for a given board, looks at the average difference
+        from a random endState"""
+
+        score = 0
+
+        goalVehicles = self.getVehicles(endState)
+        vehicles = self.getVehicles(board)
+
+        for vehicle in vehicles:
+            for goalVehicle in goalVehicles:
+                if vehicle.name == goalVehicle.name:
+                    score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+        return score/len(vehicles)
+
+    def heuristic3 (self, board):
+        """Returns score for a given board,
+        looks at the number of vehicles blocking the red car"""
+
+        score = 0
+
+        vehicles = self.getVehicles(board)
+        redVehicle = [vehicle for vehicle in vehicles if vehicle.name == 'X'][0]
+        if redVehicle.xBegin == self.size - 2:
+            return 0
+
+        for vehicle in vehicles:
+            if vehicle.orientation == "V" and vehicle.xBegin >= (redVehicle.xBegin
+            + redVehicle.length) and (vehicle.yBegin <= redVehicle.yBegin
+            and vehicle.yBegin + vehicle.length > redVehicle.yBegin):
+                score += 1
+        return score
