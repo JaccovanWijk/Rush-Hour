@@ -18,7 +18,8 @@ class BreadthFirst(r.RushHour):
         self.closedBoards = set()
         self.count = 0
 
-    def breadthFirstSearch(self, all=False):
+
+    def solver(self, all=False):
         """The breadth first search algorithm
 
         Returns solution, amount of moves and iterations"""
@@ -62,10 +63,10 @@ class BreadthFirst(r.RushHour):
 
         return self.count
 
+
     def getSucessors(self):
         """Get next board states reachable by making one move"""
         sucessors = []
-        cars = self.currentVehicles
 
         # get all moves of all vehicles
         for vehicle in self.currentVehicles:
