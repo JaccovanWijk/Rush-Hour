@@ -22,7 +22,10 @@ class BranchBound(r.RushHour):
         self.iterations = 0
         self.done = False
 
-    def branchBoundSolve(self, amount):
+        game = bf.BruteForce(self.currentBoard)
+        self.endState = game.solver()[-1]
+
+    def solver(self, amount):
         start_time = time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
@@ -32,7 +35,7 @@ class BranchBound(r.RushHour):
 
         for i in range(amount):
             timez = time()
-            self.solver(self.currentBoard, 0)
+            self.branchBoundSolve(self.currentBoard, 0)
             self.done = False
             print("time", i, "=", time() - timez)
             timez = time()
@@ -40,7 +43,7 @@ class BranchBound(r.RushHour):
         print("time: ", time() - start_time)
         return self.upperBound
 
-    def solver(self, board, moves):
+    def branchBoundSolve(self, board, moves):
         """Recursive branch and bound solver"""
         # check limit
         if moves >= self.upperBound or (board, moves) in self.closedBoards or self.done or self.iterations == self.amount:
@@ -63,7 +66,7 @@ class BranchBound(r.RushHour):
 
             # request recursive solve
             if (newBoard, moves + 1) not in self.closedBoards:
-                self.solver(newBoard, moves + 1)
+                self.branchBoundSolve(newBoard, moves + 1)
 
         if not self.done:
             self.closedBoards.add(self.openBoards.pop())
@@ -109,37 +112,5 @@ class BranchBound(r.RushHour):
     def heuristic (self, board):
 
         score = 0
-        score += self.heuristic1(board) + self.heuristic2(board)
-        return score
-
-    def heuristic1 (self, board):
-        """Afstand van punten naar uitgang"""
-
-        score = 0
-        for i in range(self.size*self.size):
-            if board[i] == ".":
-                # add x difference
-                score += self.size - i % self.size
-                # add y difference
-                score += abs(1 - i // self.size)
-        return score
-
-    def heuristic2 (self, board):
-
-        score = 0
-
-        goalVehicles = self.getVehicles(self.endState)
-        vehicles = self.getVehicles(board)
-
-        for vehicle in vehicles:
-            for goalVehicle in goalVehicles:
-                if vehicle.name == goalVehicle.name:
-                    score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
-        # for vehicle in vehicles:
-        #      for goalVehicle in goalVehicles:
-        #
-        #          if vehicle.name == goalVehicle.name:
-        #              score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
-        #
-        # scores.append((score, (board, i)))
+        score += self.heuristic1(board) + self.heuristic2(board, self.endState)
         return score

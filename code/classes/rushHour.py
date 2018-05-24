@@ -185,8 +185,8 @@ class RushHour:
         return score/amount
 
     def heuristic2 (self, board, endState):
-        """Returns score for a given board, looks at the difference from
-        a random endState"""
+        """Returns score for a given board, looks at the average difference
+        from a random endState"""
 
         score = 0
 
@@ -197,6 +197,22 @@ class RushHour:
             for goalVehicle in goalVehicles:
                 if vehicle.name == goalVehicle.name:
                     score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
-        return score
+        return score/len(vehicles)
 
-    
+    def heuristic3 (self, board):
+        """Returns score for a given board,
+        looks at the number of vehicles blocking the red car"""
+
+        score = 0
+
+        vehicles = self.getVehicles(board)
+        redVehicle = [vehicle for vehicle in vehicles if vehicle.name == 'X'][0]
+        if redVehicle.xBegin == self.size - 2 and redVehicle.yBegin == self.yGoal:
+            return 0
+
+        for vehicle in vehicles:
+            if vehicle.orientation == "V" and vehicle.xBegin >= (redVehicle.xBegin
+            + redVehicle.length) and (vehicle.yBegin <= redVehicle.yBegin
+            and vehicle.yBegin + vehicle.length > redVehicle.yBegin):
+                score += 1
+        return score
