@@ -115,6 +115,12 @@ class RushHour:
 
         return self.update(vehicles)
 
+    def getCar(self, vehicles, name):
+        """Returns the vehicle with corresponding name"""
+
+        for vehicle in vehicles:
+            if vehicle.name == name:
+                return vehicle
 
     def won(self, vehicles):
         """Returns true if winning condition is satisfied"""
@@ -214,3 +220,23 @@ class RushHour:
             and vehicle.yBegin + vehicle.length > redVehicle.yBegin):
                 score += 1
         return score
+
+    def heuristic4(self, board):
+        """Returns score for a given board,
+        looks at moves to free up blocking cars"""
+
+        score = 0
+        vehicles = self.getVehicles(board)
+        goalCar = getCar(vehicles, "X")
+
+        if self.won(vehicles):
+            return score
+
+        lineOfView = self.driveline(board, vehicle)
+
+        # search for blocking cars
+        names = []
+        for i in range(goalCar.dominantCoordinate() + goalCar.length, self.size):
+            if lineOfView[i] != ".":
+                names.append(lineOfView[i])
+        blockingCars = [self.getCar(vehicles, name) for name in names]
