@@ -18,6 +18,7 @@ class BreadthFirst(r.RushHour):
         self.closedBoards = set()
         self.count = 0
 
+
     def solver(self, all=False):
         """The breadth first search algorithm
 
@@ -61,6 +62,7 @@ class BreadthFirst(r.RushHour):
             self.closedBoards.add(self.currentBoard)
 
         return self.count
+
 
     def getSucessors(self):
         """Get next board states reachable by making one move"""

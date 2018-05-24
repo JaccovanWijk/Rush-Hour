@@ -1,13 +1,13 @@
 import rushHour as r
 import random
 import math
-import visualizer as vis
 
 class BruteForce(r.RushHour):
     """A random algorithm for Rush Hour."""
 
     def __init__(self, board):
 
+        # model for game
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
@@ -20,24 +20,18 @@ class BruteForce(r.RushHour):
         self.memory = dict()
         self.memory[self.currentBoard] = ()
 
+
     def solver(self):
         """Get a random solution."""
 
-        name = "Groot0"
-        self.visualise(self.currentVehicles, name)
-
         lastCar = None
-        # i = 0
         while not self.won(self.currentVehicles):
 
-            # i += 1
-            # name = "Random" + str(i)
-            # print(name)
-
+            #initialise search
             board = self.currentBoard
             car = random.choice(self.vehicles)
 
-            # search moves selected car
+            # search moves for selected car
             possibleMoves = self.searchMoves(self.currentBoard,car)
             if possibleMoves:
 
@@ -48,15 +42,17 @@ class BruteForce(r.RushHour):
                 # update current board
                 self.currentBoard = self.makingMove(self.currentVehicles,car, move)
 
-                #vis.drawBoard(self.vehicles, self.size, self.visualizer, name)
-
+                # memorize moves made
                 if self.currentBoard not in self.memory:
                     self.memory[self.currentBoard] = (board, "HOI")
 
                 possibleDriveX = self.driveline(self.currentBoard, self.carX)
-                if self.won(self.currentVehicles):#ended(possibleDriveX):
+
+                # stop if puzzle is solved
+                if self.won(self.currentVehicles):
                     break
 
+        # remove repetitive moves
         moveList = self.showMoves(self.currentBoard, self.memory)
         return self.moves, len(moveList) + 1, self.currentBoard
 
