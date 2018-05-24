@@ -18,7 +18,7 @@ class BreadthFirst(r.RushHour):
         self.closedBoards = set()
         self.count = 0
 
-    def breadthFirstSearch(self, all=False):
+    def solver(self, all=False):
         """The breadth first search algorithm
 
         Returns solution, amount of moves and iterations"""
