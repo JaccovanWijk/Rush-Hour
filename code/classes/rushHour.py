@@ -199,4 +199,21 @@ class RushHour:
                     score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
         return score
 
-    
+    def heuristic3 (self, board):
+        """Returns score for a given board,
+        looks at the number of vehicles blocking the red car"""
+
+        score = 0
+
+        vehicles = self.getVehicles(board)
+        red_vehicle = [
+            vehicle for vehicle in vehicles if vehicle.name == 'X'][0]
+        if red_vehicle.xBegin == self.size - 2 and red_vehicle.yBegin == self.yGoal:
+            return 0
+
+        for vehicle in vehicles:
+            if vehicle.orientation == "V" and vehicle.xBegin >= (red_vehicle.xBegin
+            + red_vehicle.length) and (vehicle.yBegin <= red_vehicle.yBegin
+            and vehicle.yBegin + vehicle.length > red_vehicle.yBegin):
+                score += 1
+        return score
