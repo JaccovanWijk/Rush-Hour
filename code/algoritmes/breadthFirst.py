@@ -65,7 +65,6 @@ class BreadthFirst(r.RushHour):
     def getSucessors(self):
         """Get next board states reachable by making one move"""
         sucessors = []
-        cars = self.currentVehicles
 
         # get all moves of all vehicles
         for vehicle in self.currentVehicles:
