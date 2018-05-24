@@ -17,10 +17,14 @@ class aStar(r.RushHour):
         self.Gcost = {}
         game = bf.BruteForce(self.currentBoard)
         self.endState = game.solver()[-1]
+        self.heuristics = []
 
 
-    def solver(self, all=False):
+    def solver(self, heuristics, all=False):
         """The A* search algorithm"""
+
+        # set heuristics
+        self.heuristics = heuristics
 
         # initialise search
         self.priorityQueue.put((0, self.currentBoard))
@@ -92,5 +96,13 @@ class aStar(r.RushHour):
 
     def heuristic(self, board):
 
-        score = self.heuristic3(board)
+        score = 0
+        for heuristic in self.heuristics:
+            if heuristic == "heuristic1":
+                score += self.heuristic1(board)
+            if heuristic == "heuristic2":
+                score += self.heuristic2(board, self.endState)
+            if heuristic == "heuristic3":
+                score += self.heuristic3(board)
+
         return score
