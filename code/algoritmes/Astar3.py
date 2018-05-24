@@ -26,13 +26,13 @@ class aStar(r.RushHour):
         self.priorityQueue.put((0, self.currentBoard))
         self.openBoards.append(self.currentBoard)
         self.moves[self.currentBoard] = ()
+        self.Gcost[self.currentBoard] = 0
 
         while not self.priorityQueue.empty():
 
             # update constants
             self.currentBoard = self.priorityQueue.get()[1]
             self.openBoards.remove(self.currentBoard)
-            self.Gcost[self.currentBoard] = 0
 
             #self.closedBoards.add(self.currentBoard)
 
@@ -54,7 +54,6 @@ class aStar(r.RushHour):
 
                     cost = self.Gcost[self.currentBoard] + 1
                     self.Gcost[newBoard] = (cost)
-                    print(cost)
 
                     score = cost #+ self.heuristic(newBoard)
 
