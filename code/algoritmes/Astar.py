@@ -14,13 +14,13 @@ class aStar(r.RushHour):
         self.openBoards = []
         self.priorityQueue = Qu.PriorityQueue()
         self.moves = dict()
-        self.count = 0
         self.Gcost = {}
         game = bf.BruteForce(self.currentBoard)
         self.endState = game.solver()[-1]
 
 
-    def solver(self):
+    def solver(self, all=False):
+        """The A* search algorithm"""
 
         # initialise search
         self.priorityQueue.put((0, self.currentBoard))
@@ -83,7 +83,6 @@ class aStar(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
-
                 move = vehicle.name + str(i)
 
                 sucessors.append((newBoard, move))
@@ -93,5 +92,5 @@ class aStar(r.RushHour):
 
     def heuristic(self, board):
 
-        score = self.heuristic1(board)
+        score = self.heuristic3(board)
         return score
