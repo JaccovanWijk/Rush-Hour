@@ -77,7 +77,7 @@ class AlgorithmPage(tk.Frame):
         self.BreadthFirstAlg.pack(pady=5, padx=5)
 
         # make astar button
-        self.AstarAlg = ttk.Button(self, text="Astar Algorithm",
+        self.AstarAlg = ttk.Button(self, text="A* Algorithm",
         command=lambda: controller.show_frame(GamePage, "astar",
         currentGame, currentAmount, currentHeuristics))
 
@@ -234,7 +234,9 @@ class AmountPage(tk.Frame):
 
     def setAmount(self, amount, controller):
 
-        controller.show_frame(EndPage, currentAlgorithm[-1], currentGame[-1], amount, currentHeuristics[-1])
+        currentAmount.append(amount)
+        self.quit()
+        # controller.show_frame(EndPage, currentAlgorithm[-1], currentGame[-1], amount, currentHeuristics[-1])
 
 class EndPage(tk.Frame):
 
