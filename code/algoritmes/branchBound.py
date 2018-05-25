@@ -26,7 +26,8 @@ class BranchBound(r.RushHour):
     upperBounds     -- all improved upper bound steps
     amount          -- amount of improvements on the upper bound requested
     iterations      -- amount of improvements on the upper bound done
-    heuristics      -- list of heuristics used for this run of branch and bound"""
+    heuristics      -- list of heuristics used for this run of branch and bound
+    times           -- list of times recorded after every iteration"""
 
     def __init__(self,board):
         """
@@ -47,6 +48,7 @@ class BranchBound(r.RushHour):
         self.iterations = 0
         self.done = False
         self.heuristics = []
+        self.times = [time()]
 
     def solver(self, amount, heuristics):
         """The branch and bound search algorithm.
@@ -59,7 +61,6 @@ class BranchBound(r.RushHour):
         """
         self.heuristics = heuristics
 
-        start_time = time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
         self.upperBounds.append(self.upperBound)
@@ -74,7 +75,7 @@ class BranchBound(r.RushHour):
             # print("time", i, "=", time() - timez)
             # timez = time()
 
-        return self.upperBound, self.upperBounds, time() - start_time
+        return self.upperBound, self.upperBounds, sum(self.times), self.times
 
     def branchBoundSolve(self, board, moves):
         """Recursive branch and bound solver."""
@@ -88,6 +89,7 @@ class BranchBound(r.RushHour):
         if self.won(self.currentVehicles):
             self.upperBound = moves
             self.upperBounds.append(self.upperBound)
+            self.times.append(time() - self.times[-1])
             self.iterations += 1
             self.done = True
             print("New upperbound =", moves)
@@ -145,5 +147,7 @@ class BranchBound(r.RushHour):
                 score += self.heuristic2(board, self.endState)
             if heuristic == "heuristic3":
                 score += self.heuristic3(board)
+            if heuristic == "heuristic4":
+                score += self.heuristic4(board)
 
         return score

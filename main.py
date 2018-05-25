@@ -8,10 +8,17 @@ this is done by generating a GUI with choices.
 import os, sys
 import tkinter as tk
 from tkinter import ttk
+
 directory = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(directory, "code"))
 sys.path.append(os.path.join(directory, "code", "classes"))
 sys.path.append(os.path.join(directory, "code", "algoritmes"))
+
+# import matplotlib
+# matplotlib.use("TkAgg")
+# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+# from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 
 # import shit
 import rushHour as r
@@ -45,12 +52,14 @@ class windows(tk.Tk):
         self.frames = {}
 
         # determine size of window
-        for F in (GamePage, AlgorithmPage, AmountPage, HeuristicsPage, ProgressPage, ShowPage):
+        for F in (GamePage, AlgorithmPage, AmountPage, HeuristicsPage,
+                  ProgressPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(AlgorithmPage, currentAlgorithm, currentGame, currentAmount, currentHeuristics)
+        self.show_frame(AlgorithmPage, currentAlgorithm, currentGame,
+        currentAmount, currentHeuristics)
 
     def show_frame(self, cont, algorithm, game, amount, heuristics):
         """ Show frame and update info """
@@ -64,10 +73,10 @@ class windows(tk.Tk):
         frame.tkraise()
 
 class AlgorithmPage(tk.Frame):
-    """ Show buttons to choose algorithms. """
+    """ Creates window to show buttons to choose algorithms. """
 
     def __init__(self, parent, controller):
-        """Explain what this will do pls."""
+        """ Sets text and buttons into frame """
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Which algorithm would you like to use?")
         label.pack(pady=5, padx=5)
@@ -101,10 +110,10 @@ class AlgorithmPage(tk.Frame):
         self.BranchBoundAlg.pack(pady=5, padx=5)
 
 class GamePage(tk.Frame):
-    """Explain what this will do pls."""
+    """ Creates window to create buttons to ask the amount of games. """
 
     def __init__(self, parent, controller):
-        """Explain what this will do pls."""
+        """ Sets text and buttons """
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="What board do you want to solve?")
         label.pack(pady=5, padx=5)
@@ -162,7 +171,7 @@ class GamePage(tk.Frame):
         self.Game7Button.pack(pady=5, padx=5)
 
     def nextPage(self, game, controller):
-        """Explain what this will do pls."""
+        """ Finds next page to show. """
         if currentAlgorithm[-1] == "astar" or currentAlgorithm[-1] == "branchbound":
             controller.show_frame(HeuristicsPage, currentAlgorithm[-1],
             game, currentAmount, currentHeuristics)
@@ -175,44 +184,60 @@ class GamePage(tk.Frame):
             game, currentAmount, currentHeuristics)
 
 class HeuristicsPage(tk.Frame):
-    """Explain what this will do pls."""
+    """ Creates window to show heuristics. """
 
     def __init__(self, parent, controller):
-        """Explain what this will do pls."""
+        """ Sets checkboxes for heuristics. """
         if currentAlgorithm[-1] == "random" or currentAlgorithm[-1] == "breadthfirst":
-            controller.show_frame(AmountPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], currentHeuristics[-1])
+            controller.show_frame(AmountPage, currentAlgorithm[-1],
+            currentGame[-1], currentAmount[-1], currentHeuristics[-1])
         else:
             tk.Frame.__init__(self, parent)
             label = tk.Label(self, text="What heuristics do you want to use?")
             label.pack(pady=5, padx=5)
 
+            # create checkbutton heuristic1
             var1 = tk.IntVar()
-            self.checkBox1 = tk.Checkbutton(self, text="Average distance empty spot to exit (could be admissible)", variable=var1)
+            self.checkBox1 = tk.Checkbutton(self, text="Average distance empty "+
+            "spot to exit (could be admissible)", variable=var1)
             self.checkBox1.pack(pady=5, padx=5)
 
+            # create checkbutton heuristic2
             var2 = tk.IntVar()
-            self.checkBox2 = tk.Checkbutton(self, text="Average difference position cars with a solution (could be admissible)", variable=var2)
+            self.checkBox2 = tk.Checkbutton(self, text="Average difference" +
+            " position cars with a solution (could be admissible)",
+            variable=var2)
             self.checkBox2.pack(pady=5, padx=5)
 
+            # create checkbutton heuristic3
             var3 = tk.IntVar()
-            self.checkBox3 = tk.Checkbutton(self, text="Amount of cars blocking the red car (not admissible)", variable=var3)
+            self.checkBox3 = tk.Checkbutton(self, text="Amount of cars blocking"+
+            " the red car (not admissible)", variable=var3)
             self.checkBox3.pack(pady=5, padx=5)
+
+            # create checkbutton heuristic4
+            var4 = tk.IntVar()
+            self.checkBox4 = tk.Checkbutton(self, text="Lowerbound for the " +
+            "amount of moves left (admissible)", variable=var4)
+            self.checkBox4.pack(pady=5, padx=5)
 
             self.submitButton = ttk.Button(self, text="Submit",
             command=lambda: self.checkboxCheck([var1.get(),
-            var2.get(), var3.get()], controller))
+            var2.get(), var3.get(), var4.get()], controller))
             self.submitButton.pack(pady=5, padx=5)
 
     def nextPage(self, heuristics, controller):
-        """Explain what this will do pls."""
+        """ Finds next page to show. """
         if currentAlgorithm[-1] == "branchbound":
-            controller.show_frame(AmountPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], heuristics)
+            controller.show_frame(AmountPage, currentAlgorithm[-1],
+            currentGame[-1], currentAmount[-1], heuristics)
         else:
-            controller.show_frame(ProgressPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], heuristics)
+            controller.show_frame(ProgressPage, currentAlgorithm[-1],
+            currentGame[-1], currentAmount[-1], heuristics)
 
 
     def checkboxCheck(self, checkboxes, controller):
-        """Explain what this will do pls."""
+        """ Checks which checkboxes are checked. """
         heuristics = []
         for i in range(len(checkboxes)):
             if checkboxes[i] == 1:
@@ -221,10 +246,10 @@ class HeuristicsPage(tk.Frame):
         self.nextPage(heuristics, controller)
 
 class AmountPage(tk.Frame):
-    """Explain what this will do pls."""
+    """ Creates window to ask the amount of iterations. """
 
     def __init__(self, parent, controller):
-        """Explain what this will do pls."""
+        """ Sets buttons for the amount of iterations. """
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="How many times do you want to run it?")
         label.pack(pady=5, padx=5)
@@ -250,81 +275,102 @@ class AmountPage(tk.Frame):
         controller.show_frame(ProgressPage, currentAlgorithm[-1], currentGame[-1], amount, currentHeuristics[-1])
 
 class ProgressPage(tk.Frame):
+    """ Creates window where the user can start running the code. """
 
     def __init__(self, parent, controller):
-        """Explain what this will do pls."""
+
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="After pressing the button, please " +
-        "wait a few seconds.")
+        "wait a few seconds. The terminal will display whats's next.")
         label.pack(pady=5, padx=5)
 
         self.runButton = ttk.Button(self, text="Press to run!",
-        command=lambda: self.runAlgorithm(controller))
+        command=lambda: self.quit())
         self.runButton.pack(pady=5, padx=5)
-
-    def runAlgorithm(self, controller):
-
-        location = "data/Boards/" + currentGame[-1]
-
-        f = open(location, "r")
-        board = f.read()
-        f.close()
-        solution = []
-
-        print(currentHeuristics)
-        print(currentAlgorithm)
-        print(currentGame)
-        print(currentAmount)
-
-
-        if currentAlgorithm[-1] == "random":
-
-            moves = 0
-            maxmove = 0
-            minmove = 1000000
-            for i in range(currentAmount[-1]):
-                game = rs.RandomSolve(board)
-                move = game.solver()[1]
-                if move > maxmove:
-                   maxmove = move
-                if move < minmove:
-                   minmove = move
-                moves += move
-            solutionAverage = "Average amount of moves over " + str(currentAmount[-1]) + " games: " + str(moves/currentAmount[-1]) + ". "
-            solutionMin = "Lowest amount of moves over " + str(currentAmount[-1]) + " games: " + str(minmove) + ". "
-            solutionMax = "Highest amount of moves over " + str(currentAmount[-1]) + " games: " + str(maxmove) + ". "
-            totalSolution = solutionAverage + solutionMin + solutionMax
-            solution.append(totalSolution)
-
-        elif currentAlgorithm[-1] == "breadthfirst":
-
-            game = br.BreadthFirst(board)
-            print("Shortest amount of moves possible:", len(game.solver()[0]))
-
-        elif currentAlgorithm[-1] == "astar":
-
-            game = A.AStar(board)
-            print("Solution found by Astar:", game.solver(currentHeuristics[-1]))
-
-        else:
-
-            game = bb.BranchBound(board)
-            print("Solution found by Branch and Bound:", game.solver(currentAmount[-1], currentHeuristics[-1])[0])
-
-        controller.show_frame(ShowPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], currentHeuristics[-1])
-
-class ShowPage(tk.Frame):
-
-    def __init__(self, parent, controller):
-
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="resultaatjes")
-        label.pack(pady=5, padx=5)
+        # controller.show_frame(ShowPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], currentHeuristics[-1])
 
 def main():
 
     app = windows()
     app.mainloop()
+
+
+    location = "data/Boards/" + currentGame[-1]
+
+    f = open(location, "r")
+    board = f.read()
+    f.close()
+    solution = []
+
+    if currentAlgorithm[-1] == "random":
+
+        runRandom(board)
+
+    elif currentAlgorithm[-1] == "breadthfirst":
+
+        start_time = time()
+        game = br.BreadthFirst(board)
+        print("Shortest amount of moves possible:", len(game.solver()[0]),
+        ". Found in", time() - start_time, "seconds.")
+
+    elif currentAlgorithm[-1] == "astar":
+
+        game = A.AStar(board)
+        print("Solution found by Astar:", game.solver(currentHeuristics[-1]))
+
+    else:
+
+        runBranchAndBound(board)
+
+
+def runRandom(board):
+
+    # run random and check for max and min
+    allMoves = []
+    maxMove = 0
+    minMove = 1000000
+    for i in range(currentAmount[-1]):
+        game = rs.RandomSolve(board)
+        move = game.solver()[1]
+        allMoves.append(move)
+        if move > maxMove:
+           maxMove = move
+        if move < minMove:
+           minMove = move
+        # show user how much times it's run
+        print(str(i + 1) + "/" + str(currentAmount[-1]))
+
+    if len(allMoves) > 1:
+        # plot results
+        bins = [minMove+x*(maxMove-minMove) /10 for x in range(11)]
+
+        plt.hist(allMoves, bins, rwidth=0.8)
+
+        plt.xlabel('Amount of moves')
+        plt.ylabel('Amount of games')
+        plt.title('Time in which branch and bound finds a new upperbound')
+        plt.show()
+
+    else:
+        print("Solved " + str(currentGame[-1]) + " in " + str(allMoves[0]) +
+        " moves.")
+
+def runBranchAndBound(board):
+
+    game = bb.BranchBound(board)
+    upperbound, upperbounds, totalTime, times = game.solver(currentAmount[-1],
+    currentHeuristics[-1])
+
+    if len(times) > 1:
+        plt.plot(upperbounds, times)
+        plt.gca().invert_xaxis()
+        plt.xlabel('Upper bounds')
+        plt.ylabel('Time in seconds')
+        plt.title('Distribution of moves by random algorithm')
+
+        plt.show()
+    else:
+        print("New upperbound found is " + str(upperbound) + " moves.")
 
 
 if __name__ == "__main__":
