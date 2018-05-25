@@ -1,3 +1,3 @@
 # Data
 ## Boards
-De folder *Boards* bevat alle beginborden als textbestand zodat deze ingelezen kunnen worden door de algoritmes.
+The folder *Boards* contains all begin states as text files, which can be read in by the algorithms for further manipulation.
