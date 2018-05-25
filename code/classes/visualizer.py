@@ -1,3 +1,5 @@
+"""visualizer.py: The visualisation of a rush hour board."""
+
 import pygame
 import random
 
@@ -9,7 +11,7 @@ GREY = (127,127,127)
 RED = (255,0,0)
 
 def drawBoard(vehicles, size, huemap, name):
-    """Visualises a rush-hour board"""
+    """Visualise a rush-hour board."""
     # initialise image
     image = pygame.Surface((size * CAR_SIZE, size * CAR_SIZE))
     image.fill(GREY)
@@ -26,7 +28,7 @@ def drawBoard(vehicles, size, huemap, name):
     pygame.image.save(image, name + ".png")
 
 def drawCross(image, vehicle, width):
-    """Marks a vehicle with a cross"""
+    """Mark a vehicle with a cross."""
     # calculate rectangle bounds
     up = vehicle.yBegin * CAR_SIZE + CAR_SIZE//10 + width//2 - 1
     down = vehicle.yBegin * CAR_SIZE + CAR_SIZE*9//10 - width//2 - 1
@@ -38,7 +40,7 @@ def drawCross(image, vehicle, width):
     pygame.draw.line(image, WHITE, [right,up], [left,down], width)
 
 def drawRect(image, huemap, vehicle):
-    """Draws a rectangle to represent the vehicle"""
+    """Draw a rectangle to represent the vehicle."""
     rect = []
     # x of NW corner
     rect.append(vehicle.xBegin * CAR_SIZE + CAR_SIZE//10)
@@ -59,8 +61,7 @@ def drawRect(image, huemap, vehicle):
     image.fill(huemap[vehicle.name], rect)
 
 def readBoard(vehicles):
-    """Read in board and make hue map"""
-
+    """Read in board and make hue map."""
     # read in all unique names
     names = [vehicle.name for vehicle in vehicles]
     nameCount = len(names) - 1
@@ -76,8 +77,7 @@ def readBoard(vehicles):
     return huemap
 
 def hue(number):
-    """Returns a hue for a given number between 0 and 1"""
-
+    """Return a hue for a given number between 0 and 1."""
     # Orange to green
     if number < 2/6:
         return (255 * (1 - (number) * 3), 255, 0)
