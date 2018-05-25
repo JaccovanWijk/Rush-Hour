@@ -25,6 +25,8 @@ python main.py
 ```
 Now a user interface will pop up ```(maybe foto)```. If you follow the instructions the algorithms will run automatically. Don't panic if the popup screen freezes, python is busy with the algorithm. With some algorithms you can see the progress, with others this isn't possible.
 
+If you're done looking at the results, close the popup screens. You  can now use your commandpromt to run it again.
+
 ### Tips for running our code in a decent timespan
 * If you want to run the **Random algorithm** a lot of times, choose a board of size 6 by 6. If you want to see the larger boards in action you should consider running it less times;
 * If you want to run the **Breadth First algorithm**, **Astar**, or **Branch and Bound**, choose board 1, 2, or 3.
