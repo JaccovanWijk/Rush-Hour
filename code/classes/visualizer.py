@@ -25,7 +25,7 @@ def drawBoard(vehicles, size, huemap, name):
             drawCross(image, vehicle, 20)
 
     # save image
-    pygame.image.save(image, name + ".png")
+    pygame.image.save(image, "images\moves\" + name + ".png")
 
 def drawCross(image, vehicle, width):
     """Mark a vehicle with a cross."""
