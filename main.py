@@ -8,6 +8,7 @@ this is done by generating a GUI with choices.
 import os, sys
 import tkinter as tk
 from tkinter import ttk
+from time import time
 
 directory = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(directory, "code"))
@@ -310,8 +311,8 @@ def main():
 
         start_time = time()
         game = br.BreadthFirst(board)
-        print("Shortest amount of moves possible:", len(game.solver()[0]),
-        ". Found in", time() - start_time, "seconds.")
+        print("Shortest amount of moves possible: ", len(game.solver()[0]),
+        ". Found in", time() - start_time, " seconds.",sep='')
 
     elif currentAlgorithm[-1] == "astar":
 
