@@ -1,6 +1,6 @@
 # Code
-In deze folder zijn de volgende dingen te vinden:
-## algoritmes
-In de folder *algoritmes* zijn onze verschillende pogingen tot het oplossen van het probleem te vinden. Momenteel zijn er een aantal nog niet werkende.
+In these directories are the following files:
+## algorithms
+Our algorithms are in the directory *algorithms*. This directory contains a **Random algorithm, Breadth First algorithm, Astar algorithm** and a **Branch and Bound algorithm**. 
 ## classes
-In de folder *classes* hebben wij de datastructuren die nodig zijn voor ons probleem
+Our datastructure and our visualisation (not relevant for you) are in the *classes* directory. This directory contains the **RushHour class** and the **Vehicle class**.
