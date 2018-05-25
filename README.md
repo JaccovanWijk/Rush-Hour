@@ -5,6 +5,8 @@ The board is a square of six by six, nine by nine or twelve by twelve with cars 
 
 Our goal is to use different algorithms and try to solve the seven given beginboards in the shortest amount of time possible, or the shortest amount of moves possible. 
 
+[Our assigned case can be find here](http://heuristieken.nl/wiki/index.php?title=Rush_Hour)
+
 ## Getting Started
 The code is written in Python3.6.5. To run this code you can install the requirements.txt with pip. You can do this with the following command:
 ```
