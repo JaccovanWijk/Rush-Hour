@@ -48,7 +48,7 @@ class aStar(r.RushHour):
                 print("won:", self.currentBoard)
                 break
 
-            for (newBoard, move) in self.getSucessors():
+            for newBoard in self.getSucessors():
 
                 # board is already processed
                 if newBoard in self.closedBoards:
@@ -57,8 +57,8 @@ class aStar(r.RushHour):
                 #if board isn't already in priority queue
                 if not newBoard in self.openBoards:
 
-                    #add move to moves
-                    self.moves[newBoard] = (self.currentBoard, move)
+                    # add move to moves
+                    self.moves[newBoard] = self.currentBoard
 
                     # add new board state to open boards
                     self.openBoards.append(newBoard)
@@ -75,23 +75,6 @@ class aStar(r.RushHour):
             self.closedBoards.add(self.currentBoard)
 
         return len(self.showMoves(self.currentBoard, self.moves))
-
-
-    def getSucessors(self):
-        """Get next board states reachable by making one move"""
-        sucessors = []
-
-        # get all moves of all vehicles
-        for vehicle in self.currentVehicles:
-            for i in self.searchMoves(self.currentBoard, vehicle):
-                # determine new state
-                newBoard = self.makingMove(self.currentVehicles,vehicle, i)
-                self.makingMove(self.currentVehicles,vehicle, -i)
-
-                sucessors.append(newBoard)
-
-        return sucessors
-
 
     def heuristic(self, board):
 

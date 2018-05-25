@@ -87,20 +87,6 @@ class BranchBound(r.RushHour):
 
         return [item[1] for item in sorted(sort, key=lambda score: score[0])]
 
-    def getSucessors(self, board):
-        """Get next board states reachable by making one move"""
-        sucessors = []
-        vehicles = self.getVehicles(board)
-
-        # get all moves of all vehicles
-        for vehicle in vehicles:
-            for i in self.searchMoves(board, vehicle):
-                # determine new state
-                newBoard = self.makingMove(vehicles, vehicle, i)
-                self.makingMove(vehicles,vehicle, -i)
-                sucessors.append(newBoard)
-        return sucessors
-
     def RandomSolve(self, board):
 
         # bruteForce 10 times

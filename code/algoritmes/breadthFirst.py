@@ -66,19 +66,3 @@ class BreadthFirst(r.RushHour):
             self.closedBoards.add(self.currentBoard)
 
         return (self.showMoves(self.winningBoard, self.moves), self.count, time() - beginTime)
-
-
-    def getSucessors(self):
-        """Get next board states reachable by making one move"""
-        sucessors = []
-
-        # get all moves of all vehicles
-        for vehicle in self.currentVehicles:
-            for i in self.searchMoves(self.currentBoard, vehicle):
-                # determine new state
-                newBoard = self.makingMove(self.currentVehicles,vehicle, i)
-                self.makingMove(self.currentVehicles,vehicle, -i)
-
-                sucessors.append(newBoard)
-
-        return sucessors

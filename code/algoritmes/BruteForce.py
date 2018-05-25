@@ -42,7 +42,7 @@ class BruteForce(r.RushHour):
 
                 # memorize moves made
                 if self.currentBoard not in self.memory:
-                    self.memory[self.currentBoard] = (board, "HOI")
+                    self.memory[self.currentBoard] = board
 
                 # stop if puzzle is solved
                 if self.won(self.currentVehicles):
