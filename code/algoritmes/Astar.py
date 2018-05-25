@@ -9,16 +9,33 @@ import RandomSolver as rs
 import queue as Qu
 
 class AStar(r.RushHour):
-    """The A* model used by the corresponding algorithm."""
+    """
+    The A* model used by the corresponding algorithm.
+
+    Attributes:
+    currentBoard    -- string representation of board
+    currentVehicles -- vehicles of current board
+    openBoards      -- boards in processing
+    closedBoards    -- boards already processed
+    priorityQueue   -- queue of boards being processed, sorted by score
+    Gcost           -- list of costs to get to particular state
+    endState        -- end state of a random solution
+    heuristics      -- list of heuristics used for this run of A*
+    """
 
     def __init__(self, board):
-        """Initialise model for A*."""
+        """
+        Initialise model for A*.
+
+        Arguments:
+        board    -- representation of a rush hour board
+        """
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
+        self.currentVehicles = self.vehicles
         self.closedBoards = set()
         self.openBoards = []
         self.priorityQueue = Qu.PriorityQueue()
-        self.moves = dict()
         self.Gcost = {}
         game = rs.RandomSolve(self.currentBoard)
         self.endState = game.solver()[-1]
@@ -32,8 +49,7 @@ class AStar(r.RushHour):
         Arguments:
         heuristics -- a list of heuristics used by A*
 
-        Returns:
-        amount of moves needed to solve the puzzle
+        Returns amount of moves needed to solve the puzzle.
         """
         # set heuristics
         self.heuristics = heuristics
@@ -75,7 +91,7 @@ class AStar(r.RushHour):
                     # add new board state to open boards
                     self.openBoards.append(newBoard)
 
-                    #calculate the current depth and new G_cost
+                    # calculate the current depth and new G_cost
                     cost = self.Gcost[self.currentBoard] + 1
                     self.Gcost[newBoard] = (cost)
 
@@ -89,7 +105,7 @@ class AStar(r.RushHour):
         return len(self.showMoves(self.currentBoard, self.moves))
 
     def heuristic(self, board):
-        """Return estimated amount of moves to solution."""
+        """Return estimated amount of moves from state to solution."""
         score = 0
         for heuristic in self.heuristics:
             if heuristic == "heuristic1":

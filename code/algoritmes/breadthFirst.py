@@ -25,7 +25,7 @@ class BreadthFirst(r.RushHour):
 
     def __init__(self,board):
         """
-        Initialise model.
+        Initialise model for breadth first search.
 
         Arguments:
         board -- representation of a rush hour board

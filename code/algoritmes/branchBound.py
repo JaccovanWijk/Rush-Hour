@@ -13,16 +13,33 @@ import math
 import visualizer as v
 
 class BranchBound(r.RushHour):
-    """The branch and bound model for its algorithm."""
+    """
+    The branch and bound model for its algorithm.
+
+    Attributes:
+    currentBoard    -- string representation of board
+    currentVehicles -- vehicles of current board
+    endState        -- end state of a random solution
+    openBoards      -- boards in processing
+    closedBoards    -- boards already processed
+    upperBound      -- current best upper bound
+    upperBounds     -- all improved upper bound steps
+    amount          -- amount of improvements on the upper bound requested
+    iterations      -- amount of improvements on the upper bound done
+    heuristics      -- list of heuristics used for this run of branch and bound"""
 
     def __init__(self,board):
-        """Describe all arguments here."""
+        """
+        Initialise model for branch and bound.
+
+        Arguments:
+        board -- representation of a rush hour board
+        """
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.endState = ""
         self.currentVehicles = self.vehicles
         self.closedBoards = set()
-        self.finalClosedBoards = set()
         self.openBoards = []
         self.upperBound = 0
         self.upperBounds = []
@@ -119,7 +136,7 @@ class BranchBound(r.RushHour):
         return movemin
 
     def heuristic(self, board):
-        """Return estimated amount of moves to solution."""
+        """Return estimated amount of moves from board to solution."""
         score = 0
         for heuristic in self.heuristics:
             if heuristic == "heuristic1":
