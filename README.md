@@ -27,7 +27,7 @@ Now a user interface will pop up ```(maybe foto)```. If you follow the instructi
 
 ### Tips for running our code in a decent timespan
 * If you want to run the **Random algorithm** a lot of times, choose a board of size 6 by 6. If you want to see the larger boards in action you should consider running it less times;
-* If you want to run the **Breadth First algorithm**, **Astar**, or **Branch and Bound**, choose board 1, 2, or 3;
+* If you want to run the **Breadth First algorithm**, **Astar**, or **Branch and Bound**, choose board 1, 2, or 3.
 
 
 ## Authors
