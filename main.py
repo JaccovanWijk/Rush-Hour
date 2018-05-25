@@ -362,7 +362,7 @@ def runBranchAndBound(board):
     upperbound, upperbounds, totalTime, times = game.solver(currentAmount[-1],
     currentHeuristics[-1])
 
-    if len(times) > 1:
+    if len(times) > 2:
         plt.plot(upperbounds, times)
         plt.gca().invert_xaxis()
         plt.xlabel('Upper bounds')
@@ -371,7 +371,7 @@ def runBranchAndBound(board):
 
         plt.show()
     else:
-        print("New upperbound found is " + str(upperbound) + " moves.")
+        print("New upperbound found is " + str(upperbound) + " moves. Found in " + str(totalTime) + " seconds.")
 
 
 if __name__ == "__main__":

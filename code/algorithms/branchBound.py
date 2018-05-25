@@ -27,7 +27,8 @@ class BranchBound(r.RushHour):
     amount          -- amount of improvements on the upper bound requested
     iterations      -- amount of improvements on the upper bound done
     heuristics      -- list of heuristics used for this run of branch and bound
-    times           -- list of times recorded after every iteration"""
+    times           -- list of times recorded after every iteration
+    currentTime     -- keeps track of current time"""
 
     def __init__(self,board):
         """
@@ -48,7 +49,8 @@ class BranchBound(r.RushHour):
         self.iterations = 0
         self.done = False
         self.heuristics = []
-        self.times = [time()]
+        self.times = [0]
+        self.currentTime = 0
 
     def solver(self, amount, heuristics):
         """The branch and bound search algorithm.
@@ -65,6 +67,8 @@ class BranchBound(r.RushHour):
         self.upperBound = self.RandomSolve(self.currentBoard)
         self.upperBounds.append(self.upperBound)
         print("First upperbound =",self.upperBound)
+
+        self.currentTime = time()
 
         self.amount = amount
 
@@ -89,9 +93,10 @@ class BranchBound(r.RushHour):
         if self.won(self.currentVehicles):
             self.upperBound = moves
             self.upperBounds.append(self.upperBound)
-            self.times.append(time() - self.times[-1])
+            self.times.append(time() - self.currentTime)
             self.iterations += 1
             self.done = True
+            self.currentTime = time()
             print("New upperbound =", moves)
             return
 
