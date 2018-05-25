@@ -11,7 +11,16 @@ GREY = (127,127,127)
 RED = (255,0,0)
 
 def drawBoard(vehicles, size, huemap, name):
-    """Visualise a rush-hour board."""
+    """
+    Visualise a rush-hour board.
+
+    Arguments:
+    vehicles -- list of vehicles on board
+    size     -- length of the sides
+    huemap   -- color dictionary of the cars
+    name     -- name of the image file
+
+    Creates a graphical representation of a rush hour board."""
     # initialise image
     image = pygame.Surface((size * CAR_SIZE, size * CAR_SIZE))
     image.fill(GREY)

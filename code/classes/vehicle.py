@@ -1,7 +1,16 @@
 """vehicle.py: A representation of a vehicle in a rush hour game."""
 
 class Vehicle:
-    """Represents a vehicle of a rush hour game."""
+    """
+    Represents a vehicle of a rush hour game.
+
+    Attributes:
+    name        -- character of car in board string
+    xBegin      -- x coordinate of upperleft corner
+    yBegin      -- y coordinate of upperleft corner
+    length      -- length of car
+    orientation -- 'H' horizontal, or 'V' vertical
+    """
 
     def __init__(self, name, xBegin, yBegin, length, orientation):
         """Initialise the vehicle."""
