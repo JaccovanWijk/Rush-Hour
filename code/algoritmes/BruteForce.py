@@ -12,9 +12,7 @@ class BruteForce(r.RushHour):
         self.currentBoard = self.initBoard
         self.currentVehicles = self.vehicles
         self.moves = 0
-        for vehicle in self.vehicles:
-            if vehicle.name == "X":
-                self.carX = vehicle
+        self.carX = self.getCar(self.currentVehicles, "X")
 
         # initialise move memory
         self.memory = dict()
@@ -45,8 +43,6 @@ class BruteForce(r.RushHour):
                 # memorize moves made
                 if self.currentBoard not in self.memory:
                     self.memory[self.currentBoard] = (board, "HOI")
-
-                possibleDriveX = self.driveline(self.currentBoard, self.carX)
 
                 # stop if puzzle is solved
                 if self.won(self.currentVehicles):

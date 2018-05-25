@@ -16,6 +16,8 @@ class BreadthFirst(r.RushHour):
 
         self.openBoards = deque()
         self.closedBoards = set()
+        self.winningBoard = ""
+        self.solved = False
         self.count = 0
 
 
@@ -37,13 +39,15 @@ class BreadthFirst(r.RushHour):
             self.currentVehicles = self.getVehicles(self.currentBoard)
 
             # stop if puzzle is solved
-            if self.won(self.currentVehicles):
+            if self.won(self.currentVehicles) and not self.solved:
+                self.winningBoard = self.currentBoard
+                self.solved = True
                 if not all:
-                    return (self.showMoves(self.currentBoard, self.moves), self.count, time() - beginTime)
+                    break;
 
             self.count += 1
 
-            for (newBoard, move) in self.getSucessors():
+            for newBoard in self.getSucessors():
 
                 # board is already processed
                 if newBoard in self.closedBoards:
@@ -53,7 +57,7 @@ class BreadthFirst(r.RushHour):
                 if not newBoard in self.openBoards:
 
                     # add move to moves
-                    self.moves[newBoard] = (self.currentBoard, move)
+                    self.moves[newBoard] = self.currentBoard
 
                     # add new board state to open boards
                     self.openBoards.append(newBoard)
@@ -61,7 +65,7 @@ class BreadthFirst(r.RushHour):
             # finish processing current board
             self.closedBoards.add(self.currentBoard)
 
-        return self.count
+        return (self.showMoves(self.winningBoard, self.moves), self.count, time() - beginTime)
 
 
     def getSucessors(self):
@@ -74,8 +78,7 @@ class BreadthFirst(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
-                move = vehicle.name + " " + str(i)
 
-                sucessors.append([newBoard,move])
+                sucessors.append(newBoard)
 
         return sucessors

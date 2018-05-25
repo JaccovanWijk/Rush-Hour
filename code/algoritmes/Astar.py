@@ -87,9 +87,8 @@ class aStar(r.RushHour):
                 # determine new state
                 newBoard = self.makingMove(self.currentVehicles,vehicle, i)
                 self.makingMove(self.currentVehicles,vehicle, -i)
-                move = vehicle.name + str(i)
 
-                sucessors.append((newBoard, move))
+                sucessors.append(newBoard)
 
         return sucessors
 

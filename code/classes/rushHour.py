@@ -150,12 +150,11 @@ class RushHour:
 
             # go back one move
             row = moves[endState]
-            if len(row) == 2:
-                endState = row[0]
-                move = row[1]
+            if len(row) != 0:
+                endState = row
 
                 # add move to list
-                moveList.append(move)
+                moveList.append(endState)
             else:
                 break
 
@@ -172,6 +171,9 @@ class RushHour:
         """Creates an image of the board, named <fileName>"""
 
         vis.drawBoard(vehicles, self.size, self.huemap, fileName)
+
+    def heuristic0(self, board):
+        return 0
 
     def heuristic1 (self, board):
         """Returns score for a given board, looks at average distance
@@ -200,43 +202,68 @@ class RushHour:
         for vehicle in vehicles:
             for goalVehicle in goalVehicles:
                 if vehicle.name == goalVehicle.name:
-                    score -= abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
+                    score += abs(vehicle.dominantCoordinate() - goalVehicle.dominantCoordinate())
         return score/len(vehicles)
 
-    def heuristic3 (self, board):
+    def heuristic3 (self, board, score=True):
         """Returns score for a given board,
         looks at the number of vehicles blocking the red car"""
 
-        score = 0
-
         vehicles = self.getVehicles(board)
-        redVehicle = [vehicle for vehicle in vehicles if vehicle.name == 'X'][0]
-        if redVehicle.xBegin == self.size - 2:
+        if self.won(vehicles) and score:
             return 0
 
-        for vehicle in vehicles:
-            if vehicle.orientation == "V" and vehicle.xBegin >= (redVehicle.xBegin
-            + redVehicle.length) and (vehicle.yBegin <= redVehicle.yBegin
-            and vehicle.yBegin + vehicle.length > redVehicle.yBegin):
-                score += 1
-        return score
+        goalCar = self.getCar(vehicles, "X")
+        lineOfView = self.driveline(board, goalCar)
+
+        # search for blocking cars
+        names = []
+        afterCar = goalCar.dominantCoordinate() + goalCar.length
+        for i in range(afterCar, self.size):
+            if lineOfView[i] != ".":
+                names.append(lineOfView[i])
+        blockingCars = [self.getCar(vehicles, name) for name in names]
+
+        if score:
+            return len(blockingCars) + 1
+        else:
+            return blockingCars
 
     def heuristic4(self, board):
         """Returns score for a given board,
         looks at moves to free up blocking cars"""
 
-        score = 0
         vehicles = self.getVehicles(board)
-        goalCar = getCar(vehicles, "X")
-
+        goalCar = self.getCar(vehicles, "X")
         if self.won(vehicles):
-            return score
+            return 0
 
-        lineOfView = self.driveline(board, vehicle)
+        blockingCars = self.heuristic3(board, False)
 
-        # search for blocking cars
-        names = []
-        for i in range(goalCar.dominantCoordinate() + goalCar.length, self.size):
-            if lineOfView[i] != ".":
-                names.append(lineOfView[i])
-        blockingCars = [self.getCar(vehicles, name) for name in names]
+        scores = []
+        for car in blockingCars:
+            scores.append(self.searchMovable(vehicles, car, {goalCar}, 1))
+        return min(scores)
+
+    def searchMovable(self, vehicles, vehicle, prevVehicles, N):
+
+        board = self.update(vehicles)
+        lineOfView = self.driveline(self.update(vehicles), vehicle)
+        beginC = vehicle.dominantCoordinate()
+
+        neighbours = []
+        if beginC - 1 >= 0:
+            neighbours.append(lineOfView[beginC - 1])
+        if beginC + vehicle.length < self.size:
+            neighbours.append(lineOfView[beginC + vehicle.length])
+
+        if "." in neighbours or vehicle in prevVehicles:
+            return N + 1
+
+        prevVehicles.add(vehicle)
+        scores = []
+        for name in neighbours:
+            newVehicle = self.getCar(vehicles, name)
+            score = self.searchMovable(vehicles, newVehicle, prevVehicles, N + 1)
+            scores.append(score)
+        return min(scores)
