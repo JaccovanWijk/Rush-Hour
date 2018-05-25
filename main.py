@@ -349,7 +349,7 @@ def runRandom(board):
 
         plt.xlabel('Amount of moves')
         plt.ylabel('Amount of games')
-        plt.title('Time in which branch and bound finds a new upperbound')
+        plt.title('Distribution of moves by random algorithm')
         plt.show()
 
     else:
@@ -367,7 +367,7 @@ def runBranchAndBound(board):
         plt.gca().invert_xaxis()
         plt.xlabel('Upper bounds')
         plt.ylabel('Time in seconds')
-        plt.title('Distribution of moves by random algorithm')
+        plt.title('Time in which branch and bound finds a new upperbound')
 
         plt.show()
     else:
