@@ -256,7 +256,6 @@ class RushHour:
             if lineOfView[i] != ".":
                 names.append(lineOfView[i])
         blockingCars = [self.getCar(vehicles, name) for name in names]
-
         if score:
             return len(blockingCars) + 1
         else:
@@ -270,6 +269,8 @@ class RushHour:
             return 0
 
         blockingCars = self.heuristic3(board, False)
+        if not blockingCars:
+            return 1
 
         scores = []
         for car in blockingCars:
