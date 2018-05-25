@@ -1,12 +1,19 @@
+"""
+breadthFirst.py: An implementation of a breadth first search algorithm.
+
+This implementation uses random moves to solve
+a rush hour puzzle.
+"""
+
 import rushHour as r
 import random
 import math
 
-class BruteForce(r.RushHour):
+class RandomSolve(r.RushHour):
     """A random algorithm for Rush Hour."""
 
     def __init__(self, board):
-
+        """Initialise model."""
         # model for game
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
@@ -21,7 +28,6 @@ class BruteForce(r.RushHour):
 
     def solver(self):
         """Get a random solution."""
-
         lastCar = None
         while not self.won(self.currentVehicles):
 

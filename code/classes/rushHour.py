@@ -1,13 +1,19 @@
+"""
+rushHour.py: Implements a general rush hour board.
+
+In this module a general rush hour board and some
+methods with it are implemented
+"""
+
 import vehicle as v
 import math
 import visualizer as vis
 
 class RushHour:
-    """A single Rush Hour board"""
+    """A single Rush Hour board."""
 
     def __init__(self, board):
-
-        # create board
+        """Initialise rush hour game."""
         self.initBoard = board.replace("\n", "")
         self.size = int(math.sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
@@ -20,8 +26,7 @@ class RushHour:
 
 
     def update(self, vehicles):
-        """Update board with new set of cars"""
-
+        """Update board with new set of cars."""
         # initialise board
         board = []
         for i in range(self.size):
@@ -48,8 +53,7 @@ class RushHour:
 
 
     def getVehicles(self, board):
-        """Read in vehicle of a given board"""
-
+        """Read in vehicle of a given board."""
         names = []
         vehicles = []
         # read in board
@@ -76,9 +80,7 @@ class RushHour:
 
 
     def searchMoves(self, board, vehicle, allMoves=True):
-
-        """Search for available moves for a given vehicle"""
-
+        """Search for available moves for a given vehicle."""
         moves = []
 
         # get line of view
@@ -109,29 +111,26 @@ class RushHour:
             return [-j,i]
 
     def makingMove(self, vehicles, car, direction):
-        """Move a car in a given direction"""
-
+        """Move a car in a given direction."""
         car.move(direction)
 
         return self.update(vehicles)
 
     def getCar(self, vehicles, name):
-        """Returns the vehicle with corresponding name"""
-
+        """Return the vehicle with corresponding name."""
         for vehicle in vehicles:
             if vehicle.name == name:
                 return vehicle
 
     def won(self, vehicles):
-        """Returns true if winning condition is satisfied"""
-
+        """Return true if winning condition is satisfied."""
         for vehicle in vehicles:
             if vehicle.name == 'X' and vehicle.xBegin == self.size - 2 and vehicle.yBegin == self.yGoal:
                 return True
         return False
 
     def driveline(self, board, vehicle):
-        """Return possible driveline"""
+        """Return possible driveline."""
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
@@ -142,8 +141,7 @@ class RushHour:
         return possibleDrive
 
     def showMoves(self, endState, moves):
-        """Makes a list of moves made to solve the puzzle"""
-
+        """Make a list of moves made to solve the puzzle."""
         moveList = list()
 
         while True:
@@ -162,7 +160,7 @@ class RushHour:
         return moveList
 
     def getSucessors(self):
-        """Get next board states reachable by making one move"""
+        """Get next board states reachable by making one move."""
         sucessors = []
 
         # get all moves of all vehicles
@@ -177,23 +175,21 @@ class RushHour:
         return sucessors
 
     def showBoard(self, board):
-        """Print board in a better way"""
+        """Print board in a better way."""
         for i in range(self.size):
             print(board[i*self.size:(i+1)*self.size])
         print("")
 
     def visualise(self, vehicles, fileName):
-        """Creates an image of the board, named <fileName>"""
-
+        """Create an image of the board, named <fileName>."""
         vis.drawBoard(vehicles, self.size, self.huemap, fileName)
 
     def heuristic0(self, board):
+        """The null-heuristic."""
         return 0
 
     def heuristic1 (self, board):
-        """Returns score for a given board, looks at average distance
-        from all empty spots to the exit"""
-
+        """Estimate moves to solution by distance of open spots to goal."""
         score = 0
         amount = 0
         for i in range(self.size*self.size):
@@ -206,9 +202,7 @@ class RushHour:
         return score/amount
 
     def heuristic2 (self, board, endState):
-        """Returns score for a given board, looks at the average difference
-        from a random endState"""
-
+        """Estimate moves to solution by difference to an endstate."""
         score = 0
 
         goalVehicles = self.getVehicles(endState)
@@ -221,9 +215,7 @@ class RushHour:
         return score/len(vehicles)
 
     def heuristic3 (self, board, score=True):
-        """Returns score for a given board,
-        looks at the number of vehicles blocking the red car"""
-
+        """Estimate moves to solution by the amount of cars blocking the goal."""
         vehicles = self.getVehicles(board)
         if self.won(vehicles) and score:
             return 0
@@ -245,9 +237,7 @@ class RushHour:
             return blockingCars
 
     def heuristic4(self, board):
-        """Returns score for a given board,
-        looks at moves to free up blocking cars"""
-
+        """Estimate moves to solution by moves required to move the goal a spot."""
         vehicles = self.getVehicles(board)
         goalCar = self.getCar(vehicles, "X")
         if self.won(vehicles):
@@ -261,7 +251,7 @@ class RushHour:
         return min(scores)
 
     def searchMovable(self, vehicles, vehicle, prevVehicles, N):
-
+        """Recursively search for movable vehicles."""
         board = self.update(vehicles)
         lineOfView = self.driveline(self.update(vehicles), vehicle)
         beginC = vehicle.dominantCoordinate()

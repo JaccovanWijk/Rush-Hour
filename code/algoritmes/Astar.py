@@ -1,13 +1,18 @@
+"""
+Astar.py: An implementation of an A* algorithm.
+
+This module implements an A* algorithm with different
+heuristics, which are defined in the module 'rushHour.py'.
+"""
 import rushHour as r
-import BruteForce as bf
-import breadthFirst as brF
+import RandomSolver as rs
 import queue as Qu
 
-class aStar(r.RushHour):
+class AStar(r.RushHour):
+    """The A* model used by the corresponding algorithm."""
 
     def __init__(self, board):
-
-        # model game
+        """Initialise model for A*."""
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.closedBoards = set()
@@ -15,14 +20,21 @@ class aStar(r.RushHour):
         self.priorityQueue = Qu.PriorityQueue()
         self.moves = dict()
         self.Gcost = {}
-        game = bf.BruteForce(self.currentBoard)
+        game = rs.RandomSolve(self.currentBoard)
         self.endState = game.solver()[-1]
         self.heuristics = []
 
 
-    def solver(self, heuristics, all=False):
-        """The A* search algorithm"""
+    def solver(self, heuristics):
+        """
+        The A* search algorithm.
 
+        Arguments:
+        heuristics -- a list of heuristics used by A*
+
+        Returns:
+        amount of moves needed to solve the puzzle
+        """
         # set heuristics
         self.heuristics = heuristics
 
@@ -77,7 +89,7 @@ class aStar(r.RushHour):
         return len(self.showMoves(self.currentBoard, self.moves))
 
     def heuristic(self, board):
-
+        """Return estimated amount of moves to solution."""
         score = 0
         for heuristic in self.heuristics:
             if heuristic == "heuristic1":

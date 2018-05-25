@@ -1,8 +1,10 @@
+"""vehicle.py: A representation of a vehicle in a rush hour game."""
+
 class Vehicle:
     """Represents a vehicle of a rush hour game."""
 
     def __init__(self, name, xBegin, yBegin, length, orientation):
-
+        """Initialise the vehicle."""
         self.name = name
         self.xBegin = xBegin
         self.yBegin = yBegin
@@ -10,7 +12,7 @@ class Vehicle:
         self.orientation = orientation
 
     def dominantCoordinate(self):
-        """Returns the begin coordinate in move direction."""
+        """Return the begin coordinate in move direction."""
         if self.orientation == 'H':
             return self.xBegin
         elif self.orientation == 'V':

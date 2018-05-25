@@ -1,3 +1,10 @@
+"""
+main.py: Makes a GUI for the algorithms.
+
+This module makes it easier for the user to use
+the algorithms of choice on boards of their choice,
+this is done by generating a GUI with choices.
+"""
 import os, sys
 import tkinter as tk
 from tkinter import ttk
@@ -10,7 +17,7 @@ sys.path.append(os.path.join(directory, "code", "algoritmes"))
 import rushHour as r
 import Astar as A
 import breadthFirst as br
-import BruteForce as bf
+import RandomSolver as rs
 import branchBound as bb
 
 currentAlgorithm = [0]
@@ -19,9 +26,10 @@ currentAmount = [0]
 currentHeuristics = [0]
 
 class windows(tk.Tk):
+    """Some docstring here."""
 
     def __init__(self, *args, **kwargs):
-
+        """Explain what this will do pls."""
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "Rush Hour")
 
@@ -45,7 +53,7 @@ class windows(tk.Tk):
         self.show_frame(AlgorithmPage, currentAlgorithm, currentGame, currentAmount, currentHeuristics)
 
     def show_frame(self, cont, algorithm, game, amount, heuristics):
-
+        """Explain what this will do pls."""
         currentAlgorithm.append(algorithm)
         currentGame.append(game)
         currentAmount.append(amount)
@@ -55,9 +63,10 @@ class windows(tk.Tk):
         frame.tkraise()
 
 class AlgorithmPage(tk.Frame):
+    """Explain what this will do pls."""
 
     def __init__(self, parent, controller):
-
+        """Explain what this will do pls."""
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Which algorithm would you like to use?")
         label.pack(pady=5, padx=5)
@@ -91,9 +100,10 @@ class AlgorithmPage(tk.Frame):
         self.BranchBoundAlg.pack(pady=5, padx=5)
 
 class GamePage(tk.Frame):
+    """Explain what this will do pls."""
 
     def __init__(self, parent, controller):
-
+        """Explain what this will do pls."""
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="What board do you want to solve?")
         label.pack(pady=5, padx=5)
@@ -151,7 +161,7 @@ class GamePage(tk.Frame):
         self.Game7Button.pack(pady=5, padx=5)
 
     def nextPage(self, game, controller):
-
+        """Explain what this will do pls."""
         if currentAlgorithm[-1] == "astar" or currentAlgorithm[-1] == "branchbound":
             controller.show_frame(HeuristicsPage, currentAlgorithm[-1],
             game, currentAmount, currentHeuristics)
@@ -164,9 +174,10 @@ class GamePage(tk.Frame):
             game, currentAmount, currentHeuristics)
 
 class HeuristicsPage(tk.Frame):
+    """Explain what this will do pls."""
 
     def __init__(self, parent, controller):
-
+        """Explain what this will do pls."""
         if currentAlgorithm[-1] == "random" or currentAlgorithm[-1] == "breadthfirst":
             controller.show_frame(AmountPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], currentHeuristics[-1])
         else:
@@ -192,7 +203,7 @@ class HeuristicsPage(tk.Frame):
             self.submitButton.pack(pady=5, padx=5)
 
     def nextPage(self, heuristics, controller):
-
+        """Explain what this will do pls."""
         if currentAlgorithm[-1] == "branchbound":
             controller.show_frame(AmountPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], heuristics)
         else:
@@ -200,7 +211,7 @@ class HeuristicsPage(tk.Frame):
 
 
     def checkboxCheck(self, checkboxes, controller):
-
+        """Explain what this will do pls."""
         heuristics = []
         for i in range(len(checkboxes)):
             if checkboxes[i] == 1:
@@ -209,9 +220,10 @@ class HeuristicsPage(tk.Frame):
         self.nextPage(heuristics, controller)
 
 class AmountPage(tk.Frame):
+    """Explain what this will do pls."""
 
     def __init__(self, parent, controller):
-
+        """Explain what this will do pls."""
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="How many times do you want to run it?")
         label.pack(pady=5, padx=5)
@@ -233,15 +245,16 @@ class AmountPage(tk.Frame):
         self.amount1000Button.pack(pady=5, padx=5)
 
     def setAmount(self, amount, controller):
-
+        """Explain what this will do pls."""
         currentAmount.append(amount)
         self.quit()
         # controller.show_frame(EndPage, currentAlgorithm[-1], currentGame[-1], amount, currentHeuristics[-1])
 
 class EndPage(tk.Frame):
+    """Explain what this will do pls."""
 
     def __init__(self, parent, controller):
-
+        """Explain what this will do pls."""
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Please wait a moment, then close this window.")
         label.pack(pady=5, padx=5)
@@ -249,7 +262,7 @@ class EndPage(tk.Frame):
         self.quit()
 
 def main():
-
+    """Explain what this will do pls."""
     app = windows()
     app.mainloop()
 
@@ -265,7 +278,7 @@ def main():
         maxmove = 0
         minmove = 1000000
         for i in range(currentAmount[-1]):
-            game = bf.BruteForce(board)
+            game = rs.RandomSolve(board)
             move = game.solver()[1]
             if move > maxmove:
                maxmove = move
@@ -283,7 +296,7 @@ def main():
 
     elif currentAlgorithm[-1] == "astar":
 
-        game = A.aStar(board)
+        game = A.AStar(board)
         print("Solution found by Astar:", game.solver(currentHeuristics[-1]))
 
     else:

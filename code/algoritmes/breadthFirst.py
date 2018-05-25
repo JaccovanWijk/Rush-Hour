@@ -1,13 +1,34 @@
+"""
+breadthFirst.py: An implementation of a breadth first search algorithm.
+
+This implementation uses a breadth frst search algorithm to
+solve a rush hour puzzle.
+"""
 from time import time
 from collections import deque
 
 import rushHour as r
 
 class BreadthFirst(r.RushHour):
-    """A breadth first search algorithm for Rush Hour"""
+    """
+    A breadth first search algorithm for Rush Hour.
+
+    Attributes:
+        currentBoard    -- string representation of board
+        currentVehicles -- vehicles of current boards
+        openBoards      -- boards in processing
+        closedBoards    -- boards already processed
+        solved          -- indicates if puzzle is solved
+        count           -- amount of iterations
+    """
 
     def __init__(self,board):
+        """
+        Initialise model.
 
+        Arguments:
+            board -- Representation of a rush hour board
+        """
         r.RushHour.__init__(self,board)
 
         # model game
@@ -16,15 +37,22 @@ class BreadthFirst(r.RushHour):
 
         self.openBoards = deque()
         self.closedBoards = set()
-        self.winningBoard = ""
         self.solved = False
         self.count = 0
 
 
     def solver(self, all=False):
-        """The breadth first search algorithm
+        """
+        The breadth first search algorithm.
 
-        Returns solution, amount of moves and iterations"""
+        Arguments:
+            all (bool): Find all reachable states. Defaults to False.
+
+        Returns:
+
+        Returns solution, amount of moves and iterations
+        """
+        returnVals = []
         beginTime = time()
 
         # initialise search
@@ -40,8 +68,9 @@ class BreadthFirst(r.RushHour):
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles) and not self.solved:
-                self.winningBoard = self.currentBoard
+                returnVals.append(self.showMoves(self.currentBoard,self.moves))
                 self.solved = True
+
                 if not all:
                     break;
 
@@ -65,4 +94,7 @@ class BreadthFirst(r.RushHour):
             # finish processing current board
             self.closedBoards.add(self.currentBoard)
 
-        return (self.showMoves(self.winningBoard, self.moves), self.count, time() - beginTime)
+        returnVals.append(self.count)
+        returnVals.append(time() - beginTime)
+
+        return self.showMoves(self.winningBoard, self.moves), self.count, time() - beginTime

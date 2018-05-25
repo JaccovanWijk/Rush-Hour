@@ -1,15 +1,22 @@
+"""
+branchBound.py: Implements a branch and bound algorithm.
+
+This module implements a branch and bound algorithm with
+heuristics to lower the computation time.
+"""
+
 import rushHour as r
-import BruteForce as bf
+import RandomSolver as rs
 from time import time
 import random
 import math
 import visualizer as v
-# import Queue
 
 class BranchBound(r.RushHour):
+    """The branch and bound model for its algorithm."""
 
     def __init__(self,board):
-
+        """Describe all arguments here."""
         r.RushHour.__init__(self, board)
         self.currentBoard = self.initBoard
         self.endState = ""
@@ -25,7 +32,14 @@ class BranchBound(r.RushHour):
         self.heuristics = []
 
     def solver(self, amount, heuristics):
+        """The branch and bound search algorithm.
 
+        Arguments:
+        amount      -- amount of improvements on the upper bound
+        heuristics: -- list of heuristics used
+
+        Returns least upperbound, improvements and computation time.
+        """
         self.heuristics = heuristics
 
         start_time = time()
@@ -46,7 +60,7 @@ class BranchBound(r.RushHour):
         return self.upperBound, self.upperBounds, time() - start_time
 
     def branchBoundSolve(self, board, moves):
-        """Recursive branch and bound solver"""
+        """Recursive branch and bound solver."""
         # check limit
         if moves >= self.upperBound or (board, moves) in self.closedBoards or self.done or self.iterations == self.amount:
             return
@@ -76,7 +90,7 @@ class BranchBound(r.RushHour):
 
 
     def sortedSucessors(self, board):
-        """Sort list of boards"""
+        """Sort list of boards."""
         sucessors = self.getSucessors(board)
         sort = []
         sortedSucessors = []
@@ -88,18 +102,24 @@ class BranchBound(r.RushHour):
         return [item[1] for item in sorted(sort, key=lambda score: score[0])]
 
     def RandomSolve(self, board):
+        """Solve board randomly ten times.
 
+        Arguments:
+            board -- board to solve
+
+        Returns minimum amount of moves of solutions
+        """
         # bruteForce 10 times
         movemin = 100000
         for j in range(10):
-            game = bf.BruteForce(board)
+            game = rs.RandomSolve(board)
             amount, move, self.endState = game.solver()
             if move < movemin:
                 movemin = move
         return movemin
 
     def heuristic(self, board):
-
+        """Return estimated amount of moves to solution."""
         score = 0
         for heuristic in self.heuristics:
             if heuristic == "heuristic1":
