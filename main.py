@@ -8,6 +8,7 @@ this is done by generating a GUI with choices.
 import os, sys
 import tkinter as tk
 from tkinter import ttk
+from time import time
 
 directory = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(directory, "code"))
@@ -310,8 +311,8 @@ def main():
 
         start_time = time()
         game = br.BreadthFirst(board)
-        print("Shortest amount of moves possible:", len(game.solver()[0]),
-        ". Found in", time() - start_time, "seconds.")
+        print("Shortest amount of moves possible: ", len(game.solver()[0]),
+        ". Found in", time() - start_time, " seconds.",sep='')
 
     elif currentAlgorithm[-1] == "astar":
 
@@ -348,7 +349,7 @@ def runRandom(board):
 
         plt.xlabel('Amount of moves')
         plt.ylabel('Amount of games')
-        plt.title('Time in which branch and bound finds a new upperbound')
+        plt.title('Distribution of moves by random algorithm')
         plt.show()
 
     else:
@@ -366,7 +367,7 @@ def runBranchAndBound(board):
         plt.gca().invert_xaxis()
         plt.xlabel('Upper bounds')
         plt.ylabel('Time in seconds')
-        plt.title('Distribution of moves by random algorithm')
+        plt.title('Time in which branch and bound finds a new upperbound')
 
         plt.show()
     else:
