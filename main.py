@@ -13,16 +13,19 @@ import breadthFirst as br
 import BruteForce as bf
 import branchBound as bb
 
-currentAlgorithm = [0]
-currentGame = [0]
-currentAmount = [0]
-currentHeuristics = [0]
+currentAlgorithm = ["branchbound"]
+currentGame = ["VisBoard"]
+currentAmount = [1]
+currentHeuristics = [[]]
+solution = [0]
 
 class windows(tk.Tk):
-
+    """ Creates window """
     def __init__(self, *args, **kwargs):
 
+        # initialise and custimize window
         tk.Tk.__init__(self, *args, **kwargs)
+        tk.Tk.iconbitmap(self, default="images\icon.ico")
         tk.Tk.wm_title(self, "Rush Hour")
 
         container = tk.Frame(self)
@@ -34,17 +37,16 @@ class windows(tk.Tk):
 
         self.frames = {}
 
-        for F in (GamePage, AlgorithmPage, AmountPage, HeuristicsPage, EndPage):
-
+        # determine size of window
+        for F in (GamePage, AlgorithmPage, AmountPage, HeuristicsPage, ProgressPage, ShowPage):
             frame = F(container, self)
-
             self.frames[F] = frame
-
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(AlgorithmPage, currentAlgorithm, currentGame, currentAmount, currentHeuristics)
 
     def show_frame(self, cont, algorithm, game, amount, heuristics):
+        """ Show frame and update info """
 
         currentAlgorithm.append(algorithm)
         currentGame.append(game)
@@ -55,6 +57,7 @@ class windows(tk.Tk):
         frame.tkraise()
 
 class AlgorithmPage(tk.Frame):
+    """ Show buttons to choose algorithms. """
 
     def __init__(self, parent, controller):
 
@@ -91,6 +94,7 @@ class AlgorithmPage(tk.Frame):
         self.BranchBoundAlg.pack(pady=5, padx=5)
 
 class GamePage(tk.Frame):
+    """  """
 
     def __init__(self, parent, controller):
 
@@ -157,7 +161,7 @@ class GamePage(tk.Frame):
             game, currentAmount, currentHeuristics)
         elif currentAlgorithm[-1] == "breadthfirst":
             currentGame.append(game)
-            controller.show_frame(EndPage, currentAlgorithm[-1],
+            controller.show_frame(ProgressPage, currentAlgorithm[-1],
             game, currentAmount, currentHeuristics)
         else:
             controller.show_frame(AmountPage, currentAlgorithm[-1],
@@ -196,7 +200,7 @@ class HeuristicsPage(tk.Frame):
         if currentAlgorithm[-1] == "branchbound":
             controller.show_frame(AmountPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], heuristics)
         else:
-            controller.show_frame(EndPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], heuristics)
+            controller.show_frame(ProgressPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], heuristics)
 
 
     def checkboxCheck(self, checkboxes, controller):
@@ -234,62 +238,84 @@ class AmountPage(tk.Frame):
 
     def setAmount(self, amount, controller):
 
-        currentAmount.append(amount)
-        self.quit()
-        # controller.show_frame(EndPage, currentAlgorithm[-1], currentGame[-1], amount, currentHeuristics[-1])
+        controller.show_frame(ProgressPage, currentAlgorithm[-1], currentGame[-1], amount, currentHeuristics[-1])
 
-class EndPage(tk.Frame):
+class ProgressPage(tk.Frame):
 
     def __init__(self, parent, controller):
 
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Please wait a moment, then close this window.")
+        label = tk.Label(self, text="After pressing the button, please " +
+        "wait a few seconds.")
         label.pack(pady=5, padx=5)
 
-        self.quit()
+        self.runButton = ttk.Button(self, text="Press to run!",
+        command=lambda: self.runAlgorithm(controller))
+        self.runButton.pack(pady=5, padx=5)
+
+    def runAlgorithm(self, controller):
+
+        location = "data/Boards/" + currentGame[-1]
+
+        f = open(location, "r")
+        board = f.read()
+        f.close()
+        solution = []
+
+        print(currentHeuristics)
+        print(currentAlgorithm)
+        print(currentGame)
+        print(currentAmount)
+
+
+        if currentAlgorithm[-1] == "random":
+
+            moves = 0
+            maxmove = 0
+            minmove = 1000000
+            for i in range(currentAmount[-1]):
+                game = bf.BruteForce(board)
+                move = game.solver()[1]
+                if move > maxmove:
+                   maxmove = move
+                if move < minmove:
+                   minmove = move
+                moves += move
+            solutionAverage = "Average amount of moves over " + str(currentAmount[-1]) + " games: " + str(moves/currentAmount[-1]) + ". "
+            solutionMin = "Lowest amount of moves over " + str(currentAmount[-1]) + " games: " + str(minmove) + ". "
+            solutionMax = "Highest amount of moves over " + str(currentAmount[-1]) + " games: " + str(maxmove) + ". "
+            totalSolution = solutionAverage + solutionMin + solutionMax
+            solution.append(totalSolution)
+
+        elif currentAlgorithm[-1] == "breadthfirst":
+
+            game = br.BreadthFirst(board)
+            print("Shortest amount of moves possible:", len(game.solver()[0]))
+
+        elif currentAlgorithm[-1] == "astar":
+
+            game = A.aStar(board)
+            print("Solution found by Astar:", game.solver(currentHeuristics[-1]))
+
+        else:
+
+            game = bb.BranchBound(board)
+            print("Solution found by Branch and Bound:", game.solver(currentAmount[-1], currentHeuristics[-1])[0])
+
+        controller.show_frame(ShowPage, currentAlgorithm[-1], currentGame[-1], currentAmount[-1], currentHeuristics[-1])
+
+class ShowPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="resultaatjes")
+        label.pack(pady=5, padx=5)
 
 def main():
 
     app = windows()
     app.mainloop()
-
-    location = "data/Boards/" + currentGame[-1]
-
-    f = open(location, "r")
-    board = f.read()
-    f.close()
-
-    if currentAlgorithm[-1] == "random":
-
-        moves = 0
-        maxmove = 0
-        minmove = 1000000
-        for i in range(currentAmount[-1]):
-            game = bf.BruteForce(board)
-            move = game.solver()[1]
-            if move > maxmove:
-               maxmove = move
-            if move < minmove:
-               minmove = move
-            moves += move
-        print("Average amount of moves over", currentAmount[-1], "games:",int(moves/currentAmount[-1]))
-        print("Lowest amount of moves over", currentAmount[-1], "games:",minmove)
-        print("Highest amount of moves over", currentAmount[-1], "games:",maxmove)
-
-    elif currentAlgorithm[-1] == "breadthfirst":
-
-        game = br.BreadthFirst(board)
-        print("Shortest amount of moves possible:", len(game.solver()[0]))
-
-    elif currentAlgorithm[-1] == "astar":
-
-        game = A.aStar(board)
-        print("Solution found by Astar:", game.solver(currentHeuristics[-1]))
-
-    else:
-
-        game = bb.BranchBound(board)
-        print("Solution found by Branch and Bound:", game.solver(currentAmount[-1], currentHeuristics[-1])[0])
 
 
 if __name__ == "__main__":
