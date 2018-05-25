@@ -5,13 +5,16 @@ The board is a square of six by six, nine by nine or twelve by twelve with cars 
 
 Our goal is to use different algorithms and try to solve the seven given beginboards in the shortest amount of time possible, or the shortest amount of moves possible. 
 
-# Getting Started
+## Getting Started
 The code is written in Python3.6.5. To run this code you can install the requirements.txt with pip. You can do this with the following command:
 ```
 pip install -r requirements.txt 
 ```
 
-# Auteurs
+## Structure
+All code except for main.py
+
+## Authers
 * Dylan Wellner
 * Ian Epping
 * Jacco van Wijk
