@@ -7,8 +7,9 @@ Our goal is to use different algorithms and try to solve the seven given beginbo
 
 # Getting Started
 The code is written in Python3.6.5. To run this code you can install the requirements.txt with pip. You can do this with the following command:
-
-``` pip install -r requirements.txt ```
+```
+pip install -r requirements.txt 
+```
 
 # Auteurs
 * Dylan Wellner
