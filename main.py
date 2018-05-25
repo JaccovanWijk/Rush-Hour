@@ -312,7 +312,7 @@ def main():
         start_time = time()
         game = br.BreadthFirst(board)
         print("Shortest amount of moves possible: ", len(game.solver()[0]),
-        ". Found in", time() - start_time, " seconds.",sep='')
+        ". Found in ", time() - start_time, " seconds.",sep='')
 
     elif currentAlgorithm[-1] == "astar":
 

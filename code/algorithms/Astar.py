@@ -73,7 +73,6 @@ class AStar(r.RushHour):
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles):
-                print("won:", self.currentBoard)
                 break
 
             for newBoard in self.getSucessors(self.currentBoard):
@@ -114,5 +113,7 @@ class AStar(r.RushHour):
                 score += self.heuristic2(board, self.endState)
             if heuristic == "heuristic3":
                 score += self.heuristic3(board)
+            if heuristic == "heuristic4":
+                score += self.heuristic4(board)
 
         return score
