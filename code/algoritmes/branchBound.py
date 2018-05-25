@@ -18,27 +18,32 @@ class BranchBound(r.RushHour):
         self.finalClosedBoards = set()
         self.openBoards = []
         self.upperBound = 0
+        self.upperBounds = []
         self.amount = 0
         self.iterations = 0
         self.done = False
+        self.heuristics = []
 
-    def solver(self, amount):
+    def solver(self, amount, heuristics):
+
+        self.heuristics = heuristics
+
         start_time = time()
         # find upperbound by random solver
         self.upperBound = self.RandomSolve(self.currentBoard)
+        self.upperBounds.append(self.upperBound)
         print("First upperbound =",self.upperBound)
 
         self.amount = amount
 
         for i in range(amount):
-            timez = time()
+            # timez = time()
             self.branchBoundSolve(self.currentBoard, 0)
             self.done = False
-            print("time", i, "=", time() - timez)
-            timez = time()
+            # print("time", i, "=", time() - timez)
+            # timez = time()
 
-        print("time: ", time() - start_time)
-        return self.upperBound
+        return self.upperBound, self.upperBounds, time() - start_time
 
     def branchBoundSolve(self, board, moves):
         """Recursive branch and bound solver"""
@@ -51,6 +56,7 @@ class BranchBound(r.RushHour):
         # if won, set new upperlimit
         if self.won(self.currentVehicles):
             self.upperBound = moves
+            self.upperBounds.append(self.upperBound)
             self.iterations += 1
             self.done = True
             print("New upperbound =", moves)
@@ -106,8 +112,15 @@ class BranchBound(r.RushHour):
                 movemin = move
         return movemin
 
-    def heuristic (self, board):
+    def heuristic(self, board):
 
         score = 0
-        score += self.heuristic1(board) + self.heuristic2(board, self.endState)
+        for heuristic in self.heuristics:
+            if heuristic == "heuristic1":
+                score += self.heuristic1(board)
+            if heuristic == "heuristic2":
+                score += self.heuristic2(board, self.endState)
+            if heuristic == "heuristic3":
+                score += self.heuristic3(board)
+
         return score

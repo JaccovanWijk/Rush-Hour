@@ -287,7 +287,7 @@ def main():
     else:
 
         game = bb.BranchBound(board)
-        print("Solution found by Branch and Bound:", game.solver(currentAmount[-1]))
+        print("Solution found by Branch and Bound:", game.solver(currentAmount[-1], currentHeuristics[-1])[0])
 
 
 if __name__ == "__main__":

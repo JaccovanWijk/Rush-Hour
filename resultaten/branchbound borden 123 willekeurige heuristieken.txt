@@ -1,0 +1,30 @@
+Game 1 went to upperbound of 33 in 170 steps in 873.4749307632446 seconds. 
+Game 1 with heuristic1 went to upperbound of 33 in 163 steps in 987.2561681270599 seconds. 
+Game 1 with heuristic2 went to upperbound of 33 in 181 steps in 2407.3504223823547 seconds. 
+Game 1 with heuristic3 went to upperbound of 33 in 226 steps in 1964.1568076610565 seconds. 
+Game 1 with heuristic1 with heuristic2 went to upperbound of 33 in 157 steps in 2264.6873681545258 seconds. 
+Game 1 with heuristic1 with heuristic3 went to upperbound of 33 in 147 steps in 1457.043760061264 seconds. 
+Game 1 with heuristic3 with heuristic2 went to upperbound of 33 in 202 steps in 3414.572907447815 seconds. 
+Game 1 with heuristic1 with heuristic2 with heuristic3 went to upperbound of 33 in 152 steps in 2750.7442574501038 seconds. 
+Game 2 went to upperbound of 15 in 61 steps in 95.58513021469116 seconds. 
+Game 2 with heuristic1 went to upperbound of 15 in 59 steps in 87.3905885219574 seconds. 
+Game 2 with heuristic2 went to upperbound of 15 in 59 steps in 210.96575784683228 seconds. 
+Game 2 with heuristic3 went to upperbound of 15 in 35 steps in 93.13624858856201 seconds. 
+Game 2 with heuristic1 with heuristic2 went to upperbound of 15 in 59 steps in 192.6303415298462 seconds. 
+Game 2 with heuristic1 with heuristic3 went to upperbound of 15 in 67 steps in 129.13948678970337 seconds. 
+Game 2 with heuristic3 with heuristic2 went to upperbound of 15 in 62 steps in 358.93405079841614 seconds. 
+Game 2 with heuristic1 with heuristic2 with heuristic3 went to upperbound of 15 in 52 steps in 193.4296374320984 seconds. 
+Game 3 went to upperbound of 21 in 35 steps in 15.029948472976685 seconds. 
+Game 3 with heuristic1 went to upperbound of 21 in 29 steps in 14.502816438674927 seconds. 
+Game 3 with heuristic2 went to upperbound of 21 in 24 steps in 22.86530566215515 seconds. 
+Game 3 with heuristic3 went to upperbound of 21 in 13 steps in 12.257567882537842 seconds. 
+Game 3 with heuristic1 with heuristic2 went to upperbound of 21 in 31 steps in 34.15579390525818 seconds. 
+Game 3 with heuristic1 with heuristic3 went to upperbound of 21 in 42 steps in 29.30991005897522 seconds. 
+Game 3 with heuristic3 with heuristic2 went to upperbound of 21 in 32 steps in 35.44317293167114 seconds. 
+Game 3 with heuristic1 with heuristic2 with heuristic3 went to upperbound of 21 in 32 steps in 39.83280658721924 seconds. 
+Game 1 went to upperbound of 33 in 176 steps in 902.9130353927612 seconds. 
+Game 1 with heuristic1 went to upperbound of 33 in 209 steps in 1258.4505007266998 seconds. 
+Game 1 with heuristic2 went to upperbound of 33 in 174 steps in 2310.166780948639 seconds. 
+Game 1 with heuristic3 went to upperbound of 33 in 194 steps in 1694.43914103508 seconds. 
+Game 1 with heuristic1 with heuristic2 went to upperbound of 33 in 154 steps in 2224.4932119846344 seconds. 
+Game 1 with heuristic1 with heuristic3 went to upperbound of 33 in 204 steps in 1982.7750957012177 seconds. 
