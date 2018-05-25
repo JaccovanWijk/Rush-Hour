@@ -2,7 +2,7 @@
 rushHour.py: Implements a general rush hour board.
 
 In this module a general rush hour board and some
-methods with it are implemented
+methods with it are implemented.
 """
 
 import vehicle as v
@@ -10,10 +10,24 @@ import math
 import visualizer as vis
 
 class RushHour:
-    """A single Rush Hour board."""
+    """
+    A single Rush Hour board.
+
+    Attributes:
+    initBoard -- board of rush hour game
+    vehicles  -- vehicles of board
+    size      -- length of sides in squares
+    yGoal     -- y coordinate of goal
+    moves     -- dictionary for move history
+    huemap    -- dictionary for car colors. For visualisation."""
 
     def __init__(self, board):
-        """Initialise rush hour game."""
+        """
+        Initialise rush hour game.
+
+        Arguments:
+        board -- representation of a rush hour board
+        """
         self.initBoard = board.replace("\n", "")
         self.size = int(math.sqrt(len(self.initBoard)))
         self.vehicles = self.getVehicles(self.initBoard)
@@ -25,8 +39,8 @@ class RushHour:
         self.huemap = vis.readBoard(self.vehicles)
 
 
-    def update(self, vehicles):
-        """Update board with new set of cars."""
+    def getBoard(self, vehicles):
+        """Convert list of vehicles to a board."""
         # initialise board
         board = []
         for i in range(self.size):
@@ -53,7 +67,7 @@ class RushHour:
 
 
     def getVehicles(self, board):
-        """Read in vehicle of a given board."""
+        """Convert board into a list of vehicles."""
         names = []
         vehicles = []
         # read in board
@@ -80,7 +94,15 @@ class RushHour:
 
 
     def searchMoves(self, board, vehicle, allMoves=True):
-        """Search for available moves for a given vehicle."""
+        """
+        Search for available moves for a given vehicle.
+
+        Arguments:
+        board    -- representation of a rush hour board
+        vehicle  -- vehicle to find available moves for
+        allMoves -- return a list of all moves or only the furthest. Defaults to True.
+
+        Returns a list of possible moves."""
         moves = []
 
         # get line of view
@@ -111,10 +133,10 @@ class RushHour:
             return [-j,i]
 
     def makingMove(self, vehicles, car, direction):
-        """Move a car in a given direction."""
+        """Move a car in a given direction, return updated board."""
         car.move(direction)
 
-        return self.update(vehicles)
+        return self.getBoard(vehicles)
 
     def getCar(self, vehicles, name):
         """Return the vehicle with corresponding name."""
@@ -130,7 +152,7 @@ class RushHour:
         return False
 
     def driveline(self, board, vehicle):
-        """Return possible driveline."""
+        """Return line of board in which vehicle can drive."""
         possibleDrive = ""
         if vehicle.orientation == "H":
             # pick everything in it's row
@@ -145,30 +167,34 @@ class RushHour:
         moveList = list()
 
         while True:
-
             # go back one move
             row = moves[endState]
             if len(row) != 0:
                 endState = row
-
                 # add move to list
                 moveList.append(endState)
             else:
                 break
-
         moveList.reverse()
         return moveList
 
-    def getSucessors(self):
-        """Get next board states reachable by making one move."""
-        sucessors = []
+    def getSucessors(self, board):
+        """
+        Get next board states reachable by making one move.
 
+        Arguments:
+        board -- representation of a rush hour board
+
+        Returns list of next board states.
+        """
+        sucessors = []
+        vehicles = self.getVehicles(board)
         # get all moves of all vehicles
-        for vehicle in self.currentVehicles:
-            for i in self.searchMoves(self.currentBoard, vehicle):
+        for vehicle in vehicles:
+            for i in self.searchMoves(board, vehicle):
                 # determine new state
-                newBoard = self.makingMove(self.currentVehicles,vehicle, i)
-                self.makingMove(self.currentVehicles,vehicle, -i)
+                newBoard = self.makingMove(vehicles, vehicle, i)
+                self.makingMove(vehicles, vehicle, -i)
 
                 sucessors.append(newBoard)
 
@@ -237,7 +263,7 @@ class RushHour:
             return blockingCars
 
     def heuristic4(self, board):
-        """Estimate moves to solution by moves required to move the goal a spot."""
+        """Estimate moves to solution by amount of cars blocking the goal."""
         vehicles = self.getVehicles(board)
         goalCar = self.getCar(vehicles, "X")
         if self.won(vehicles):
@@ -251,9 +277,20 @@ class RushHour:
         return min(scores)
 
     def searchMovable(self, vehicles, vehicle, prevVehicles, N):
-        """Recursively search for movable vehicles."""
-        board = self.update(vehicles)
-        lineOfView = self.driveline(self.update(vehicles), vehicle)
+        """
+        Recursively search for movable vehicles.
+
+        Arguments:
+        vehicles     -- vehicles of board
+        vehicle      -- vehicle to find neighbours for
+        prevVehicles -- list of previously checked vehicles
+        N            -- amount of vehicles previously checked
+
+        Returns mimimum amount of moves required to free up the
+        red goal car one spot.
+        """
+        board = self.getBoard(vehicles)
+        lineOfView = self.driveline(self.getBoard(vehicles), vehicle)
         beginC = vehicle.dominantCoordinate()
 
         neighbours = []

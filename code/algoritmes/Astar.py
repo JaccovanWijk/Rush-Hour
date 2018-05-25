@@ -60,7 +60,7 @@ class AStar(r.RushHour):
                 print("won:", self.currentBoard)
                 break
 
-            for newBoard in self.getSucessors():
+            for newBoard in self.getSucessors(self.currentBoard):
 
                 # board is already processed
                 if newBoard in self.closedBoards:

@@ -14,12 +14,13 @@ class BreadthFirst(r.RushHour):
     A breadth first search algorithm for Rush Hour.
 
     Attributes:
-        currentBoard    -- string representation of board
-        currentVehicles -- vehicles of current boards
-        openBoards      -- boards in processing
-        closedBoards    -- boards already processed
-        solved          -- indicates if puzzle is solved
-        count           -- amount of iterations
+    currentBoard    -- string representation of board
+    currentVehicles -- vehicles of current board
+    openBoards      -- boards in processing
+    closedBoards    -- boards already processed
+    solved          -- indicates if puzzle is solved
+    winningBoard    -- first winning state encountered
+    count           -- amount of iterations
     """
 
     def __init__(self,board):
@@ -27,7 +28,7 @@ class BreadthFirst(r.RushHour):
         Initialise model.
 
         Arguments:
-            board -- Representation of a rush hour board
+        board -- representation of a rush hour board
         """
         r.RushHour.__init__(self,board)
 
@@ -38,6 +39,7 @@ class BreadthFirst(r.RushHour):
         self.openBoards = deque()
         self.closedBoards = set()
         self.solved = False
+        self.winningBoard = ""
         self.count = 0
 
 
@@ -46,9 +48,7 @@ class BreadthFirst(r.RushHour):
         The breadth first search algorithm.
 
         Arguments:
-            all (bool): Find all reachable states. Defaults to False.
-
-        Returns:
+        all (bool): find all reachable states. Defaults to False.
 
         Returns solution, amount of moves and iterations
         """
@@ -68,7 +68,7 @@ class BreadthFirst(r.RushHour):
 
             # stop if puzzle is solved
             if self.won(self.currentVehicles) and not self.solved:
-                returnVals.append(self.showMoves(self.currentBoard,self.moves))
+                self.winningBoard = self.currentBoard
                 self.solved = True
 
                 if not all:
@@ -76,7 +76,7 @@ class BreadthFirst(r.RushHour):
 
             self.count += 1
 
-            for newBoard in self.getSucessors():
+            for newBoard in self.getSucessors(self.currentBoard):
 
                 # board is already processed
                 if newBoard in self.closedBoards:
